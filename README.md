@@ -1,2 +1,2 @@
-# DirectX11Engine_3D
- Direct X 11 3D Game
+# DirectX11Engine
+ DirectX11_2D_Project 

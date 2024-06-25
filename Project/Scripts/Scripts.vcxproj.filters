@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Default">
+      <UniqueIdentifier>{61ee435b-ba1a-4628-9b20-43555755801d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{6eb16733-13ca-487b-80b3-f19165645d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptManager">
+      <UniqueIdentifier>{d554e11f-cdc8-411b-af5f-04ee70569379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{f8893301-eecd-450b-a6d1-2bedf7b55d9c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CCameraMoveScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="CMissileScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="CScriptManager.h">
+      <Filter>ScriptManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraMoveScript.cpp">
+      <Filter>Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="CMissileScript.cpp">
+      <Filter>Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="CScriptManager.cpp">
+      <Filter>ScriptManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
