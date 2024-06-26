@@ -27,7 +27,7 @@ void CEditorManager::Init()
 	pEditorCam->AddComponent(new CEditorCameraScript);
 
 	pEditorCam->Camera()->LayerCheckAll(0xffffffff);
-	pEditorCam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pEditorCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
 	CRenderManager::GetInst()->RegisterEditorCamera(pEditorCam->Camera());
 

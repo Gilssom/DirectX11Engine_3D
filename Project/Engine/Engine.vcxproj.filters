@@ -516,6 +516,9 @@
     <FxCompile Include="postprocess.fx">
       <Filter>HLSL\02. 2D</Filter>
     </FxCompile>
+    <FxCompile Include="std3d.fx">
+      <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

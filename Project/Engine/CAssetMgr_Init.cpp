@@ -139,6 +139,11 @@ void CAssetManager::CreateDefaultMesh()
 	AddAsset<CMesh>(L"CircleMesh_Debug", pMesh);
 	vecVtx.clear();
 	vecIdx.clear();
+
+
+	// ===============
+	// Cube Mesh
+	// ===============
 }
 
 void CAssetManager::CreateDefaultTexture()
@@ -297,6 +302,21 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 	AddAsset<CGraphicShader>(L"DebugShapeShader", pShader);
+
+
+	// ====================
+	//	Std3D Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\Std3d.fx", "VS_Std3D");
+	pShader->CreatePixelShader(strPath + L"shader\\Std3d.fx", "PS_Std3D");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK); // 3D ÀÇ ±âº» Cull Mode
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
+
+	AddAsset<CGraphicShader>(L"Std3DShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -370,5 +390,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"DebugShapeMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DebugShapeShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Std 3D Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"Std3DMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"Std3DShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }
