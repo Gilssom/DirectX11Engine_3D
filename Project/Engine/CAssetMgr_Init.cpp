@@ -144,6 +144,153 @@ void CAssetManager::CreateDefaultMesh()
 	// ===============
 	// Cube Mesh
 	// ===============
+	// 6개의 각 면 마다 각자의 방향벡터(노말, 탄젠트, 바이노말) 이 세팅되어야 하기 때문에
+	// 면 단위로 정점 4개씩 6면, 총 24개의 정점이 필요하다.	
+	Vtx arrCube[24] = {};
+
+	// 윗면
+	arrCube[0].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+	arrCube[0].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	arrCube[0].vUv = Vec2(0.f, 0.f);
+	arrCube[0].vNormal = Vec3(0.f, 1.f, 0.f);
+
+	arrCube[1].vPos = Vec3(0.5f, 0.5f, 0.5f);
+	arrCube[1].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	arrCube[1].vUv = Vec2(0.f, 0.f);
+	arrCube[1].vNormal = Vec3(0.f, 1.f, 0.f);
+
+	arrCube[2].vPos = Vec3(0.5f, 0.5f, -0.5f);
+	arrCube[2].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	arrCube[2].vUv = Vec2(0.f, 0.f);
+	arrCube[2].vNormal = Vec3(0.f, 1.f, 0.f);
+
+	arrCube[3].vPos = Vec3(-0.5f, 0.5f, -0.5f);
+	arrCube[3].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	arrCube[3].vUv = Vec2(0.f, 0.f);
+	arrCube[3].vNormal = Vec3(0.f, 1.f, 0.f);
+
+
+	// 아랫 면	
+	arrCube[4].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+	arrCube[4].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	arrCube[4].vUv = Vec2(0.f, 0.f);
+	arrCube[4].vNormal = Vec3(0.f, -1.f, 0.f);
+
+	arrCube[5].vPos = Vec3(0.5f, -0.5f, -0.5f);
+	arrCube[5].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	arrCube[5].vUv = Vec2(0.f, 0.f);
+	arrCube[5].vNormal = Vec3(0.f, -1.f, 0.f);
+
+	arrCube[6].vPos = Vec3(0.5f, -0.5f, 0.5f);
+	arrCube[6].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	arrCube[6].vUv = Vec2(0.f, 0.f);
+	arrCube[6].vNormal = Vec3(0.f, -1.f, 0.f);
+
+	arrCube[7].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+	arrCube[7].vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	arrCube[7].vUv = Vec2(0.f, 0.f);
+	arrCube[7].vNormal = Vec3(0.f, -1.f, 0.f);
+
+	// 왼쪽 면
+	arrCube[8].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+	arrCube[8].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+	arrCube[8].vUv = Vec2(0.f, 0.f);
+	arrCube[8].vNormal = Vec3(-1.f, 0.f, 0.f);
+
+	arrCube[9].vPos = Vec3(-0.5f, 0.5f, -0.5f);
+	arrCube[9].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+	arrCube[9].vUv = Vec2(0.f, 0.f);
+	arrCube[9].vNormal = Vec3(-1.f, 0.f, 0.f);
+
+	arrCube[10].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+	arrCube[10].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+	arrCube[10].vUv = Vec2(0.f, 0.f);
+	arrCube[10].vNormal = Vec3(-1.f, 0.f, 0.f);
+
+	arrCube[11].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+	arrCube[11].vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+	arrCube[11].vUv = Vec2(0.f, 0.f);
+	arrCube[11].vNormal = Vec3(-1.f, 0.f, 0.f);
+
+	// 오른쪽 면
+	arrCube[12].vPos = Vec3(0.5f, 0.5f, -0.5f);
+	arrCube[12].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+	arrCube[12].vUv = Vec2(0.f, 0.f);
+	arrCube[12].vNormal = Vec3(1.f, 0.f, 0.f);
+
+	arrCube[13].vPos = Vec3(0.5f, 0.5f, 0.5f);
+	arrCube[13].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+	arrCube[13].vUv = Vec2(0.f, 0.f);
+	arrCube[13].vNormal = Vec3(1.f, 0.f, 0.f);
+
+	arrCube[14].vPos = Vec3(0.5f, -0.5f, 0.5f);
+	arrCube[14].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+	arrCube[14].vUv = Vec2(0.f, 0.f);
+	arrCube[14].vNormal = Vec3(1.f, 0.f, 0.f);
+
+	arrCube[15].vPos = Vec3(0.5f, -0.5f, -0.5f);
+	arrCube[15].vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+	arrCube[15].vUv = Vec2(0.f, 0.f);
+	arrCube[15].vNormal = Vec3(1.f, 0.f, 0.f);
+
+	// 뒷 면
+	arrCube[16].vPos = Vec3(0.5f, 0.5f, 0.5f);
+	arrCube[16].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+	arrCube[16].vUv = Vec2(0.f, 0.f);
+	arrCube[16].vNormal = Vec3(0.f, 0.f, 1.f);
+
+	arrCube[17].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+	arrCube[17].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+	arrCube[17].vUv = Vec2(0.f, 0.f);
+	arrCube[17].vNormal = Vec3(0.f, 0.f, 1.f);
+
+	arrCube[18].vPos = Vec3(-0.5f, -0.5f, 0.5f);
+	arrCube[18].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+	arrCube[18].vUv = Vec2(0.f, 0.f);
+	arrCube[18].vNormal = Vec3(0.f, 0.f, 1.f);
+
+	arrCube[19].vPos = Vec3(0.5f, -0.5f, 0.5f);
+	arrCube[19].vColor = Vec4(1.f, 1.f, 0.f, 1.f);
+	arrCube[19].vUv = Vec2(0.f, 0.f);
+	arrCube[19].vNormal = Vec3(0.f, 0.f, 1.f);
+
+	// 앞 면
+	arrCube[20].vPos = Vec3(-0.5f, 0.5f, -0.5f);;
+	arrCube[20].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+	arrCube[20].vUv = Vec2(0.f, 0.f);
+	arrCube[20].vNormal = Vec3(0.f, 0.f, -1.f);
+
+	arrCube[21].vPos = Vec3(0.5f, 0.5f, -0.5f);
+	arrCube[21].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+	arrCube[21].vUv = Vec2(0.f, 0.f);
+	arrCube[21].vNormal = Vec3(0.f, 0.f, -1.f);
+
+	arrCube[22].vPos = Vec3(0.5f, -0.5f, -0.5f);
+	arrCube[22].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+	arrCube[22].vUv = Vec2(0.f, 0.f);
+	arrCube[22].vNormal = Vec3(0.f, 0.f, -1.f);
+
+	arrCube[23].vPos = Vec3(-0.5f, -0.5f, -0.5f);
+	arrCube[23].vColor = Vec4(1.f, 0.f, 1.f, 1.f);
+	arrCube[23].vUv = Vec2(0.f, 0.f);
+	arrCube[23].vNormal = Vec3(0.f, 0.f, -1.f);
+
+	// 인덱스
+	for (int i = 0; i < 12; i += 2)
+	{
+		vecIdx.push_back(i * 2);
+		vecIdx.push_back(i * 2 + 1);
+		vecIdx.push_back(i * 2 + 2);
+
+		vecIdx.push_back(i * 2);
+		vecIdx.push_back(i * 2 + 2);
+		vecIdx.push_back(i * 2 + 3);
+	}
+
+	pMesh = new CMesh(true);
+	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
+	AddAsset(L"CubeMesh", pMesh);
+	vecIdx.clear();
 }
 
 void CAssetManager::CreateDefaultTexture()

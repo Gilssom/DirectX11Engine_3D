@@ -25,97 +25,36 @@ void CTestLevel::CreateTestLevel()
 	//CreatePrefab();
 
 	CLevel* m_CurLevel = new CLevel;
-
-	// Layer 설정
 	m_CurLevel->GetLayer(0)->SetName(L"Default");
 	m_CurLevel->GetLayer(1)->SetName(L"Player");
 	m_CurLevel->GetLayer(2)->SetName(L"Monster");
-	m_CurLevel->GetLayer(2)->SetName(L"Back Ground");
 
-	CCollisionManager::GetInst()->LayerCheck(1, 2);
+	// Camera Object 생성
+	CGameObject* pCamObject = new CGameObject;
+	pCamObject->SetName(L"MainCamera");
+	pCamObject->AddComponent(new CTransform);
+	pCamObject->AddComponent(new CCamera);
+	pCamObject->AddComponent(new CCameraMoveScript);
 
-	// Light Object
-	CGameObject* pLightObject = new CGameObject;
-	pLightObject->SetName(L"Directional Light");
-	pLightObject->AddComponent(new CTransform);
-	pLightObject->AddComponent(new CLight2D);
+	pCamObject->Camera()->LayerCheckAll(1);
+	pCamObject->Camera()->SetCameraPriority(0); // 메인 카메라로 설정
+	pCamObject->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 
-	pLightObject->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	m_CurLevel->AddObject(0, pCamObject);
 
-	pLightObject->Light2D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObject->Light2D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-	pLightObject->Light2D()->SetAmbient(Vec3(0.f, 0.f, 0.f));
-	pLightObject->Light2D()->SetRange(500.f);
+	// Player
+	CGameObject* Player = new CGameObject;
+	Player->SetName(L"Player");
 
-	m_CurLevel->AddObject(0, pLightObject);
+	Player->AddComponent(new CTransform);
+	Player->AddComponent(new CMeshRender);
+	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
+	Player->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
-	// Clone Test
-	//pLightObject = pLightObject->Clone();
-	//pLightObject->Transform()->SetRelativePos(Vec3(300.f, 0.f, 0.f));
-	//m_CurLevel->AddObject(0, pLightObject);
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
+	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DMaterial"));
 
-	// Clone Test
-	/*pPlayer = pPlayer->Clone();
-	pPlayer->Transform()->SetRelativePos(Vec3(100.f, 0.f, 100.f));
-	m_CurLevel->AddObject(0, pPlayer, false);*/
-
-	// Monster
-	CGameObject* pMonster = new CGameObject;
-	pMonster->SetName(L"Monster");
-	pMonster->AddComponent(new CTransform);
-	pMonster->AddComponent(new CMeshRender);
-	pMonster->AddComponent(new CCollider2D);
-
-	pMonster->Transform()->SetRelativePos(Vec3(200.f, 100.f, 0.f));
-	pMonster->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
-	pMonster->Transform()->SetAbsolute(true);
-
-	pMonster->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	pMonster->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std2DMaterial"));
-
-	pMonster->Collider2D()->SetAbsolute(false);
-	pMonster->Collider2D()->SetOffset(Vec3(0.f, 0.f, 0.f));
-	pMonster->Collider2D()->SetScale(Vec3(1.f, 1.f, 1.f));
-
-	// Player 와 Monster 를 부모-자식 관계로 연결
-	//pPlayer->AddChild(pMonster);
-	m_CurLevel->AddObject(1, pMonster, false);
-
-	//pPlayer->GetScript<CPlayerScript>()->SetTarget(pMonster);
-
-	// Back Ground Object
-	CGameObject* pBackGround = new CGameObject;
-	pBackGround->SetName(L"BackGround_0");
-	pBackGround->AddComponent(new CTransform);
-	pBackGround->AddComponent(new CMeshRender);
-
-	pBackGround->Transform()->SetRelativePos(Vec3(0.f, 0.f, 1000.f));
-	pBackGround->Transform()->SetRelativeScale(Vec3(1600.f, 900.f, 1.f));
-
-	pBackGround->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	pBackGround->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std2DMaterial"));
-	pBackGround->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->Load<CTexture>(L"texture\\Background.jpg", L"texture\\Background.jpg"));
-
-	m_CurLevel->AddObject(3, pBackGround, false);
-
-	// PostProcee Filter 추가
-	CGameObject* pFilterObject = new CGameObject;
-	pFilterObject->SetName(L"Post Process");
-	pFilterObject->AddComponent(new CTransform);
-	pFilterObject->AddComponent(new CMeshRender);
-
-	pFilterObject->Transform()->SetRelativePos(200.f, 0.f, 500.f);
-	pFilterObject->Transform()->SetRelativeScale(100.f, 100.f, 1.f);
-
-	pFilterObject->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	pFilterObject->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DistortionMaterial"));
-	pFilterObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
-	pFilterObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CAssetManager::GetInst()->Load<CTexture>(L"texture\\noise\\noise_03.jpg", L"texture\\noise\\noise_03.jpg"));
-
-	m_CurLevel->AddObject(0, pFilterObject, false);
-
-	// 레벨 시작
-	m_CurLevel->Init();
+	m_CurLevel->AddObject(0, Player);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);

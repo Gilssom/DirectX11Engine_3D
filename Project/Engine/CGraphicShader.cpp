@@ -51,7 +51,7 @@ int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string&
 	}
 
 	// Vertex Layout 정보 생성
-	D3D11_INPUT_ELEMENT_DESC Layoutdesc[3] = {};
+	D3D11_INPUT_ELEMENT_DESC Layoutdesc[6] = {};
 
 	Layoutdesc[0].AlignedByteOffset = 0; // 정점 정보의 시작 위치
 	Layoutdesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT; // 그에 맞는 픽셀 크기
@@ -77,7 +77,32 @@ int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string&
 	Layoutdesc[2].SemanticName = "TEXCOORD";
 	Layoutdesc[2].SemanticIndex = 0;
 
-	if (FAILED(DEVICE->CreateInputLayout(Layoutdesc, 3
+	Layoutdesc[3].AlignedByteOffset = 36;
+	Layoutdesc[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	Layoutdesc[3].InputSlot = 0;
+	Layoutdesc[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	Layoutdesc[3].InstanceDataStepRate = 0;
+	Layoutdesc[3].SemanticName = "TANGENT";
+	Layoutdesc[3].SemanticIndex = 0;
+
+	Layoutdesc[4].AlignedByteOffset = 48;
+	Layoutdesc[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	Layoutdesc[4].InputSlot = 0;
+	Layoutdesc[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	Layoutdesc[4].InstanceDataStepRate = 0;
+	Layoutdesc[4].SemanticName = "NORMAL";
+	Layoutdesc[4].SemanticIndex = 0;
+
+	Layoutdesc[5].AlignedByteOffset = 60;
+	Layoutdesc[5].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	Layoutdesc[5].InputSlot = 0;
+	Layoutdesc[5].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	Layoutdesc[5].InstanceDataStepRate = 0;
+	Layoutdesc[5].SemanticName = "BINORMAL";
+	Layoutdesc[5].SemanticIndex = 0;
+
+
+	if (FAILED(DEVICE->CreateInputLayout(Layoutdesc, 6
 		, m_VSBlob->GetBufferPointer()
 		, m_VSBlob->GetBufferSize()
 		, m_Layout.GetAddressOf())))
