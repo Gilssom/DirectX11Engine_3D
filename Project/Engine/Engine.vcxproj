@@ -186,6 +186,7 @@ call Copy.bat</Command>
     <ClInclude Include="CLevel.h" />
     <ClInclude Include="CLevelManager.h" />
     <ClInclude Include="CLight2D.h" />
+    <ClInclude Include="CLight3D.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshRender.h" />
     <ClInclude Include="components.h" />
@@ -243,6 +244,7 @@ call Copy.bat</Command>
     <ClCompile Include="CLevel.cpp" />
     <ClCompile Include="CLevelManager.cpp" />
     <ClCompile Include="CLight2D.cpp" />
+    <ClCompile Include="CLight3D.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshRender.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />

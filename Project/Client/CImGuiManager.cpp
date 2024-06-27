@@ -71,30 +71,30 @@ int CImGuiManager::Init(HWND hwnd)
     ImGui::StyleColorsDrakular();
     //ImGui::StyleColorsLight();
 
-    //struct FontInfo
-    //{
-    //    const wchar_t* path;
-    //    float size;
-    //};
-    //
-    //FontInfo fonts[] =
-    //{
-    //    {L"Fonts\\Roboto-Regular.ttf", 16.f},
-    //    {L"Fonts\\NanumSquareNeoOTF-cBd.otf", 16.f}
-    //};
-    //
-    //for (const auto& font : fonts)
-    //{
-    //    // ImGui Font 상대경로 설정
-    //    wstring strFontPath = CPathManager::GetInst()->GetContentPath();
-    //    strFontPath += font.path;
-    //    size_t len = strFontPath.length();
-    //    size_t convertedChars = 0;
-    //    char* cstr = new char[len + 1];
-    //    wcstombs_s(&convertedChars, cstr, len + 1, strFontPath.c_str(), len);
-    //    io.Fonts->AddFontFromFileTTF(cstr, font.size, NULL);
-    //    delete[] cstr;
-    //}
+    struct FontInfo
+    {
+        const wchar_t* path;
+        float size;
+    };
+    
+    FontInfo fonts[] =
+    {
+        {L"Fonts\\Roboto-Regular.ttf", 16.f},
+        {L"Fonts\\NanumSquareNeoOTF-cBd.otf", 16.f}
+    };
+    
+    for (const auto& font : fonts)
+    {
+        // ImGui Font 상대경로 설정
+        wstring strFontPath = CPathManager::GetInst()->GetContentPath();
+        strFontPath += font.path;
+        size_t len = strFontPath.length();
+        size_t convertedChars = 0;
+        char* cstr = new char[len + 1];
+        wcstombs_s(&convertedChars, cstr, len + 1, strFontPath.c_str(), len);
+        io.Fonts->AddFontFromFileTTF(cstr, font.size, NULL);
+        delete[] cstr;
+    }
 
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.

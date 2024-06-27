@@ -42,6 +42,16 @@ void CTestLevel::CreateTestLevel()
 
 	m_CurLevel->AddObject(0, pCamObject);
 
+	// Light 3D
+	CGameObject* pLight = new CGameObject;
+	pLight->SetName(L"Directional Light");
+	pLight->AddComponent(new CTransform);
+	pLight->AddComponent(new CLight3D);
+	
+	pLight->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
+
+	m_CurLevel->AddObject(0, pLight);
+
 	// Player
 	CGameObject* Player = new CGameObject;
 	Player->SetName(L"Player");
@@ -51,7 +61,7 @@ void CTestLevel::CreateTestLevel()
 	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
 	Player->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
 	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DMaterial"));
 
 	m_CurLevel->AddObject(0, Player);

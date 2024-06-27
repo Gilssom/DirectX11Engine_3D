@@ -143,6 +143,9 @@
     <ClCompile Include="CFontManager.cpp">
       <Filter>04. Manager\11. FontManager</Filter>
     </ClCompile>
+    <ClCompile Include="CLight3D.cpp">
+      <Filter>07. Component\08. Light3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -307,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="CFontManager.h">
       <Filter>04. Manager\11. FontManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight3D.h">
+      <Filter>07. Component\08. Light3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

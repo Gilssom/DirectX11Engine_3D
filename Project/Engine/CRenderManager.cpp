@@ -9,14 +9,17 @@
 
 #include "CCamera.h"
 #include "CLight2D.h"
+#include "CLight3D.h"
 
 #include "CLevelManager.h"
 
 CRenderManager::CRenderManager()
 	 : m_EditorCam(nullptr)
 	 , m_Light2DBuffer(nullptr)
+	 , m_Light3DBuffer(nullptr)
 {
 	m_Light2DBuffer = new CStructuredBuffer;
+	m_Light3DBuffer = new CStructuredBuffer;
 
 	Render_Func = &CRenderManager::Render_Play;
 }
@@ -24,6 +27,7 @@ CRenderManager::CRenderManager()
 CRenderManager::~CRenderManager()
 {
 	delete m_Light2DBuffer;
+	delete m_Light3DBuffer;
 }
 
 void CRenderManager::CopyRenderTarget()
@@ -92,7 +96,7 @@ void CRenderManager::DataBinding()
 {
 	// Global Data Binding
 	g_GlobalData.Light2DCount = (int)m_vecLight2D.size();
-	//g_GlobalData.Light3DCount = (int)m_vecLight3D.size();
+	g_GlobalData.Light3DCount = (int)m_vecLight3D.size();
 
 	static CConstBuffer* GlobalBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::GLOBAL);
 	GlobalBuffer->SetData(&g_GlobalData);
@@ -100,6 +104,10 @@ void CRenderManager::DataBinding()
 	GlobalBuffer->Binding_CS();
 
 
+	// =========
+	// Light 2D
+	// =========
+	
 	// Light 구조화 버퍼로 Binding
 	// 크기가 더 커지면 새롭게 Create ( 공간이 부족한 일이 없어짐 )
 	// 광원 개수보다 구조화 버퍼 요소크기가 더 작으면 확장.
@@ -123,11 +131,41 @@ void CRenderManager::DataBinding()
 		m_Light2DBuffer->SetData(vecLightInfo.data(), m_vecLight2D.size());
 		m_Light2DBuffer->Binding(15);
 	}
+
+
+
+	// =========
+	// Light 3D
+	// =========
+	
+	// Light 구조화 버퍼로 Binding
+	// 크기가 더 커지면 새롭게 Create ( 공간이 부족한 일이 없어짐 )
+	// 광원 개수보다 구조화 버퍼 요소크기가 더 작으면 확장.
+	if (m_Light3DBuffer->GetElementCount() < m_vecLight3D.size())
+	{
+		m_Light3DBuffer->Create(sizeof(tLightInfo), (UINT)m_vecLight3D.size(), SB_TYPE::SRV_ONLY, true);
+	}
+
+	// m_vecLight3D 에 모인 광원의 정보를 구조화 버퍼로 전달
+	vecLightInfo.clear();
+
+	for (size_t i = 0; i < m_vecLight3D.size(); i++)
+	{
+		vecLightInfo.push_back(m_vecLight3D[i]->GetLightInfo());
+	}
+
+	// 광원이 Level 에 1개 이상이 있다면
+	if (!vecLightInfo.empty())
+	{
+		m_Light3DBuffer->SetData(vecLightInfo.data(), m_vecLight3D.size());
+		m_Light3DBuffer->Binding(16);
+	}
 }
 
 void CRenderManager::DataClear()
 {
 	m_vecLight2D.clear();
+	m_vecLight3D.clear();
 }
 
 void CRenderManager::RegisterCamera(CCamera* newCamera, int priority)
