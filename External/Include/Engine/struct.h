@@ -32,6 +32,7 @@ struct tDebugShapeInfo
 	Vec3			Rotation;
 	Matrix			matWorld; // 모든 위치 회전 크기를 가진 월드 행렬
 	Vec4			Color;
+	bool			DepthTest;
 	float			Duration; // 유지 시간
 	float			Age;	  // 존재 시간
 };

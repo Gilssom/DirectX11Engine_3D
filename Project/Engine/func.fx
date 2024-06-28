@@ -65,6 +65,78 @@ float3 CalLight2D(int lightIdx, float3 vWorldPos)
     return vLightPower;
 }
 
+void CalLight3D(int _LightIdx, float3 _ViewPos, float3 _ViewNormal, inout tLight _Light)
+{
+    // 광원 정보
+    tLightInfo LightInfo = g_Light3D[_LightIdx];
+    
+    // 빛의 세기
+    float LightPower = (float) 0.f;
+    
+    // 빛의 방향
+    float3 vLight = (float3) 0.f;
+    
+    // 빛을 적용받을 픽셀(물체) 에서의 법선 벡터 (노말 벡터)
+    _ViewNormal = normalize(_ViewNormal);
+    
+    // 거리에 따른 빛의 세기 (Directional 은 무관)
+    float DistancePower = 1.f;
+    
+    
+    // Directional Light
+    if(LightInfo.LightType == 0)
+    {
+        // View Space 에서의 광원 방향
+        vLight = normalize(mul(float4(LightInfo.WorldDir, 0.f), g_matView).xyz);
+        
+        // 램버트 코사인 법칙으로 구한 빛의 세기    
+        LightPower = saturate(dot(_ViewNormal, -vLight));
+    }
+    
+    // Point Light
+    else if (LightInfo.LightType == 1)
+    {
+        // 광원의 위치
+        float3 vLightPos = mul(float4(LightInfo.WorldPos.xyz, 1.f), g_matView);
+        
+        // View Space 에서의 물체를 향한 광원의 방향
+        vLight = normalize(_ViewPos - vLightPos);
+        
+        // 램버트 코사인 법칙으로 구한 빛의 세기   
+        LightPower = saturate(dot(_ViewNormal, -vLight));
+        
+        // 광원과 물체 사이의 거리
+        float Distance = distance(_ViewPos, vLightPos);
+        
+        // 거리에 따른 빛의 세기 감소율
+        //DistancePower = saturate(1.f - Distance / LightInfo.Range);                        (일정한 간격)
+        DistancePower = saturate(cos(saturate(Distance / LightInfo.Range) * (PI / 2.f))); // (cos 그래프에 의한 간격)
+    }
+    
+    // Spot Light (주말 과제)
+    else if (LightInfo.LightType == 2)
+    {
+        
+    }
+    
+    
+    // 반사 Reflect (HLSL 내부 함수 => reflect())
+    float3 vReflect = normalize(vLight + dot(-vLight, _ViewNormal) * 2.f * _ViewNormal);
+    
+    // 시선 벡터 (픽셀이 카메라를 향한 방향)
+    float3 vEye = normalize(_ViewPos);
+    
+    // 반사된 빛이 카메라로 들어오는 각도를 cos 으로 환산
+    float ReflectPower = saturate(dot(-vEye, vReflect));
+    ReflectPower = pow(ReflectPower, 20);
+    
+    
+    // 나(픽셀)의 색상과 광원 세기, 반사광을 바탕으로 보간해서 색 및 빛을 지정한다.
+    // 빛의 크기를 계산 (광원이 여러개일 수도 있기 때문에 + 를 해준다.
+    _Light.vDiffuse.rgb     += LightInfo.Light.vDiffuse.rgb * LightPower * DistancePower;
+    _Light.vAmbient.rgb     += LightInfo.Light.vAmbient.rgb;
+    _Light.vMaxSpecular.rgb += LightInfo.Light.vDiffuse.rgb * LightInfo.Light.vMaxSpecular.rgb * ReflectPower * DistancePower;
+}
 
 int IsBinding(in Texture2D _tex)
 {

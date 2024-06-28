@@ -553,8 +553,8 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreateVertexShader(strPath + L"shader\\debug_shape.fx", "VS_DebugShape");
 	pShader->CreatePixelShader(strPath + L"shader\\debug_shape.fx", "PS_DebugShape");
 
-	pShader->SetRSType(RS_TYPE::CULL_NONE);
-	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);

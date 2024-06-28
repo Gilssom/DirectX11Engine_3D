@@ -8,15 +8,21 @@ struct VS_OUT
 {
     float4 vPosition : SV_Position;
     float2 vUV : TEXCOORD;
+    
+    float3 vViewPos : POSITION;
+    float3 vViewNormal : NORMAL;
 };
 
 
-VS_OUT VS_DebugShape(float3 vLocalPos : POSITION, float2 vUV : TEXCOORD)
+VS_OUT VS_DebugShape(float3 vLocalPos : POSITION, float2 vUV : TEXCOORD, float3 vNormal : NORMAL)
 {
     VS_OUT output = (VS_OUT) 0.f;
     
     output.vPosition = mul(mul(mul(float4(vLocalPos, 1.f), g_matWorld), g_matView), g_matProj);
     output.vUV = vUV;
+    
+    output.vViewPos = mul(float4(vLocalPos, 1.f), g_matWV);
+    output.vViewNormal = normalize(mul(float4(vNormal, 0.f), g_matWV));
     
     return output;
 }
@@ -24,8 +30,22 @@ VS_OUT VS_DebugShape(float3 vLocalPos : POSITION, float2 vUV : TEXCOORD)
 
 float4 PS_DebugShape(VS_OUT _in) : SV_Target
 {
+    // Sphere Debug
+    float Alpha = 1.f;
+    
+    if(g_int_0 == 4)
+    {
+        float3 vEye = normalize(_in.vViewPos);
+        Alpha = saturate(1.f - (dot(-vEye, _in.vViewNormal)));
+        
+        Alpha = pow(Alpha, 4.f);
+    }
+    
+    float4 vOutColor = g_vec4_0;
+    vOutColor.a = Alpha;
+    
     // Object Material Setting 에서 Color 값을 받아옴
-    return g_vec4_0;
+    return vOutColor;
 }
 
 

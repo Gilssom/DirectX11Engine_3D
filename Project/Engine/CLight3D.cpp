@@ -28,6 +28,12 @@ void CLight3D::FinalTick()
 	m_Info.WorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT); // 3D 공간의 정면 방향
 
 	m_LightIdx = CRenderManager::GetInst()->RegisterLight3D(this);
+
+	// Debug Render 요청
+	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
+	{
+		DrawDebugSphere(Transform()->GetWorldPos(), m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
+	}
 }
 
 void CLight3D::SaveToLevelFile(FILE* file)

@@ -44,11 +44,12 @@ void CTestLevel::CreateTestLevel()
 
 	// Light 3D
 	CGameObject* pLight = new CGameObject;
-	pLight->SetName(L"Directional Light");
+	pLight->SetName(L"Light");
 	pLight->AddComponent(new CTransform);
 	pLight->AddComponent(new CLight3D);
 	
 	pLight->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
+	pLight->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
 
 	m_CurLevel->AddObject(0, pLight);
 

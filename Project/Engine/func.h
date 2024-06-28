@@ -19,6 +19,8 @@ void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float duration);
 
 void DrawDebugLine();
 
+void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, float duration);
+
 string ToString(const wstring& str);
 wstring ToWString(const string& str);
 

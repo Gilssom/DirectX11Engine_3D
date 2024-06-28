@@ -55,28 +55,34 @@ void CDbgRenderManager::Render()
 		{
 		case DEBUG_SHAPE::RECT:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh_Debug"));
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 			break;
 		case DEBUG_SHAPE::CIRCLE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CircleMesh_Debug"));
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 			break;
 		case DEBUG_SHAPE::LINE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"LineMesh"));
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 			break;
 		case DEBUG_SHAPE::CUBE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 			break;
 		case DEBUG_SHAPE::SPHERE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			break;
 		default:
 			break;
 		}
 		
 		// Debug¿ë Object Render
+		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(INT_0, iter->Shape);
 		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(VEC4_0, iter->Color);
 		m_DebugRenderObj->Render();
 
-		iter->Age += DT;
+		iter->Age += DT_Engine;
 
 		if (iter->Duration <= iter->Age)
 		{

@@ -123,6 +123,23 @@ void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float duration)
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::SPHERE;
+
+	info.Position = worldPos;
+	info.Scale = Vec3(radius * 2.f, radius * 2.f, radius * 2.f);
+	info.matWorld = XMMatrixIdentity();
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
 string ToString(const wstring& str)
 {
 	return string(str.begin(), str.end());
