@@ -48,8 +48,11 @@ void CTestLevel::CreateTestLevel()
 	pLight->AddComponent(new CTransform);
 	pLight->AddComponent(new CLight3D);
 	
+	pLight->Light3D()->SetLightType(LIGHT_TYPE::POINT);
 	pLight->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 	pLight->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+	pLight->Light3D()->SetRange(500.f);
+	//pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f))
 
 	m_CurLevel->AddObject(0, pLight);
 
