@@ -116,9 +116,9 @@ void CCollider2D::FinalTick()
 		return;
 
 	if (m_OverlapCount == 0)
-		DrawDebugRect(m_matColWorld, Vec4(0.f, 1.f, 0.f, 1.f), 0.f);
+		DrawDebugRect(m_matColWorld, Vec4(0.f, 1.f, 0.f, 1.f), false, 0.f);
 	else if (m_OverlapCount >= 1)
-		DrawDebugRect(m_matColWorld, Vec4(1.f, 0.2f, 0.2f, 1.f), 0.f);
+		DrawDebugRect(m_matColWorld, Vec4(1.f, 0.2f, 0.2f, 1.f), false, 0.f);
 	else
 		assert(nullptr);
 }

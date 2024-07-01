@@ -56,22 +56,27 @@ void CDbgRenderManager::Render()
 		case DEBUG_SHAPE::RECT:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh_Debug"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::CIRCLE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CircleMesh_Debug"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::LINE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"LineMesh"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_BACK);
 			break;
 		case DEBUG_SHAPE::CUBE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::SPHERE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_FRONT);
 			break;
 		default:
 			break;
@@ -80,6 +85,17 @@ void CDbgRenderManager::Render()
 		// Debug용 Object Render
 		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(INT_0, iter->Shape);
 		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(VEC4_0, iter->Color);
+
+		// Depth 판정 여부에 따라 깊이 테스트 실행 체크
+		if (iter->DepthTest)
+		{
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetDSType(DS_TYPE::NO_WRITE);
+		}
+		else
+		{
+			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+		}
+
 		m_DebugRenderObj->Render();
 
 		iter->Age += DT_Engine;

@@ -116,7 +116,29 @@ void CalLight3D(int _LightIdx, float3 _ViewPos, float3 _ViewNormal, inout tLight
     // Spot Light (주말 과제)
     else if (LightInfo.LightType == 2)
     {
+        // 광원의 위치
+        float3 vLightPos = mul(float4(LightInfo.WorldPos.xyz, 1.f), g_matView);
         
+        // View Space 에서의 물체를 향한 광원의 방향
+        vLight = normalize(_ViewPos - vLightPos);
+        
+        // 램버트 코사인 법칙으로 구한 빛의 세기   
+        LightPower = saturate(dot(_ViewNormal, -vLight));
+        
+        // 광원과 물체 사이의 거리
+        float Distance = distance(_ViewPos, vLightPos);
+        
+        // 거리에 따른 빛의 세기 감소율
+        DistancePower = saturate(cos(saturate(Distance / LightInfo.Range) * (PI / 2.f)));
+        
+        // 스포트라이트의 방향
+        float3 vSpotDir = normalize(mul(float4(LightInfo.WorldDir, 0.f), g_matView).xyz);
+        
+        // 스포트라이트 각도에 따른 빛의 세기 감소율 계산
+        float SpotEffect = dot(-vLight, vSpotDir);
+        float SpotAngle = cos(radians(LightInfo.Angle));
+        float SpotPower = saturate((SpotEffect - SpotAngle) / (1.0f - SpotAngle));
+        LightPower *= SpotPower;
     }
     
     

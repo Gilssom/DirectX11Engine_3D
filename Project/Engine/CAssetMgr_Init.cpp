@@ -41,6 +41,10 @@ void CAssetManager::CreateDefaultMesh()
 	// ===============
 	// Rect Mesh
 	// ===============
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vNormal = Vec3(0.f, 0.f, -1.f);
+	v.vBinormal = Vec3(0.f, -1.f, 0.f);
+
 	v.vPos = Vec3(-0.5f, 0.5f, 0.f);
 	v.vColor = Vec4(1.f, 0.f, 0.f, 1.f);
 	v.vUv = Vec2(0.f, 0.f);
@@ -574,7 +578,9 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
 
-	pShader->AddScalarParam("Light Shader Type", INT_0);
+	//pShader->AddScalarParam("Light Shader Type", INT_0);
+	pShader->AddTexParam("Output Texture", TEX_0);
+	pShader->AddTexParam("Normal Texture", TEX_1);
 
 	AddAsset<CGraphicShader>(L"Std3DShader", pShader);
 }

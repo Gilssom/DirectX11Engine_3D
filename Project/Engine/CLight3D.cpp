@@ -32,7 +32,7 @@ void CLight3D::FinalTick()
 	// Debug Render ¿äÃ»
 	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
 	{
-		DrawDebugSphere(Transform()->GetWorldPos(), m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
+		DrawDebugSphere(Transform()->GetWorldPos(), m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
 	}
 }
 

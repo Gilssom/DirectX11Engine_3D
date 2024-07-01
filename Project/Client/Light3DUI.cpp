@@ -52,7 +52,7 @@ void Light3DUI::Render_Tick()
 	ImGui::BeginDisabled(IsDirLight);
 
 	ImGui::Text("Light Range"); SAME;
-	if (ImGui::DragFloat("##Light Range", &fRange))
+	if (ImGui::DragFloat("##Light Range", &fRange, 0.5f, 0.f));
 	{
 		pLight3D->SetRange(fRange);
 	}
@@ -65,9 +65,9 @@ void Light3DUI::Render_Tick()
 	ImGui::BeginDisabled(!IsSpotLight);
 
 	ImGui::Text("Spot Light Angle"); SAME;
-	if (ImGui::DragFloat("##Spot Light Angle", &fAngle))
+	if (ImGui::DragFloat("##Spot Light Angle", &fAngle, 0.1f, 0.f, 180.f))
 	{
-		pLight3D->SetRange(fAngle);
+		pLight3D->SetAngle(fAngle);
 	}
 
 	ImGui::EndDisabled();

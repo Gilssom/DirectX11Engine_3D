@@ -36,9 +36,9 @@ float4 PS_DebugShape(VS_OUT _in) : SV_Target
     if(g_int_0 == 4)
     {
         float3 vEye = normalize(_in.vViewPos);
-        Alpha = 1.f - saturate(dot(-vEye, _in.vViewNormal));
+        Alpha = 1.f - saturate(dot(vEye, _in.vViewNormal));
         
-        Alpha = pow(Alpha, 4.f);
+        Alpha = pow(Alpha, 2.f);
     }
     
     float4 vOutColor = g_vec4_0;

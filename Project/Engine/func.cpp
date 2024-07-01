@@ -73,7 +73,7 @@ bool IsValid(CGameObject*& object)
 }
 
 // 각 포지션 정보 함수
-void DrawDebugRect(Vec3 worldPos, Vec3 worldScale, Vec3 worldRotation, Vec4 vColor, float duration)
+void DrawDebugRect(Vec3 worldPos, Vec3 worldScale, Vec3 worldRotation, Vec4 vColor, float depthTest, float duration)
 {
 	tDebugShapeInfo info = {};
 	info.Shape = DEBUG_SHAPE::RECT;
@@ -88,11 +88,13 @@ void DrawDebugRect(Vec3 worldPos, Vec3 worldScale, Vec3 worldRotation, Vec4 vCol
 	info.Duration = duration;
 	info.Age = 0.f;
 
+	info.DepthTest = depthTest;
+
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
 // 행렬 정보 함수
-void DrawDebugRect(Matrix matWorld, Vec4 vColor, float duration)
+void DrawDebugRect(Matrix matWorld, Vec4 vColor, float depthTest, float duration)
 {
 	tDebugShapeInfo info = {};
 	info.Shape = DEBUG_SHAPE::RECT;
@@ -103,10 +105,12 @@ void DrawDebugRect(Matrix matWorld, Vec4 vColor, float duration)
 	info.Duration = duration;
 	info.Age = 0.f;
 
+	info.DepthTest = depthTest;
+
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
-void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float duration)
+void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float depthTest, float duration)
 {
 	tDebugShapeInfo info = {};
 	info.Shape = DEBUG_SHAPE::CIRCLE;
@@ -119,6 +123,8 @@ void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float duration)
 
 	info.Duration = duration;
 	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
 
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
@@ -136,6 +142,8 @@ void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, f
 
 	info.Duration = duration;
 	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
 
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
