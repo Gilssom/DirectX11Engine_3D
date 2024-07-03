@@ -43,6 +43,7 @@ public:
 	GET_COMPONENT(Light3D, LIGHT3D);
 	GET_COMPONENT(TileMap, TILEMAP);
 	GET_COMPONENT(ParticleSystem, PARTICLESYSTEM);
+	GET_COMPONENT(SkyBox, SKYBOX);
 
 	void DisconnectWithParent();
 	void RegisterAsParentObject();

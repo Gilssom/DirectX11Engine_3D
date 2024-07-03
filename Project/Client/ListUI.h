@@ -27,6 +27,7 @@ public:
 
 public:
 	virtual void Render_Tick() override;
+	virtual void Activate() override;
 	virtual void Deactivate() override;
 
 public:

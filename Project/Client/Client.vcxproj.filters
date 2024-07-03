@@ -140,11 +140,14 @@
     <Filter Include="02. EditorUI\01. Inspector\ComponentUI\09. TileMapUI">
       <UniqueIdentifier>{0e28ae69-4920-4e8e-af73-c61b0f51aa15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\10. ScriptUI">
-      <UniqueIdentifier>{b4d9247f-cbe5-420f-9a56-cf67129ad0ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI">
       <UniqueIdentifier>{be0270b6-58ea-491e-acf1-57d311b44db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI">
+      <UniqueIdentifier>{f4077830-a1d8-4277-ae33-151fe6ae3b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\11. ScriptUI">
+      <UniqueIdentifier>{b4d9247f-cbe5-420f-9a56-cf67129ad0ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -281,7 +284,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClInclude>
     <ClInclude Include="ScriptUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. ScriptUI</Filter>
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -318,6 +321,9 @@
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
       <Filter>02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxUI.h">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -453,7 +459,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClCompile>
     <ClCompile Include="ScriptUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. ScriptUI</Filter>
     </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -490,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
       <Filter>02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxUI.cpp">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

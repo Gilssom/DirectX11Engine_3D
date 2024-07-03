@@ -129,6 +129,42 @@ void DrawDebugCircle(Vec3 worldPos, float radius, Vec4 vColor, float depthTest, 
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugCube(Vec3 worldPos, Vec3 worldScale, Vec3 worldRotation, Vec4 vColor, bool depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::CUBE;
+
+	info.Position = worldPos;
+	info.Scale = worldScale;
+	info.Rotation = worldRotation;
+	info.matWorld = XMMatrixIdentity();
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
+void DrawDebugCube(Matrix matWorld, Vec4 vColor, float depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::CUBE;
+	info.matWorld = matWorld;
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
 void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, float duration)
 {
 	tDebugShapeInfo info = {};
@@ -137,6 +173,22 @@ void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, f
 	info.Position = worldPos;
 	info.Scale = Vec3(radius * 2.f, radius * 2.f, radius * 2.f);
 	info.matWorld = XMMatrixIdentity();
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
+void DrawDebugSphere(Matrix matWorld, Vec4 vColor, float depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::SPHERE;
+	info.matWorld = matWorld;
 
 	info.Color = vColor;
 

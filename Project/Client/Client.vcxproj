@@ -189,6 +189,7 @@
     <ClInclude Include="PrefabUI.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScriptUI.h" />
+    <ClInclude Include="SkyBoxUI.h" />
     <ClInclude Include="SoundUI.h" />
     <ClInclude Include="SpriteView.h" />
     <ClInclude Include="targetver.h" />
@@ -248,6 +249,7 @@
     </ClCompile>
     <ClCompile Include="PrefabUI.cpp" />
     <ClCompile Include="ScriptUI.cpp" />
+    <ClCompile Include="SkyBoxUI.cpp" />
     <ClCompile Include="SoundUI.cpp" />
     <ClCompile Include="SpriteView.cpp" />
     <ClCompile Include="TextureUI.cpp" />

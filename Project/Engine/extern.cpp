@@ -21,6 +21,7 @@ extern const char* COMPONENT_TYPE_STRING[(UINT)COMPONENT_TYPE::END]
 	"Light2D",
 	"Light3D",
 	"Mesh Renderer",
+	"SkyBox",
 	"Decal",
 	"Particle System",
 	"Tile Map",

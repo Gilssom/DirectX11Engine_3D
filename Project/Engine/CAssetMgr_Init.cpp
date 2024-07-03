@@ -296,6 +296,13 @@ void CAssetManager::CreateDefaultMesh()
 	AddAsset(L"CubeMesh", pMesh);
 	vecIdx.clear();
 
+	UINT arrCubeIdx[] = { 0,1,2,3,0,7,6,1,2,5,4,3,0,7,4,5,6 };
+
+	pMesh = new CMesh(true);
+	pMesh->Create(arrCube, 24, arrCubeIdx, sizeof(arrCubeIdx) / sizeof(UINT));
+	AddAsset(L"CubeMesh_Debug", pMesh);
+	vecIdx.clear();
+
 
 	// ===============
 	// Sphere Mesh
@@ -578,11 +585,27 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
 
-	//pShader->AddScalarParam("Light Shader Type", INT_0);
 	pShader->AddTexParam("Output Texture", TEX_0);
 	pShader->AddTexParam("Normal Texture", TEX_1);
 
 	AddAsset<CGraphicShader>(L"Std3DShader", pShader);
+
+
+	// ====================
+	//	SkyBox Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\skybox.fx", "VS_SkyBox");
+	pShader->CreatePixelShader(strPath + L"shader\\skybox.fx", "PS_SkyBox");
+
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS_EQUAL);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
+
+	pShader->AddTexParam("SkyBox Texture", TEX_0);
+
+	AddAsset<CGraphicShader>(L"SkyBoxShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -662,5 +685,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"Std3DMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"Std3DShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// SkyBox Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"SkyBoxMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"SkyBoxShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

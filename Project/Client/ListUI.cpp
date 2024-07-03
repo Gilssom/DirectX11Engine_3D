@@ -49,6 +49,11 @@ void ListUI::Render_Tick()
     }
 }
 
+void ListUI::Activate()
+{
+    m_vecList.insert(m_vecList.begin(), "None");
+}
+
 void ListUI::Deactivate()
 {
     m_vecList.clear();

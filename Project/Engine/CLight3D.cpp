@@ -31,9 +31,9 @@ void CLight3D::FinalTick()
 
 	// Debug Render ¿äÃ»
 	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
-	{
-		DrawDebugSphere(Transform()->GetWorldPos(), m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
-	}
+		DrawDebugSphere(m_Info.WorldPos, m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
+	else
+		DrawDebugCube(m_Info.WorldPos, Vec3(50.f, 50.f, 200.f), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
 }
 
 void CLight3D::SaveToLevelFile(FILE* file)

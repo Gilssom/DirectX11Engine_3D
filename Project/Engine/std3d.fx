@@ -20,6 +20,9 @@ struct VS_OUT
     float2 vUV : TEXCOORD; 
     
     float3 vViewPos : POSITION;
+    
+    float3 vViewTangent : TANGENT;
+    float3 vViewBinormal : BINORMAL;
     float3 vViewNormal : NORMAL;
 };
 
@@ -30,12 +33,12 @@ VS_OUT VS_Std3D(VS_IN _in)
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
     output.vUV = _in.vUV;
     
-    // 광원 정보
-    tLightInfo LightInfo = g_Light3D[0];
-    
     // 방향성 벡터는 이동에 영향을 받으면 안됨. 그래서 동차좌표는 0으로 (4차원 좌표는 이동좌표)
     // 물체의 월드상에서의 표면의 수직 방향 계산
     output.vViewPos     = mul(float4(_in.vNormal, 1.f), g_matWV);
+
+    output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV));
+    output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV));
     output.vViewNormal  = normalize(mul(float4(_in.vNormal, 0.f), g_matWV));
     
     // 정점에서 광원 연산하는 작업은 앞으로 진행 X (픽셀에서 진행)
@@ -49,7 +52,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     float3 vObjectColor = float3(1.f, 0.f, 1.f);
     float Alpha = 1.f;
     
-    if(g_tex_0)
+    if(g_btex_0)
     {
         float4 vColor   = g_tex_0.Sample(g_sam_0, _in.vUV);
         vObjectColor    = vColor.rgb;
@@ -60,7 +63,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     // Normal Map
     float3 vViewNormal = _in.vViewNormal;
     
-    if(g_tex_1)
+    if(g_btex_1)
     {
         // Sample 로 얻은 값의 범위는 0 ~ 1, 실제 기록된 값의 의미는 -1 ~ 1
         float3 vNormal = g_tex_1.Sample(g_sam_0, _in.vUV);
@@ -70,12 +73,12 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
         
         float3x3 Rot =
         {
-            // tangent
-            // binormal
-            // normal
+            _in.vViewTangent,
+            _in.vViewBinormal,
+            _in.vViewNormal
         };
 
-        vViewNormal = mul(vNormal, Rot);
+        vViewNormal = normalize(mul(vNormal, Rot));
     }
     
     
@@ -92,7 +95,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     
     vOut.rgb =  vObjectColor.rgb * Light.vDiffuse.rgb 
                 + vObjectColor.rgb * Light.vAmbient.rgb
-                + vObjectColor.rgb * Light.vMaxSpecular.rgb;
+                + Light.vMaxSpecular.rgb;
     
     return vOut;
 }

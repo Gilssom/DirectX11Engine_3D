@@ -146,6 +146,9 @@
     <ClCompile Include="CLight3D.cpp">
       <Filter>07. Component\08. Light3D</Filter>
     </ClCompile>
+    <ClCompile Include="CSkyBox.cpp">
+      <Filter>07. Component\Rendering\04. SkyBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -314,6 +317,9 @@
     <ClInclude Include="CLight3D.h">
       <Filter>07. Component\08. Light3D</Filter>
     </ClInclude>
+    <ClInclude Include="CSkyBox.h">
+      <Filter>07. Component\Rendering\04. SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -433,9 +439,6 @@
     <Filter Include="07. Component\Rendering\LandScape">
       <UniqueIdentifier>{413f56a1-efad-4039-a6e0-09124ea92b8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07. Component\Rendering\SkyBox">
-      <UniqueIdentifier>{2448658c-b180-4dd9-9b97-ada9917df8b9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="08. Asset\Shader\ComputeShader">
       <UniqueIdentifier>{0dce31e0-27bc-4bf3-af03-c7a3bec1f3b9}</UniqueIdentifier>
     </Filter>
@@ -490,6 +493,9 @@
     <Filter Include="04. Manager\11. FontManager">
       <UniqueIdentifier>{69e02712-4b3e-4bdc-9948-c6b4f2b1f269}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\Rendering\04. SkyBox">
+      <UniqueIdentifier>{2448658c-b180-4dd9-9b97-ada9917df8b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -523,6 +529,9 @@
       <Filter>HLSL\02. 2D</Filter>
     </FxCompile>
     <FxCompile Include="std3d.fx">
+      <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
+    <FxCompile Include="skybox.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
   </ItemGroup>

@@ -69,7 +69,7 @@ void CDbgRenderManager::Render()
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_BACK);
 			break;
 		case DEBUG_SHAPE::CUBE:
-			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
+			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh_Debug"));
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;

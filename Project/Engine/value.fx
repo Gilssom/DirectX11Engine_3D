@@ -50,14 +50,14 @@ cbuffer MATERIAL_CONST : register(b1)
     uint             g_btex_3;
     uint             g_btex_4;
     uint             g_btex_5;
-    uint             g_btex_6;
-    uint             g_btex_7;
-    uint             g_btex_8;
-    uint             g_btex_9;
-    uint             g_btex_10;
-    uint             g_btex_11;
-    uint             g_btex_12;
-    uint             g_btex_13;
+    uint             g_btexcube_0;
+    uint             g_btexcube_1;
+    uint             g_btexcube_2;
+    uint             g_btexcube_3;
+    uint             g_btexarr_0;
+    uint             g_btexarr_1;
+    uint             g_btexarr_2;
+    uint             g_btexarr_3;
 };
 
 
@@ -88,6 +88,7 @@ cbuffer GLOBAL_DATA : register(b3)
 SamplerState g_sam_0 : register(s0);
 SamplerState g_sam_1 : register(s1);
 
+// 기존 한장의 Texture
 Texture2D       g_tex_0     : register(t0);
 Texture2D       g_tex_1     : register(t1);
 Texture2D       g_tex_2     : register(t2);
@@ -95,11 +96,13 @@ Texture2D       g_tex_3     : register(t3);
 Texture2D       g_tex_4     : register(t4);
 Texture2D       g_tex_5     : register(t5);
 
+// Cube 전용 6장의 Texture 로 구성되어 있는 Texture
 TextureCube     g_texcube_0 : register(t6);
 TextureCube     g_texcube_1 : register(t7);
 TextureCube     g_texcube_2 : register(t8);
 TextureCube     g_texcube_3 : register(t9);
 
+// 여러장의 Texture 로 구성되어 있는 Texture
 Texture2DArray  g_texarr_0  : register(t10);
 Texture2DArray  g_texarr_1  : register(t11);
 Texture2DArray  g_texarr_2  : register(t12);

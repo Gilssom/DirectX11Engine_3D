@@ -10,3 +10,4 @@
 #include "CLight3D.h"
 #include "CTileMap.h"
 #include "CParticleSystem.h"
+#include "CSkyBox.h"
