@@ -21,9 +21,6 @@ private:
 	ComPtr<ID3D11DeviceContext>		m_Context;		// GPU 렌더링 관련 명령,
 	ComPtr<IDXGISwapChain>			m_SwapChain;	// 렌더타겟 버퍼 소유, 화면에 최종 장면을 게시
 
-	Ptr<CTexture>					m_RTTex;
-	Ptr<CTexture>					m_DSTex;
-
 	ComPtr<ID3D11SamplerState>		m_Sampler[2];
 	ComPtr<ID3D11RasterizerState>	m_RS[(UINT)RS_TYPE::END];
 
@@ -42,7 +39,6 @@ private:
 
 public:
 	int Init(HWND hwnd, Vec2 resolution);
-	void ClearTarget(float(&ArrColor)[4]);
 	void Present() { m_SwapChain->Present(0, 0); }
 
 	Vec2 GetRenderResolution() { return m_RenderResolution; }

@@ -171,6 +171,7 @@ enum class DEBUG_SHAPE
 	// 3D
 	CUBE,
 	SPHERE,
+	CONE,
 };
 
 enum class PROJ_TYPE
@@ -205,6 +206,10 @@ enum class TASK_TYPE
 
 enum class SHADER_DOMAIN
 {
+	DOMAIN_DEFERRED,	// 디퍼드 전용
+	DOMAIN_DECAL,		// 디퍼드 데칼
+	DOMAIN_LIGHTING,	// 디퍼드 라이팅(광원)
+
 	DOMAIN_OPAQUE,		// 불투명
 	DOMAIN_MASKED,		// 일부 투명
 	DOMAIN_TRANSPARENT,	// 반투명
@@ -231,4 +236,17 @@ enum class LEVEL_STATE
 	PLAY,
 	STOP,
 	PAUSE,
+};
+
+enum class MRT_TYPE
+{
+	SWAPCHAIN,
+	
+	DEFERRED,
+	LIGHT,
+
+	SHADOW,
+
+
+	END,
 };

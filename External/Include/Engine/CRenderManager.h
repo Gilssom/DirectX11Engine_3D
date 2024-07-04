@@ -24,14 +24,15 @@ private:
 	// 멤버 함수 포인터
 	void(CRenderManager::*Render_Func)(void);
 
-	vector<CLight2D*>	m_vecLight2D;		// 매 프레임마다 등록해야함 ( = Layer )
-	CStructuredBuffer*	m_Light2DBuffer;	// 구조화 버퍼
+	vector<CLight2D*>	m_vecLight2D;				// 매 프레임마다 등록해야함 ( = Layer )
+	CStructuredBuffer*	m_Light2DBuffer;			// 구조화 버퍼
 
-	vector<CLight3D*>	m_vecLight3D;		// 매 프레임마다 등록해야함 ( = Layer )
-	CStructuredBuffer*	m_Light3DBuffer;	// 구조화 버퍼
+	vector<CLight3D*>	m_vecLight3D;				// 매 프레임마다 등록해야함 ( = Layer )
+	CStructuredBuffer*	m_Light3DBuffer;			// 구조화 버퍼
 
-	Ptr<CTexture>		m_RenderTargetCopyTex;	// Post Process 를 위한 Copy Render Target Texture
+	Ptr<CTexture>		m_RenderTargetCopyTex;		// Post Process 를 위한 Copy Render Target Texture
 
+	class CMRT*			m_MRT[(UINT)MRT_TYPE::END]; // MRT 관리 및 제어
 
 public:
 	void RegisterCamera(CCamera* camera, int priority);
@@ -71,5 +72,7 @@ private:
 private:
 	void DataBinding();
 	void DataClear();
+	void CreateMRT();
+	void ClearMRT();
 };
 

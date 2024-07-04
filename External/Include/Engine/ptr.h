@@ -12,7 +12,6 @@ public:
 	T* Get() const { return m_Asset; }
 	T** GetAdressOf() const { return &m_Asset; }
 
-
 public:
 	bool operator == (T* _Asset) const
 	{

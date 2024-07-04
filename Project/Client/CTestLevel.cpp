@@ -88,8 +88,8 @@ void CTestLevel::CreateTestLevel()
 	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
 	Player->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DMaterial"));
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"ConeMesh"));
+	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"));
 
 	m_CurLevel->AddObject(0, Player);
 

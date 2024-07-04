@@ -413,6 +413,119 @@ void CAssetManager::CreateDefaultMesh()
 	AddAsset(L"SphereMesh", pMesh);
 	vecVtx.clear();
 	vecIdx.clear();
+
+
+
+	// ===============
+	// Cone Mesh
+	// ===============
+	fRadius = 0.5f;
+	float fHeight = 1.f;
+	iStackCount = 20;  // 원뿔의 층 개수
+	iSliceCount = 60;  // 원뿔의 슬라이스 개수
+
+	// Bottom center
+	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vUv = Vec2(0.5f, 0.5f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, -1.f, 0.f);  // 밑면 노멀 벡터는 아래쪽을 향함
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, -1.f);
+	vecVtx.push_back(v);
+
+	fSliceAngle = XM_2PI / iSliceCount;
+	float fStackHeight = fHeight / iStackCount;
+
+	// Bottom vertices
+	for (UINT i = 0; i <= iSliceCount; ++i)
+	{
+		float theta = i * fSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(theta), 0.f, fRadius * sinf(theta));
+		v.vUv = Vec2((cosf(theta) + 1.f) * 0.5f, (sinf(theta) + 1.f) * 0.5f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+		Vec3 normal(cosf(theta), fRadius / fHeight, sinf(theta));
+		normal.Normalize();
+		v.vNormal = normal;
+
+		v.vTangent = Vec3(-sinf(theta), 0.f, cosf(theta));
+		v.vBinormal = Vec3(0.f, 1.f, 0.f);
+		vecVtx.push_back(v);
+	}
+
+	// Side vertices
+	for (UINT i = 1; i <= iStackCount; ++i)
+	{
+		float y = i * fStackHeight;
+		float r = fRadius * (1.0f - (float)i / iStackCount);
+
+		for (UINT j = 0; j <= iSliceCount; ++j)
+		{
+			float theta = j * fSliceAngle;
+
+			v.vPos = Vec3(r * cosf(theta), y, r * sinf(theta));
+			v.vUv = Vec2((float)j / iSliceCount, (float)i / iStackCount);
+			v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+			// 옆면 노멀 벡터는 원뿔의 축을 기준으로 반지름 방향으로 설정
+			Vec3 normal(cosf(theta), fRadius / fHeight, sinf(theta));
+			normal.Normalize();
+			v.vNormal = normal;
+
+			v.vTangent = Vec3(-sinf(theta), 0.f, cosf(theta));
+			v.vBinormal = Vec3(0.f, 1.f, 0.f);
+			vecVtx.push_back(v);
+		}
+	}
+
+	// Top vertex
+	v.vPos = Vec3(0.f, fHeight, 0.f);
+	v.vUv = Vec2(0.5f, 0.f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, 1.f, 0.f);
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, -1.f);
+	vecVtx.push_back(v);
+
+	// Bottom indices
+	for (UINT i = 1; i <= iSliceCount; ++i)
+	{
+		vecIdx.push_back(0);           // 밑면 중심점의 인덱스
+		vecIdx.push_back(i);           // 현재 슬라이스의 정점 인덱스
+		vecIdx.push_back(i + 1);       // 다음 슬라이스의 정점 인덱스
+	}
+
+	// Side indices
+	for (UINT i = 0; i < iStackCount; ++i)
+	{
+		for (UINT j = 0; j < iSliceCount; ++j)
+		{
+			vecIdx.push_back((iSliceCount + 1) * i + j + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + j + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+
+			vecIdx.push_back((iSliceCount + 1) * i + j + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+			vecIdx.push_back((iSliceCount + 1) * i + (j + 1) + 1);
+		}
+	}
+
+	// Top indices
+	UINT iTopIdx = (UINT)vecVtx.size() - 1;
+
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(iTopIdx);
+		vecIdx.push_back(iTopIdx - (i + 1) - 1);
+		vecIdx.push_back(iTopIdx - (i + 2) - 1);
+	}
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddAsset(L"ConeMesh", pMesh);
+	vecVtx.clear();
+	vecIdx.clear();
 }
 
 void CAssetManager::CreateDefaultTexture()
@@ -581,6 +694,7 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreatePixelShader(strPath + L"shader\\Std3d.fx", "PS_Std3D");
 
 	pShader->SetRSType(RS_TYPE::CULL_BACK); // 3D 의 기본 Cull Mode
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME); // 3D Test Wire Mode
 	pShader->SetBSType(BS_TYPE::DEFAULT);
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
@@ -606,6 +720,23 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->AddTexParam("SkyBox Texture", TEX_0);
 
 	AddAsset<CGraphicShader>(L"SkyBoxShader", pShader);
+
+
+	// ====================
+	//	Deferred Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\std3d_deferred.fx", "VS_Std3D_Deferred");
+	pShader->CreatePixelShader(strPath + L"shader\\std3d_deferred.fx", "PS_Std3D_Deferred");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
+	
+	pShader->AddTexParam("Output Texture", TEX_0);
+
+	AddAsset<CGraphicShader>(L"Std3DDeferredShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -691,5 +822,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"SkyBoxMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"SkyBoxShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Deferred Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"Std3DDeferredMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"Std3DDeferredShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

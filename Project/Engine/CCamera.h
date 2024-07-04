@@ -27,6 +27,9 @@ private:
 	// 자식 오브젝트는 Layer 가 다를 수 있다.
 	UINT		m_LayerCheck;
 
+	vector<CGameObject*>	m_vecDeferred;
+	vector<CGameObject*>	m_vecDecal;
+
 	vector<CGameObject*>	m_vecOpaque;
 	vector<CGameObject*>	m_vecMasked;
 	vector<CGameObject*>	m_vecTransParent;
@@ -51,6 +54,9 @@ public:
 	float GetAspectRatio() { return m_AspectRatio; }
 	float GetScale() { return m_Scale; }
 
+	const Matrix& GetViewMat() { return m_matView; }
+	const Matrix& GetProjMat() { return m_matProj; }
+
 	void LayerCheck(int layerIdx);
 	void LayerCheckAll(UINT value) { m_LayerCheck = value; } // 모든 숫자에 1 을 넣는
 	const UINT GetLayerCheck() { return m_LayerCheck; }
@@ -62,9 +68,11 @@ public:
 	virtual	void FinalTick() override; // 반드시 구현
 	void Render();
 
-private:
+public:
 	void SortClear();
 
+	void Render_deferred();
+	void Render_decal();
 	void Render_opaque();
 	void Render_masked();
 	void Render_transparent();

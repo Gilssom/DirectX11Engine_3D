@@ -13,10 +13,13 @@
 
 #include "CLevelManager.h"
 
+#include "CMRT.h"
+
 CRenderManager::CRenderManager()
 	 : m_EditorCam(nullptr)
 	 , m_Light2DBuffer(nullptr)
 	 , m_Light3DBuffer(nullptr)
+	 , m_MRT{}
 {
 	m_Light2DBuffer = new CStructuredBuffer;
 	m_Light3DBuffer = new CStructuredBuffer;
@@ -28,21 +31,14 @@ CRenderManager::~CRenderManager()
 {
 	delete m_Light2DBuffer;
 	delete m_Light3DBuffer;
+
+	Safe_Del_Array(m_MRT);
 }
 
 void CRenderManager::CopyRenderTarget()
 {
 	Ptr<CTexture> pRenderTargetTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetTex");
 	CONTEXT->CopyResource(m_RenderTargetCopyTex->GetTex2D().Get(), pRenderTargetTex->GetTex2D().Get());
-}
-
-void CRenderManager::Init()
-{
-	// RenderTarget 을 복사받을 수 있는 텍스쳐를 생성
-	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
-	m_RenderTargetCopyTex = CAssetManager::GetInst()->CreateTexture(L"RenderTargetCopyTex"
-							, (UINT)vRenderResol.x, (UINT)vRenderResol.y
-							, DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_BIND_SHADER_RESOURCE);
 }
 
 void CRenderManager::Tick()
@@ -55,17 +51,11 @@ void CRenderManager::Render()
 	if (!CLevelManager::GetInst()->GetCurrentLevel())
 		return;
 
-	// Swap Chain 의 Back Buffer 를 Render Target 으로 재지정
-	Ptr<CTexture> pRTTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetTex");
-	Ptr<CTexture> pDSTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"DepthStencilTex");
-	CONTEXT->OMSetRenderTargets(1, pRTTex->GetRTV().GetAddressOf(), pDSTex->GetDSV().Get());
+	// MRT Clear
+	ClearMRT();
 
 	// 렌더링에 필요한 데이터 바인딩
 	DataBinding();
-
-	// Target Clear
-	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.f };
-	CDevice::GetInst()->ClearTarget(clearColor);
 
 	// 함수 포인터로 원하는 함수를 호출 시킬 수 있도록 (Render Play or Editor)
 	(this->*Render_Func)();
@@ -88,8 +78,45 @@ void CRenderManager::Render_Play()
 
 void CRenderManager::Render_Editor()
 {
-	if(m_EditorCam != nullptr)
-		m_EditorCam->Render();
+	if (m_EditorCam == nullptr)
+		return;
+
+	g_Trans.matView = m_EditorCam->GetViewMat();
+	g_Trans.matProj = m_EditorCam->GetProjMat();
+
+	// Shader Domain 에 따른 물체의 분류 작업
+	m_EditorCam->SortObject();
+
+	// Deferred MRT 로 변경
+	m_MRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
+
+	// Deferred 물체 Rendering
+	m_EditorCam->Render_deferred();
+	m_EditorCam->Render_decal();
+
+	// Light MRT 로 변경
+	//m_MRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
+
+	// Light Rendering
+	//for (size_t i = 0; i < m_vecLight3D.size(); i++)
+	//{
+	//	m_vecLight3D[i]->Render();
+	//}
+
+	// Color 정보와 Light 정보를 병합
+	
+
+	// Swap Chain MRT 로 변경
+	m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
+
+	// Forward Rendering 진행
+	m_EditorCam->Render_opaque();
+	m_EditorCam->Render_masked();
+	m_EditorCam->Render_transparent();
+	m_EditorCam->Render_particle();
+
+	// Post Process 후처리 과정 진행
+	m_EditorCam->Render_postprocess();
 }
 
 void CRenderManager::DataBinding()

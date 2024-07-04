@@ -149,6 +149,12 @@
     <ClCompile Include="CSkyBox.cpp">
       <Filter>07. Component\Rendering\04. SkyBox</Filter>
     </ClCompile>
+    <ClCompile Include="CMRT.cpp">
+      <Filter>04. Manager\07. RenderManager\MultiRenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderManager_Init.cpp">
+      <Filter>04. Manager\07. RenderManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -319,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="CSkyBox.h">
       <Filter>07. Component\Rendering\04. SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CMRT.h">
+      <Filter>04. Manager\07. RenderManager\MultiRenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +505,9 @@
     <Filter Include="07. Component\Rendering\04. SkyBox">
       <UniqueIdentifier>{2448658c-b180-4dd9-9b97-ada9917df8b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Manager\07. RenderManager\MultiRenderTarget">
+      <UniqueIdentifier>{a26472a0-0262-4881-b669-0d5c131ee727}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -532,6 +544,9 @@
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
     <FxCompile Include="skybox.fx">
+      <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d_deferred.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
   </ItemGroup>

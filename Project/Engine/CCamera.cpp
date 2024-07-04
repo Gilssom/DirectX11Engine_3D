@@ -112,27 +112,48 @@ void CCamera::FinalTick()
 
 void CCamera::Render()
 {
-	g_Trans.matView = m_matView;
-	g_Trans.matProj = m_matProj;
-
-	// Shader Domain 에 따른 물체의 분류 작업
-	SortObject();
-
-	// Shader Domain 에 따라서 순차적으로 렌더링
-	Render_opaque();
-	Render_masked();
-	Render_transparent();
-	Render_particle();
-	Render_postprocess();
+	// == Render Manager 로 모두 이동 ==
+	 
+	
+	//g_Trans.matView = m_matView;
+	//g_Trans.matProj = m_matProj;
+	//
+	//// Shader Domain 에 따른 물체의 분류 작업
+	//SortObject();
+	//
+	//// Shader Domain 에 따라서 순차적으로 렌더링
+	//Render_opaque();
+	//Render_masked();
+	//Render_transparent();
+	//Render_particle();
+	//Render_postprocess();
 }
 
 void CCamera::SortClear()
 {
+	m_vecDeferred.clear();
+	m_vecDecal.clear();
 	m_vecOpaque.clear();
 	m_vecMasked.clear();
 	m_vecTransParent.clear();
 	m_vecParticle.clear();
 	m_vecPostProcess.clear();
+}
+
+void CCamera::Render_deferred()
+{
+	for (size_t i = 0; i < m_vecDeferred.size(); i++)
+	{
+		m_vecDeferred[i]->Render();
+	}
+}
+
+void CCamera::Render_decal()
+{
+	for (size_t i = 0; i < m_vecDecal.size(); i++)
+	{
+		m_vecDecal[i]->Render();
+	}
 }
 
 void CCamera::Render_opaque()
@@ -223,6 +244,14 @@ void CCamera::SortObject()
 
 				switch (domain)
 				{
+				case SHADER_DOMAIN::DOMAIN_DEFERRED:
+					m_vecDeferred.push_back(vecObjects[j]);					
+					break;
+				case SHADER_DOMAIN::DOMAIN_DECAL:
+					m_vecDecal.push_back(vecObjects[j]);
+					break;
+
+
 				case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					m_vecOpaque.push_back(vecObjects[j]);
 					break;
