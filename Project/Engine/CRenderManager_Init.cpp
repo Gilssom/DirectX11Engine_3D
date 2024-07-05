@@ -44,31 +44,31 @@ void CRenderManager::CreateMRT()
 
 		Ptr<CTexture> arrRTTex[8] =
 		{
-			// 1. Color Target (물체의 색상만 저장, 광원 X)
+			// 0. Color Target (물체의 색상만 저장, 광원 X)
 			CAssetManager::GetInst()->CreateTexture(L"ColorTargetTex"
 									, (UINT)vResolution.x, (UINT)vResolution.y
 									, DXGI_FORMAT_R8G8B8A8_UNORM
 									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
 
-			// 2. Normal Target (물체 표면 Normal 정보 저장)
+			// 1. Normal Target (물체 표면 Normal 정보 저장)
 			CAssetManager::GetInst()->CreateTexture(L"NormalTargetTex"
 									, (UINT)vResolution.x, (UINT)vResolution.y
 									, DXGI_FORMAT_R32G32B32A32_FLOAT
 									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
 
-			// 3. Position Target (물체의 위치 정보 저장)
+			// 2. Position Target (물체의 위치 정보 저장)
 			CAssetManager::GetInst()->CreateTexture(L"PositionTargetTex"
 									, (UINT)vResolution.x, (UINT)vResolution.y
 									, DXGI_FORMAT_R32G32B32A32_FLOAT
 									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
 
-			// 4. Emissive Target (자체 발광 정보)
+			// 3. Emissive Target (자체 발광 정보)
 			CAssetManager::GetInst()->CreateTexture(L"EmissiveTargetTex"
 									, (UINT)vResolution.x, (UINT)vResolution.y
 									, DXGI_FORMAT_R32G32B32A32_FLOAT
 									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
 
-			// 5. Data Target (그 외 사용자 정의 정보)
+			// 4. Data Target (그 외 사용자 정의 정보)
 			CAssetManager::GetInst()->CreateTexture(L"DataTargetTex"
 									, (UINT)vResolution.x, (UINT)vResolution.y
 									, DXGI_FORMAT_R32G32B32A32_FLOAT
@@ -76,6 +76,32 @@ void CRenderManager::CreateMRT()
 		};
 
 		pMRT->Create(arrRTTex, 5, DSTex);
+	}
+
+
+	// ================
+	//	Light MRT
+	// ================
+	{
+		pMRT = m_MRT[(UINT)MRT_TYPE::LIGHT] = new CMRT;
+
+		Ptr<CTexture> arrRTTex[8] =
+		{
+			// 1. Diffuse Target (물체에 빛이 부딪힌 세기 (난반사 세기))
+			CAssetManager::GetInst()->CreateTexture(L"DiffuseTargetTex"
+									, (UINT)vResolution.x, (UINT)vResolution.y
+									, DXGI_FORMAT_R32G32B32A32_FLOAT
+									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+
+			// 2. Specular Target (물체에서 반사된 빛이 카메라로 들어오는 세기)
+			CAssetManager::GetInst()->CreateTexture(L"SpecularTargetTex"
+									, (UINT)vResolution.x, (UINT)vResolution.y
+									, DXGI_FORMAT_R32G32B32A32_FLOAT
+									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+		};
+
+		// 광원 MRT 는 깊이 텍스처 X
+		pMRT->Create(arrRTTex, 2, nullptr);
 	}
 }
 
@@ -87,4 +113,5 @@ void CRenderManager::ClearMRT()
 
 	// Deferred 는 Render Target 만 Clear
 	m_MRT[(UINT)MRT_TYPE::DEFERRED]->ClearTarget();
+	m_MRT[(UINT)MRT_TYPE::LIGHT]->ClearTarget();
 }

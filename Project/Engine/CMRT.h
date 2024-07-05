@@ -16,6 +16,8 @@ public:
 	void ClearDepthStencil(); // 깊이 텍스처는 공유해서 사용하기 때문에 독립적으로 분리
 	void OMSet(); // 최종 출력 지정
 
+	void SetClearColor(UINT _Idx, Vec4 _Color) { m_ClearColor[_Idx] = _Color; }
+
 public:
 	CLONE_DISABLE(CMRT);
 

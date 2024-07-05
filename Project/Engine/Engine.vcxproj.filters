@@ -123,13 +123,13 @@
       <Filter>07. Component\Rendering\02 .TileMap</Filter>
     </ClCompile>
     <ClCompile Include="CSetColorCS.cpp">
-      <Filter>HLSL\04. ComputeShader\SetColorShader</Filter>
+      <Filter>HLSL\05. ComputeShader\SetColorShader</Filter>
     </ClCompile>
     <ClCompile Include="CParticleSystem.cpp">
       <Filter>07. Component\Rendering\03. ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="CParticleTickCS.cpp">
-      <Filter>HLSL\04. ComputeShader\ParticleTick</Filter>
+      <Filter>HLSL\05. ComputeShader\ParticleTick</Filter>
     </ClCompile>
     <ClCompile Include="CPrefab.cpp">
       <Filter>08. Asset\Prefab</Filter>
@@ -300,13 +300,13 @@
       <Filter>07. Component\Rendering\02 .TileMap</Filter>
     </ClInclude>
     <ClInclude Include="CSetColorCS.h">
-      <Filter>HLSL\04. ComputeShader\SetColorShader</Filter>
+      <Filter>HLSL\05. ComputeShader\SetColorShader</Filter>
     </ClInclude>
     <ClInclude Include="CParticleSystem.h">
       <Filter>07. Component\Rendering\03. ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="CParticleTickCS.h">
-      <Filter>HLSL\04. ComputeShader\ParticleTick</Filter>
+      <Filter>HLSL\05. ComputeShader\ParticleTick</Filter>
     </ClInclude>
     <ClInclude Include="CPrefab.h">
       <Filter>08. Asset\Prefab</Filter>
@@ -481,15 +481,6 @@
     <Filter Include="HLSL\03. 3D">
       <UniqueIdentifier>{9d8570c2-113b-4c96-92ea-61e5286e00c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HLSL\04. ComputeShader">
-      <UniqueIdentifier>{bdbadfca-1f71-4564-a960-8de39dee9846}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HLSL\04. ComputeShader\SetColorShader">
-      <UniqueIdentifier>{904bca3d-0809-43f4-b3be-2ba2c1c8b14b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HLSL\04. ComputeShader\ParticleTick">
-      <UniqueIdentifier>{b90fb15e-0fc7-413d-8a61-2a9135928322}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07. Component\Rendering\03. ParticleSystem">
       <UniqueIdentifier>{ba324304-3da1-410e-a29b-16c88577356b}</UniqueIdentifier>
     </Filter>
@@ -507,6 +498,18 @@
     </Filter>
     <Filter Include="04. Manager\07. RenderManager\MultiRenderTarget">
       <UniqueIdentifier>{a26472a0-0262-4881-b669-0d5c131ee727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\04. Light">
+      <UniqueIdentifier>{dcfa68d0-e51f-4d5a-bbc0-02bdef44a479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\05. ComputeShader">
+      <UniqueIdentifier>{bdbadfca-1f71-4564-a960-8de39dee9846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\05. ComputeShader\SetColorShader">
+      <UniqueIdentifier>{904bca3d-0809-43f4-b3be-2ba2c1c8b14b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\05. ComputeShader\ParticleTick">
+      <UniqueIdentifier>{b90fb15e-0fc7-413d-8a61-2a9135928322}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -529,13 +532,13 @@
       <Filter>HLSL\02. 2D</Filter>
     </FxCompile>
     <FxCompile Include="compute.fx">
-      <Filter>HLSL\04. ComputeShader\SetColorShader</Filter>
+      <Filter>HLSL\05. ComputeShader\SetColorShader</Filter>
     </FxCompile>
     <FxCompile Include="particle.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
     <FxCompile Include="particletick.fx">
-      <Filter>HLSL\04. ComputeShader\ParticleTick</Filter>
+      <Filter>HLSL\05. ComputeShader\ParticleTick</Filter>
     </FxCompile>
     <FxCompile Include="postprocess.fx">
       <Filter>HLSL\02. 2D</Filter>
@@ -548,6 +551,9 @@
     </FxCompile>
     <FxCompile Include="std3d_deferred.fx">
       <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
+      <Filter>HLSL\04. Light</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

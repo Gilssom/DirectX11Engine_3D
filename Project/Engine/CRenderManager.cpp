@@ -95,16 +95,20 @@ void CRenderManager::Render_Editor()
 	m_EditorCam->Render_decal();
 
 	// Light MRT 로 변경
-	//m_MRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
+	m_MRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
 
 	// Light Rendering
-	//for (size_t i = 0; i < m_vecLight3D.size(); i++)
-	//{
-	//	m_vecLight3D[i]->Render();
-	//}
-
-	// Color 정보와 Light 정보를 병합
+	for (size_t i = 0; i < m_vecLight3D.size(); i++)
+	{
+		m_vecLight3D[i]->Lighting();
+	}
 	
+	// Color 정보와 Light 정보를 병합
+	// 목적지는 SwapChain
+	// Deferred 오브젝트들의 색상이 기록된 Color Target
+	// + 빛이 기록되어 있는 Diffuse, Specular, Emissive
+	// 
+	// 추후 작성
 
 	// Swap Chain MRT 로 변경
 	m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
