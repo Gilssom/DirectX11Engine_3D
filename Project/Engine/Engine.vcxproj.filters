@@ -555,6 +555,9 @@
     <FxCompile Include="light.fx">
       <Filter>HLSL\04. Light</Filter>
     </FxCompile>
+    <FxCompile Include="merge.fx">
+      <Filter>HLSL\04. Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

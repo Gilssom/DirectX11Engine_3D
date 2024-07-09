@@ -12,6 +12,8 @@
 
 #include <Scripts\\CScriptManager.h>
 
+#include <Engine\\CRenderManager.h>
+
 #include "CLevelSaveLoad.h"
 
 #include "CImGuiManager.h"
@@ -40,6 +42,8 @@ void MenuUI::Tick()
 		GameObject();
 
         Asset();
+
+        RenderTarget();
 
 		ImGui::EndMainMenuBar();
 	}
@@ -335,6 +339,29 @@ void MenuUI::Asset()
     }
 }
 
+void MenuUI::RenderTarget()
+{
+    if (ImGui::BeginMenu("Render Target"))
+    {
+        if (ImGui::BeginMenu("Target Filter"))
+        {
+            RenderTargetFilter("Color Target",      L"ColorTargetTex");
+            RenderTargetFilter("Normal Target",     L"NormalTargetTex");
+            RenderTargetFilter("Position Target",   L"PositionTargetTex");
+            RenderTargetFilter("Data Target",       L"DataTargetTex");
+            RenderTargetFilter("Diffuse Target",    L"DiffuseTargetTex");
+            RenderTargetFilter("Emissive Target",   L"EmissiveTargetTex");
+            RenderTargetFilter("Specular Target",   L"SpcularTargetTex");
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::Separator();
+
+        ImGui::EndMenu();
+    }
+}
+
 wstring MenuUI::GetAssetDefaultName(wstring baseName)
 {
     baseName += L" %d";
@@ -357,4 +384,28 @@ wstring MenuUI::GetAssetDefaultName(wstring baseName)
     }
 
     return szKey;
+}
+
+void MenuUI::RenderTargetFilter(const string& menuItemName, const wstring& targetKey)
+{
+    Ptr<CTexture> pOutputTargetTex = nullptr;
+    bool IsTarget = false;
+
+    if (CRenderManager::GetInst()->IsOutputTarget())
+    {
+        pOutputTargetTex = CRenderManager::GetInst()->GetOutputTarget();
+    }
+
+    if (pOutputTargetTex != nullptr && pOutputTargetTex->GetKey() == targetKey)
+        IsTarget = true;
+    else
+        IsTarget = false;
+
+    if (ImGui::MenuItem(menuItemName.c_str(), nullptr, &IsTarget))
+    {
+        if (IsTarget)
+            CRenderManager::GetInst()->SetOutputTarget(true, CAssetManager::GetInst()->FindAsset<CTexture>(targetKey));
+        else
+            CRenderManager::GetInst()->SetOutputTarget(false, nullptr);
+    }
 }

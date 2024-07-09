@@ -49,14 +49,14 @@ void CTestLevel::CreateTestLevel()
 	pLight->AddComponent(new CLight3D);
 	
 	pLight->Transform()->SetRelativePos(500.f, 500.f, 500.f);
-	pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
+	//pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
 
-	pLight->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	pLight->Light3D()->SetLightType(LIGHT_TYPE::POINT);
 	pLight->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-	pLight->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+	pLight->Light3D()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));
 	pLight->Light3D()->SetRange(500.f);
 	//pLight->Light3D()->SetAngle(50.f);
-	pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f));
+	//pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f));
 
 	m_CurLevel->AddObject(0, pLight);
 
@@ -70,11 +70,11 @@ void CTestLevel::CreateTestLevel()
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 
-	//pSkyBox->SkyBox()->SetSkyBoxType(SPHERE);
-	//pSkyBox->SkyBox()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky02.jpg"));
+	pSkyBox->SkyBox()->SetSkyBoxType(SPHERE);
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky02.jpg"));
 
-	pSkyBox->SkyBox()->SetSkyBoxType(CUBE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\SkyDawn.dds"));
+	//pSkyBox->SkyBox()->SetSkyBoxType(CUBE);
+	//pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\SkyDawn.dds"));
 
 	m_CurLevel->AddObject(0, pSkyBox);
 
@@ -88,7 +88,7 @@ void CTestLevel::CreateTestLevel()
 	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
 	Player->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"ConeMesh"));
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
 	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"));
 
 	m_CurLevel->AddObject(0, Player);

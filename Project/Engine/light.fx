@@ -65,8 +65,8 @@ PS_OUT PS_DirLight(VS_OUT _in)
     output.vDiffuse = light.vDiffuse + light.vAmbient;
     output.vSpecular = light.vMaxSpecular;
     
-    output.vDiffuse.a = 1.f;
-    output.vSpecular.a = 1.f;
+    output.vDiffuse.a = vPosition.z;
+    output.vSpecular.a = vPosition.z;
     
     return output;
 }

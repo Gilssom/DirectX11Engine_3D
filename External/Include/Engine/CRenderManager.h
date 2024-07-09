@@ -34,10 +34,22 @@ private:
 
 	class CMRT*			m_MRT[(UINT)MRT_TYPE::END]; // MRT 관리 및 제어
 
+	bool				m_OutputTarget;
+	Ptr<CTexture>		m_OutputTargetTexture;
+
 public:
 	void RegisterCamera(CCamera* camera, int priority);
 	void ClearRegisterCamera() { m_vecCam.clear(); }
 	void RegisterEditorCamera(CCamera* editorCam) { m_EditorCam = editorCam; }
+
+	void SetOutputTarget(bool set, Ptr<CTexture> targetTex) 
+	{ 
+		m_OutputTarget = set; 
+		m_OutputTargetTexture = targetTex; 
+	}
+
+	bool IsOutputTarget() { return m_OutputTarget; }
+	Ptr<CTexture> GetOutputTarget() { return m_OutputTargetTexture; }
 
 	vector<CCamera*>& GetRegisteredCamera() { return m_vecCam; }
 
@@ -75,4 +87,3 @@ private:
 	void CreateMRT();
 	void ClearMRT();
 };
-

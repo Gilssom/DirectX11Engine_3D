@@ -14,8 +14,11 @@ public:
 
     void Asset();
 
+    void RenderTarget();
+
 private:
     wstring GetAssetDefaultName(wstring baseName);
+    void RenderTargetFilter(const string& menuItemName, const wstring& targetKey);
 
 public:
     virtual void Tick() override;
