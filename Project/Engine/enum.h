@@ -77,6 +77,11 @@ enum class DS_TYPE
 	NO_TEST,	// 깊이 테스트 상관 없이 바로 통과
 	NO_TEST_NO_WRITE, // 깊이 테스트도 상관 없고, 그리지도 않을 것
 
+	// Volume Mesh
+	BACKFACE_CHECK,		// 뒷면보다 앞에 있는 부분을 찾는다.
+	FRONTFACE_CHECK,	// 앞면보다 뒤에 있는 부분을 찾는다.
+	STENCIL_CHECK,		// 지정된 Stencil 값에 해당하는 부분만 동작한다.
+
 	END,
 };
 
@@ -243,10 +248,10 @@ enum class MRT_TYPE
 	SWAPCHAIN,
 	
 	DEFERRED,
+	DECAL,
 	LIGHT,
 
 	SHADOW,
-
 
 	END,
 };

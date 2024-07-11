@@ -171,8 +171,11 @@ struct tTransform
 	// 상수 버퍼 변수는 16 Byte 로 메모리 크기를 지정해줘야 한다.
 	// 행렬 형태 사용
 	Matrix matWorld;
+	Matrix matWorldInv;
 	Matrix matView; // 카메라 전용
+	Matrix matViewInv;
 	Matrix matProj; // 투영 행렬
+	Matrix matProjInv;
 
 	Matrix matWV;
 	Matrix matWVP;

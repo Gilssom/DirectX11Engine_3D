@@ -25,7 +25,7 @@ public:
 	void SetAmbient(Vec3 ambient) { m_Info.Light.vAmbient = ambient; }
 	void SetSpecular(Vec3 specular) { m_Info.Light.vMaxSpecular = specular; }
 
-	void SetRange(float range) { m_Info.Range = range; }
+	void SetRange(float range);
 	void SetAngle(float angle) { m_Info.Angle = angle; }
 
 	const tLightInfo& GetLightInfo() { return m_Info; }

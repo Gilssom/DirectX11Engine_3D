@@ -20,7 +20,9 @@ private:
 	// 1. Camera 가 원점이다
 	// 2. Camera 는 Z 축을 바라보고 있다.
 	Matrix		m_matView;
+	Matrix		m_matViewInv;
 	Matrix		m_matProj;		// 투영
+	Matrix		m_matProjInv;
 
 	// Check 한 Layer 만 볼 수 있게 (필터 처리)
 	// 오브젝츠 계층 관계에서 부모 Layer 를 본다고 해도
@@ -55,7 +57,9 @@ public:
 	float GetScale() { return m_Scale; }
 
 	const Matrix& GetViewMat() { return m_matView; }
+	const Matrix& GetViewInvMat() { return m_matViewInv; }
 	const Matrix& GetProjMat() { return m_matProj; }
+	const Matrix& GetProjInvMat() { return m_matProjInv; }
 
 	void LayerCheck(int layerIdx);
 	void LayerCheckAll(UINT value) { m_LayerCheck = value; } // 모든 숫자에 1 을 넣는

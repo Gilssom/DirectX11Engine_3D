@@ -13,6 +13,7 @@ private:
 
 	Vec3	m_WorldDir[3];
 	Matrix	m_matWorld;
+	Matrix	m_matWorldInv;
 
 	// 부모와의 절대적인 좌표 값을 가질 것인지
 	bool	m_Absolute;

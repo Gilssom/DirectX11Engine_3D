@@ -82,7 +82,9 @@ void CRenderManager::Render_Editor()
 		return;
 
 	g_Trans.matView = m_EditorCam->GetViewMat();
+	g_Trans.matViewInv = m_EditorCam->GetViewInvMat();
 	g_Trans.matProj = m_EditorCam->GetProjMat();
+	g_Trans.matProjInv = m_EditorCam->GetProjInvMat();
 
 	// Shader Domain 에 따른 물체의 분류 작업
 	m_EditorCam->SortObject();
@@ -92,6 +94,11 @@ void CRenderManager::Render_Editor()
 
 	// Deferred 물체 Rendering
 	m_EditorCam->Render_deferred();
+	
+	// Decal MRT 로 변경
+	m_MRT[(UINT)MRT_TYPE::DECAL]->OMSet();
+
+	// Decal 물체 Rendering
 	m_EditorCam->Render_decal();
 
 	// Light MRT 로 변경

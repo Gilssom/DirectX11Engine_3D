@@ -8,8 +8,13 @@ cbuffer TRANSFORM : register(b0)
 {
     // 행으로 읽을 수 있게
     row_major matrix g_matWorld;
+    row_major matrix g_matWorldInv;
+    
     row_major matrix g_matView;
+    row_major matrix g_matViewInv;
+    
     row_major matrix g_matProj;
+    row_major matrix g_matProjInv;
     
     row_major matrix g_matWV;
     row_major matrix g_matWVP;

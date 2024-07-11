@@ -95,6 +95,7 @@ void CCamera::FinalTick()
 	
 	// 행렬은 교환 법칙 성립이 안된다.
 	m_matView = matViewTrans * matViewtRot;
+	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 
 
 	// 3. Proj 행렬 계산 (투영) = 원근투영 | 직교투영
@@ -108,6 +109,8 @@ void CCamera::FinalTick()
 		// 일직선으로 투영을 할 것이기 때문에 투영할 가로 세로 길이만 필요함
 		m_matProj = XMMatrixOrthographicLH(m_Width * m_Scale, (m_Width / m_AspectRatio) * m_Scale, 1.f, m_Far);
 	}
+
+	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 }
 
 void CCamera::Render()

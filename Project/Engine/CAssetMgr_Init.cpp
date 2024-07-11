@@ -761,6 +761,23 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 
 	// ====================
+	//	Point Light Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\light.fx", "VS_PointLight");
+	pShader->CreatePixelShader(strPath + L"shader\\light.fx", "PS_PointLight");
+
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetBSType(BS_TYPE::ONE_ONE);	// 빛이 누적되어서 합쳐져야한다.
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHTING);
+
+	// Parameter 는 내부에서 직접 지정하기 때문에 외부에 노출될 이유가 없다.
+
+	AddAsset<CGraphicShader>(L"PointLightShader", pShader);
+
+
+	// ====================
 	//	Merge Shader
 	// ====================
 	pShader = new CGraphicShader;
@@ -768,13 +785,26 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreatePixelShader(strPath + L"shader\\merge.fx", "PS_Merge");
 
 	pShader->SetRSType(RS_TYPE::CULL_BACK);
-	pShader->SetBSType(BS_TYPE::DEFAULT);	// 빛이 누적되어서 합쳐져야한다.
+	pShader->SetBSType(BS_TYPE::DEFAULT);	
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHTING);
 
-	// Parameter 는 내부에서 직접 지정하기 때문에 외부에 노출될 이유가 없다.
-
 	AddAsset<CGraphicShader>(L"MergeShader", pShader);
+
+
+	// ====================
+	//	Decal Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\decal.fx", "VS_Decal");
+	pShader->CreatePixelShader(strPath + L"shader\\decal.fx", "PS_Decal");
+
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DECAL);
+
+	AddAsset<CGraphicShader>(L"DecalShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -868,15 +898,27 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"Std3DDeferredShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
-	// DirLigth Material
+	// Dir Ligth Material
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"DirLightMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DirLightShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Point Light Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"PointLightMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"PointLightShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Merge Material
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"MergeMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"MergeShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Decal Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"DecalMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DecalShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

@@ -44,7 +44,7 @@ float3 CalLight2D(int lightIdx, float3 vWorldPos)
         
         if (fDist < info.Range)
         {
-            vLightPower = info.Light.vDiffuse * fRatio;
+            vLightPower = info.Light.vDiffuse.xyz * fRatio;
         }
     }
     
@@ -97,7 +97,7 @@ void CalLight3D(int _LightIdx, float3 _ViewPos, float3 _ViewNormal, inout tLight
     else if (LightInfo.LightType == 1)
     {
         // 광원의 위치
-        float3 vLightPos = mul(float4(LightInfo.WorldPos.xyz, 1.f), g_matView);
+        float3 vLightPos = mul(float4(LightInfo.WorldPos.xyz, 1.f), g_matView).xyz;
         
         // View Space 에서의 물체를 향한 광원의 방향
         vLight = normalize(_ViewPos - vLightPos);

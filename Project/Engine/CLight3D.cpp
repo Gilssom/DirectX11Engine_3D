@@ -26,7 +26,7 @@ void CLight3D::FinalTick()
 
 	// Debug Render ¿äÃ»
 	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
-		DrawDebugSphere(m_Info.WorldPos, m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
+		DrawDebugSphere(m_Info.WorldPos, m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
 	else
 		DrawDebugCube(m_Info.WorldPos, Vec3(50.f, 50.f, 200.f), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
 }
@@ -35,7 +35,19 @@ void CLight3D::Lighting()
 {
 	m_LightMaterial->SetScalarParam(INT_0, m_LightIdx);
 	m_LightMaterial->Binding();
+
+	if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::POINT)
+	{
+		Transform()->Binding();
+	}
+
 	m_VolumeMesh->Render();
+}
+
+void CLight3D::SetRange(float range)
+{
+	m_Info.Range = range;
+	Transform()->SetRelativeScale(m_Info.Range * 2.f, m_Info.Range * 2.f, m_Info.Range * 2.f);
 }
 
 void CLight3D::SetLightType(LIGHT_TYPE type)
@@ -56,6 +68,9 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 	{
 		m_VolumeMesh = CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh");
 		m_LightMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"PointLightMaterial");
+
+		m_LightMaterial->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"PositionTargetTex"));
+		m_LightMaterial->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"NormalTargetTex"));
 	}
 	else if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::SPOT)
 	{

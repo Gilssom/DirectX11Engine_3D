@@ -155,6 +155,9 @@
     <ClCompile Include="CRenderManager_Init.cpp">
       <Filter>04. Manager\07. RenderManager</Filter>
     </ClCompile>
+    <ClCompile Include="CDecal.cpp">
+      <Filter>07. Component\Rendering\05. Decal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="CMRT.h">
       <Filter>04. Manager\07. RenderManager\MultiRenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="CDecal.h">
+      <Filter>07. Component\Rendering\05. Decal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +517,9 @@
     <Filter Include="HLSL\05. ComputeShader\ParticleTick">
       <UniqueIdentifier>{b90fb15e-0fc7-413d-8a61-2a9135928322}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\Rendering\05. Decal">
+      <UniqueIdentifier>{e2d1e6b9-4dd0-4213-91a8-5fad6401809d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -557,6 +566,9 @@
     </FxCompile>
     <FxCompile Include="merge.fx">
       <Filter>HLSL\04. Light</Filter>
+    </FxCompile>
+    <FxCompile Include="decal.fx">
+      <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

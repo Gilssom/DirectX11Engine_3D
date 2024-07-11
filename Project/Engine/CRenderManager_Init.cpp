@@ -80,6 +80,26 @@ void CRenderManager::CreateMRT()
 
 
 	// ================
+	//	Decal MRT
+	// ================
+	{
+		pMRT = m_MRT[(UINT)MRT_TYPE::DECAL] = new CMRT;
+
+		Ptr<CTexture> arrRTTex[8] =
+		{
+			// 0. Color Target (물체의 색상만 저장, 광원 X)
+			CAssetManager::GetInst()->FindAsset<CTexture>(L"ColorTargetTex"),
+
+			// 1. Emissive Target (자체 발광 정보 저장)
+			CAssetManager::GetInst()->FindAsset<CTexture>(L"EmissiveTargetTex"),
+		};
+
+		pMRT->Create(arrRTTex, 2, nullptr);
+	}
+
+
+
+	// ================
 	//	Light MRT
 	// ================
 	{

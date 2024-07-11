@@ -21,17 +21,16 @@ public:
 	UINT GetIndexCount() { return m_IdxCount; }
 
 private:
-	void Binding();
 	virtual int Load(const wstring& _FilePath) override { return S_OK; }
 	virtual int Save(const wstring& _FilePath) override { return S_OK; }
 
 public:
 	int Create(Vtx* VtxSysMem, size_t VtxCount, UINT* IdxSysMem, size_t IdxCount);
+	void Binding();
 	void Render();
-
 	void Render_Particle(UINT instance);
 
-
+public:
 	CLONE_DISABLE(CMesh);
 
 public:

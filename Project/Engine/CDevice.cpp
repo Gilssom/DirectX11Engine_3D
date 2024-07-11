@@ -301,6 +301,54 @@ int CDevice::CreateDepthStencilState()
 	DEVICE->CreateDepthStencilState(&desc, m_DS[(UINT)DS_TYPE::NO_TEST_NO_WRITE].GetAddressOf());
 
 
+	// BackFace Check
+	desc.DepthEnable = true;
+	desc.DepthFunc = D3D11_COMPARISON_GREATER;				// 깊이가 더 멀면 통과
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+	desc.StencilEnable = true;								// 스텐실 기능 비활성화
+	desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;	// 스텐실 검사는 하지 않음
+	desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_DECR;
+	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+
+
+	// FrontFace Check
+	desc.DepthEnable = true;
+	desc.DepthFunc = D3D11_COMPARISON_LESS;					// 깊이가 더 가까워야 통과
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+	desc.StencilEnable = true;								// 스텐실 기능 비활성화
+	desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;	// 스텐실 검사는 하지 않음
+	desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_DECR;
+	desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+
+
+	// BackFace, FrontFace, RS_TYPE::CULL_NONE
+	desc.DepthEnable = true;
+	desc.DepthFunc = D3D11_COMPARISON_GREATER;				// 깊이가 더 멀면 통과
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	
+	desc.StencilEnable = true;								// 스텐실 기능 비활성화
+	desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;	// 스텐실 검사는 하지 않음
+	desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_DECR;
+	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	
+	desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;	// 스텐실 검사는 하지 않음
+	desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_INCR;
+	desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_DECR;
+
+
+
+	// Stencil Check
+	desc.DepthEnable = false;								// 깊이 Test 사용 안함
+	desc.DepthFunc = D3D11_COMPARISON_NEVER;
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	
+	desc.StencilEnable = true;								// 스텐실 기능 비활성화
+	desc.BackFace.StencilFunc = D3D11_COMPARISON_GREATER;	// 특정 스텐실 값을 가진 경우만 통과
+	desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;
+	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;
+
 	return S_OK;
 }
 

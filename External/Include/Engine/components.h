@@ -11,3 +11,4 @@
 #include "CTileMap.h"
 #include "CParticleSystem.h"
 #include "CSkyBox.h"
+#include "CDecal.h"

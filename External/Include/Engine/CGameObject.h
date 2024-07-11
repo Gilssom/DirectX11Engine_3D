@@ -44,6 +44,7 @@ public:
 	GET_COMPONENT(TileMap, TILEMAP);
 	GET_COMPONENT(ParticleSystem, PARTICLESYSTEM);
 	GET_COMPONENT(SkyBox, SKYBOX);
+	GET_COMPONENT(Decal, DECAL);
 
 	void DisconnectWithParent();
 	void RegisterAsParentObject();

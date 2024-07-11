@@ -36,6 +36,7 @@ public:
 	GET_OTHER_COMPONENT(TileMap);
 	GET_OTHER_COMPONENT(ParticleSystem);
 	GET_OTHER_COMPONENT(SkyBox);
+	GET_OTHER_COMPONENT(Decal);
 
 
 	virtual void SaveToLevelFile(FILE* file) = 0;
