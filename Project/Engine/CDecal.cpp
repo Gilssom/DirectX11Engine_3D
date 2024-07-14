@@ -5,7 +5,8 @@
 
 CDecal::CDecal()
 	: CRenderComponent(COMPONENT_TYPE::DECAL)
-	, m_Alpha(1.f)
+	, m_AsLight(true)
+	, m_LightPower(0.4f)
 {
 	SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
 	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DecalMaterial"));
@@ -30,9 +31,9 @@ void CDecal::Render()
 	if (m_OutputTex != nullptr)
 		GetMaterial()->SetTexParam(TEX_1, m_OutputTex);
 
-	GetMaterial()->SetScalarParam(FLOAT_0, m_Alpha);
-
+	GetMaterial()->SetScalarParam(INT_0, (int)m_AsLight);
+	GetMaterial()->SetScalarParam(FLOAT_0, m_LightPower);
 	GetMaterial()->Binding();
 
-	GetMesh()->Binding();
+	GetMesh()->Render();
 }

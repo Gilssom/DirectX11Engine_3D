@@ -77,9 +77,9 @@ PS_OUT PS_DirLight(VS_OUT _in)
 //  Domain  : DOMAIN_LIGHTING
 //  MRT     : Light MRT
 //  Mesh    : RectMesh
-#define LightIdx        g_int_0
-#define PositionTarget  g_tex_0
-#define NormalTarget    g_tex_1
+//#define LightIdx        g_int_0
+//#define PositionTarget  g_tex_0
+//#define NormalTarget    g_tex_1
 // =============================
 
 VS_OUT VS_PointLight(VS_IN _in)
@@ -112,21 +112,21 @@ PS_OUT PS_PointLight(VS_OUT _in)
     // 기록되어있는 Position 값을 Volume Mesh 의 Local Space 로 이동시킨다.
     float4 vLocalPos = mul(mul(float4(vPosition.xyz, 1.f), g_matViewInv), g_matWorldInv);
     
-    if (length(vLocalPos.xyz) < 0.5f)
-    {
-        output.vDiffuse = float4(0.f, 0.f, 1.f, 1.f);
-        return output;
-    }
-    else
-    {
-        output.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
-        return output;
-    }
-    
-    //if (length(vLocalPos.xyz) > 0.5f)
+    //if (length(vLocalPos.xyz) < 0.5f)
     //{
-    //    discard;
+    //    output.vDiffuse = float4(0.f, 0.f, 1.f, 1.f);
+    //    return output;
     //}
+    //else
+    //{
+    //    output.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
+    //    return output;
+    //}
+    
+    if (length(vLocalPos.xyz) > 0.5f)
+    {
+        discard;
+    }
     //else
     //{
     //    output.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);

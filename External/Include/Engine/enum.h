@@ -93,6 +93,8 @@ enum class BS_TYPE
 	ALPHA_BLEND_COVERAGE,
 	ONE_ONE,				// Src(1), Dest(1) : 검은색 배경을 뺄 상황, Light 혼합 기능 사용할 때
 
+	DECAL_BLEND,			// 0 -> AlpahBlend, 1 -> OneOne Blend
+
 	END,
 };
 

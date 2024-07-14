@@ -800,7 +800,7 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreatePixelShader(strPath + L"shader\\decal.fx", "PS_Decal");
 
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);
-	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetBSType(BS_TYPE::DECAL_BLEND);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DECAL);
 

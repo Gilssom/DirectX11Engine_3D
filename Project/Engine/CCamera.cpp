@@ -15,6 +15,7 @@
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
+	, m_Frustum(this)
 	, m_ProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_CamPriority(-1)
 	, m_FOV((XM_PI) / 3.f)
@@ -30,6 +31,7 @@ CCamera::CCamera()
 
 CCamera::CCamera(const CCamera& other)
 	: CComponent(other)
+	, m_Frustum(other.m_Frustum)
 	, m_ProjType(other.m_ProjType)
 	, m_CamPriority(-1)
 	, m_FOV(other.m_FOV)
@@ -38,6 +40,7 @@ CCamera::CCamera(const CCamera& other)
 	, m_Scale(other.m_Scale)
 	, m_LayerCheck(other.m_LayerCheck)
 {
+	m_Frustum.SetOwner(this);
 }
 
 CCamera::~CCamera()
@@ -111,6 +114,9 @@ void CCamera::FinalTick()
 	}
 
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
+
+	// 절두체 계산
+	m_Frustum.FinalTick();
 }
 
 void CCamera::Render()

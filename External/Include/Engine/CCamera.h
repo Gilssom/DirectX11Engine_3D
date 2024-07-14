@@ -1,9 +1,13 @@
 #pragma once
 #include "CComponent.h"
 
+#include "CFrustum.h"
+
 class CCamera : public CComponent
 {
 private:
+	CFrustum	m_Frustum;
+
 	PROJ_TYPE	m_ProjType;
 
 	int			m_CamPriority;	// Render Manager 에 등록될때 카메라의 우선순위 ( 0 : Main Camera , -1 : 미등록 카메라, 0 보다 크다 : Sub Camera )

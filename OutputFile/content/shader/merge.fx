@@ -57,7 +57,7 @@ float4 PS_Merge(VS_OUT _in) : SV_Target
         
         float4 vColor = ColorTarget.Sample(g_sam_0, _in.vUV);
         
-        vOutColor.rgb = vColor.rgb * (vDiffuse.rgb + vEmissive.rgb) + vSpecular.rgb;
+        vOutColor.rgb = vColor.rgb * (vDiffuse.rgb) + vSpecular.rgb + vEmissive.rgb;
     }
     
     return vOutColor;

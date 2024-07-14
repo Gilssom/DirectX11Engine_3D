@@ -8,6 +8,10 @@
 //  MRT     : Deferred
 //  DOMAIN  : DOMAIN_DECAL
 //  MESH    : Cube Mesh
+
+#define AsLight         g_int_0
+#define DecalPower      g_float_0
+
 #define PositionTarget  g_tex_0
 #define OutputTarget    g_tex_1
 // =============================
@@ -34,7 +38,7 @@ VS_OUT VS_Decal(VS_IN _in)
 struct PS_OUT
 {
     float4 vColor       : SV_Target0;
-    float4 vEmissive    : SV_Target3;
+    float4 vEmissive    : SV_Target1;
 };
 
 PS_OUT PS_Decal(VS_OUT _in)
@@ -65,11 +69,21 @@ PS_OUT PS_Decal(VS_OUT _in)
     {
         float2 vUV = float2(vLocalPos.x + 0.5f, 1.f - (vLocalPos.y + 0.5f));
         
-        vOutputColor = g_tex_1.Sample(g_sam_0, vUV);
+        vOutputColor = g_tex_1.Sample(g_sam_0, vUV) * g_float_0;
     }
     
-    output.vColor = vOutputColor;
-    output.vEmissive = float4(0.f, 0.f, 0.f, 1.f);
+    if (AsLight == 0)
+    {
+        output.vColor = vOutputColor;
+        output.vColor.a *= DecalPower;
+        output.vEmissive = float4(0.f, 0.f, 0.f, 1.f);
+    }
+    else
+    {
+        output.vColor = (float4) 0.f;
+        output.vEmissive.rgb = vOutputColor.rgb * vOutputColor.a * DecalPower;
+        output.vEmissive.a = 1.f;
+    }
     
     return output;
 }

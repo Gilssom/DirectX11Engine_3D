@@ -49,35 +49,16 @@ void CTestLevel::CreateTestLevel()
 	pLight->AddComponent(new CLight3D);
 	
 	pLight->Transform()->SetRelativePos(500.f, 100.f, 500.f);
-	//pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
+	pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
 
-	pLight->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLight->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLight->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 	pLight->Light3D()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));
 	pLight->Light3D()->SetRange(400.f);
 	//pLight->Light3D()->SetAngle(500.f);
-	//pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f));
+	pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f));
 
 	m_CurLevel->AddObject(0, pLight);
-
-
-	// Light 3D
-	CGameObject* pLight2 = new CGameObject;
-	pLight2->SetName(L"Light 2");
-	pLight2->AddComponent(new CTransform);
-	pLight2->AddComponent(new CLight3D);
-
-	pLight2->Transform()->SetRelativePos(-500.f, 100.f, 500.f);
-	//pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
-
-	pLight2->Light3D()->SetLightType(LIGHT_TYPE::POINT);
-	pLight2->Light3D()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-	pLight2->Light3D()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));
-	pLight2->Light3D()->SetRange(400.f);
-	//pLight->Light3D()->SetAngle(500.f);
-	//pLight->Light3D()->SetAmbient(Vec3(0.15f, 0.15f, 0.15f));
-
-	m_CurLevel->AddObject(0, pLight2);
 
 
 	// SkyBox
@@ -90,7 +71,7 @@ void CTestLevel::CreateTestLevel()
 	pSkyBox->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 
 	pSkyBox->SkyBox()->SetSkyBoxType(SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky01.png"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky02.jpg"));
 
 	//pSkyBox->SkyBox()->SetSkyBoxType(CUBE);
 	//pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\SkyDawn.dds"));
@@ -106,11 +87,12 @@ void CTestLevel::CreateTestLevel()
 	Player->AddComponent(new CMeshRender);
 
 	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
-	Player->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 1.f));
-	Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	Player->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	//Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
 	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"));
+	Player->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Background.jpg"));
 
 	m_CurLevel->AddObject(0, Player);
 
@@ -123,6 +105,9 @@ void CTestLevel::CreateTestLevel()
 	pDecal->AddComponent(new CDecal);
 
 	pDecal->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 200.f));
+	pDecal->Decal()->SetOutputTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Character.png"));
+	pDecal->Decal()->SetAsLight(true);
+	pDecal->Decal()->SetDecalPower(0.8f);
 
 	m_CurLevel->AddObject(0, pDecal);
 

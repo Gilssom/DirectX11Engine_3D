@@ -158,6 +158,9 @@
     <ClCompile Include="CDecal.cpp">
       <Filter>07. Component\Rendering\05. Decal</Filter>
     </ClCompile>
+    <ClCompile Include="CFrustum.cpp">
+      <Filter>07. Component\02. Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -335,6 +338,9 @@
     <ClInclude Include="CDecal.h">
       <Filter>07. Component\Rendering\05. Decal</Filter>
     </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>07. Component\02. Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -447,9 +453,6 @@
     </Filter>
     <Filter Include="07. Component\Rendering\01. MeshRender">
       <UniqueIdentifier>{37084b8d-8e07-4433-8648-2b49082c33c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="07. Component\Rendering\Decal">
-      <UniqueIdentifier>{62abd314-8344-42ee-ad7c-d70de4bdb8ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="07. Component\Rendering\LandScape">
       <UniqueIdentifier>{413f56a1-efad-4039-a6e0-09124ea92b8d}</UniqueIdentifier>

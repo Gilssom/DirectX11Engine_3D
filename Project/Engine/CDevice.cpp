@@ -385,7 +385,9 @@ int CDevice::CreateBlendState()
 	HRESULT hr = DEVICE->CreateBlendState(&desc, m_BS[(UINT)BS_TYPE::ALPHA_BLEND].GetAddressOf());
 
 
+	// ==========================
 	// ALPHA_BLEND_COVERAGE
+	// ==========================
 	desc.AlphaToCoverageEnable = true; // 풀, 나뭇잎 같은 경우에 사용할 때
 	// Direct 내부에서 Alpha 값의 깊이를 모두 보정을 해줌
 
@@ -411,7 +413,9 @@ int CDevice::CreateBlendState()
 	hr = DEVICE->CreateBlendState(&desc, m_BS[(UINT)BS_TYPE::ALPHA_BLEND_COVERAGE].GetAddressOf());
 
 
+	// ==========================
 	// ONE_ONE
+	// ==========================
 	desc.AlphaToCoverageEnable = false; 
 	desc.IndependentBlendEnable = false;
 
@@ -427,6 +431,45 @@ int CDevice::CreateBlendState()
 	desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 
 	DEVICE->CreateBlendState(&desc, m_BS[(UINT)BS_TYPE::ONE_ONE].GetAddressOf());
+
+	return S_OK;
+
+
+	// ==============================================
+	// Decal Blend :: 0 -> Alpha Blend, 1 -> One One
+	// ==============================================
+	desc.AlphaToCoverageEnable = false;
+	desc.IndependentBlendEnable = true;
+
+	// 블랜딩 방식
+	desc.RenderTarget[0].BlendEnable = true;
+	desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+
+	// 블랜딩 계수
+	desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// 알파끼리의 혼합식
+	desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+
+	// 블랜딩 방식
+	desc.RenderTarget[1].BlendEnable = true;
+	desc.RenderTarget[1].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	desc.RenderTarget[1].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+
+	// 블랜딩 계수
+	desc.RenderTarget[1].SrcBlend = D3D11_BLEND_ONE;
+	desc.RenderTarget[1].DestBlend = D3D11_BLEND_ONE;
+	desc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// 알파끼리의 혼합식
+	desc.RenderTarget[1].SrcBlendAlpha = D3D11_BLEND_ONE;
+	desc.RenderTarget[1].DestBlendAlpha = D3D11_BLEND_ZERO;
+
+	DEVICE->CreateBlendState(&desc, m_BS[(UINT)BS_TYPE::DECAL_BLEND].GetAddressOf());
 
 	return S_OK;
 }

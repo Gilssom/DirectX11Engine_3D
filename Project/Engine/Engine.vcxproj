@@ -180,6 +180,7 @@ call Copy.bat</Command>
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CFontManager.h" />
+    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicShader.h" />
     <ClInclude Include="CKeyManager.h" />
@@ -241,6 +242,7 @@ call Copy.bat</Command>
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CFontManager.cpp" />
+    <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicShader.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
