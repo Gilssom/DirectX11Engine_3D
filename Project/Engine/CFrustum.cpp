@@ -41,10 +41,50 @@ void CFrustum::FinalTick()
 
 	for (int i = 0; i < 8; ++i)
 	{
-		arrWorld[i] = XMVector2TransformCoord(m_arrProjPos[i], matInv);
+		arrWorld[i] = XMVector3TransformCoord(m_arrProjPos[i], matInv);
 	}
 
 	// 6개의 카메라 시야범위 평면을 월드공간 기준으로 만들어낸다.
 
+	// 평면의 방정식 내부 함수 (시계 방향 기준)
+	m_arrFace[FACE_NEAR] = XMPlaneFromPoints(arrWorld[0], arrWorld[1], arrWorld[2]);
+	m_arrFace[FACE_FAR] = XMPlaneFromPoints(arrWorld[5], arrWorld[4], arrWorld[7]);
 
+	m_arrFace[FACE_LEFT] = XMPlaneFromPoints(arrWorld[7], arrWorld[4], arrWorld[0]);
+	m_arrFace[FACE_RIGHT] = XMPlaneFromPoints(arrWorld[1], arrWorld[5], arrWorld[6]);
+
+	m_arrFace[FACE_TOP] = XMPlaneFromPoints(arrWorld[0], arrWorld[4], arrWorld[5]);
+	m_arrFace[FACE_BOT] = XMPlaneFromPoints(arrWorld[2], arrWorld[6], arrWorld[7]);
+}
+
+bool CFrustum::FrustumPointCheck(Vec3 worldPos)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		// a, b, c
+		Vec3 vNormal = m_arrFace[i];
+
+		// 6개의 평면과 입력으로 들어온 좌표와 내적 진행
+		// ax + by + cz + d == 0.f
+		if (vNormal.Dot(worldPos) + m_arrFace[i].w > 0.f)
+			return false;
+	}
+
+	return true;
+}
+
+bool CFrustum::FrustumSphereCheck(Vec3 worldPos, float radius)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		// a, b, c
+		Vec3 vNormal = m_arrFace[i];
+
+		// 6개의 평면과 입력으로 들어온 좌표와 내적 진행
+		// ax + by + cz + d == 0.f
+		if (vNormal.Dot(worldPos) + m_arrFace[i].w > radius)
+			return false;
+	}
+
+	return true;
 }

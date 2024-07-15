@@ -27,6 +27,8 @@ void CLight3D::FinalTick()
 	// Debug Render ¿äÃ»
 	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
 		DrawDebugSphere(m_Info.WorldPos, m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
+	else if(m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
+		DrawDebugCone(m_Info.WorldPos, m_Info.Range, 100.f, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
 	else
 		DrawDebugCube(m_Info.WorldPos, Vec3(50.f, 50.f, 200.f), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
 }
@@ -76,6 +78,9 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 	{
 		m_VolumeMesh = CAssetManager::GetInst()->FindAsset<CMesh>(L"ConeMesh");
 		m_LightMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"SpotLightMaterial");
+
+		m_LightMaterial->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"PositionTargetTex"));
+		m_LightMaterial->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"NormalTargetTex"));
 	}
 }
 

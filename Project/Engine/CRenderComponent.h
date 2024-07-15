@@ -15,6 +15,8 @@ private:
 	Ptr<CMaterial>		m_SharedMaterial;	// Asset Manager 에 등록된 재질을 참조
 	Ptr<CMaterial>		m_DynamicMaterial;	// 원본 재질의 사본 (복사본)
 
+	bool				m_FrustumCheck;		// Frustum Culling 적용 여부
+
 public:
 	virtual void Render() = 0;
 
@@ -28,6 +30,9 @@ public:
 	// 동적 재질을 생성할 수 있는 조건은 해당 Level 이 Play 상태이여야 한다.
 	Ptr<CMaterial> GetDynamicMaterial();
 	void RestoreMaterial();
+
+	void SetFrustumCheck(bool check) { m_FrustumCheck = check; }
+	bool IsFrustumCheck() { return m_FrustumCheck; }
 
 	virtual void SaveToLevelFile(FILE* file) override;
 	virtual void LoadFromLevelFile(FILE* file) override;

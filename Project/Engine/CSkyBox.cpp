@@ -8,6 +8,8 @@ CSkyBox::CSkyBox()
 	, m_Type(SKYBOX_TYPE::SPHERE)
 {
 	SetSkyBoxType(m_Type);
+
+	SetFrustumCheck(false);
 }
 
 CSkyBox::~CSkyBox()

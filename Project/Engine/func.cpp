@@ -200,6 +200,41 @@ void DrawDebugSphere(Matrix matWorld, Vec4 vColor, float depthTest, float durati
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugCone(Vec3 worldPos, float radius, float height, Vec4 vColor, bool depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::CONE;
+
+	info.Position = worldPos;
+	info.Scale = Vec3(radius * 2.f, height, radius * 2.f);  // X와 Z는 반지름, Y는 높이
+	info.matWorld = XMMatrixIdentity();
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
+void DrawDebugCone(Matrix matWorld, Vec4 vColor, float depthTest, float duration)
+{
+	tDebugShapeInfo info = {};
+	info.Shape = DEBUG_SHAPE::CONE;
+	info.matWorld = matWorld;
+
+	info.Color = vColor;
+
+	info.Duration = duration;
+	info.Age = 0.f;
+
+	info.DepthTest = depthTest;
+
+	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
+}
+
 string ToString(const wstring& str)
 {
 	return string(str.begin(), str.end());

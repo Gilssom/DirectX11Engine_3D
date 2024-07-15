@@ -12,7 +12,10 @@ private:
 
 public:
 	void SetOutputTexture(Ptr<CTexture> tex) { m_OutputTex = tex; }
+	Ptr<CTexture> GetOutputTexture() { return m_OutputTex; }
+
 	void SetAsLight(bool light) { m_AsLight = light; }
+	bool GetAsLight() { return m_AsLight; }
 	void SetDecalPower(float power)
 	{
 		m_LightPower = power;
@@ -22,6 +25,7 @@ public:
 		else if (m_LightPower > 1.f)
 			m_LightPower = 1.f;
 	}
+	float GetDecalPower() { return m_LightPower; }
 
 public:
 	virtual void FinalTick() override;

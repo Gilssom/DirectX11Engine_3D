@@ -3,6 +3,7 @@
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE type)
 	: CComponent(type)
+	, m_FrustumCheck(true)
 {
 
 }

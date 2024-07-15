@@ -4,7 +4,7 @@
 #include <Engine\\CSkyBox.h>
 
 SkyBoxUI::SkyBoxUI()
-	: ComponentUI("SkyBoxUI", "##SkyBoxUI", COMPONENT_TYPE::SKYBOX)
+	: ComponentUI("SkyBox", "##SkyBoxUI", COMPONENT_TYPE::SKYBOX)
 {
 
 }

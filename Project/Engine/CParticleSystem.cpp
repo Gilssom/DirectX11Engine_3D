@@ -15,6 +15,8 @@ CParticleSystem::CParticleSystem()
 	, m_BurstTime(0.f)
 	, m_MaxParticle(10000)
 {
+	SetFrustumCheck(false);
+
 	// Particle Tick ¿ëµµ Compute Shader
 	m_TickCS = (CParticleTickCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"ParticleTickCS").Get();
 

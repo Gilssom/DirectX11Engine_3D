@@ -161,6 +161,9 @@
     <ClCompile Include="CFrustum.cpp">
       <Filter>07. Component\02. Camera</Filter>
     </ClCompile>
+    <ClCompile Include="CBoundingBox.cpp">
+      <Filter>07. Component\09. BoundingBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="CFrustum.h">
       <Filter>07. Component\02. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoundingBox.h">
+      <Filter>07. Component\09. BoundingBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -522,6 +528,9 @@
     </Filter>
     <Filter Include="07. Component\Rendering\05. Decal">
       <UniqueIdentifier>{e2d1e6b9-4dd0-4213-91a8-5fad6401809d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\09. BoundingBox">
+      <UniqueIdentifier>{6d2c7c59-f16c-4162-8ddf-5ef1973db72d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

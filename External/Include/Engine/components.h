@@ -12,3 +12,4 @@
 #include "CParticleSystem.h"
 #include "CSkyBox.h"
 #include "CDecal.h"
+#include "CBoundingBox.h"

@@ -85,6 +85,7 @@ void CTestLevel::CreateTestLevel()
 
 	Player->AddComponent(new CTransform);
 	Player->AddComponent(new CMeshRender);
+	Player->AddComponent(new CBoundingBox);
 
 	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
 	Player->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
@@ -93,6 +94,10 @@ void CTestLevel::CreateTestLevel()
 	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
 	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"));
 	Player->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Background.jpg"));
+
+	Player->BoundingBox()->SetAbsolute(true);
+	Player->BoundingBox()->SetOffset(Vec3(0.f, 0.f, 0.f));
+	Player->BoundingBox()->SetRadius(600.f);
 
 	m_CurLevel->AddObject(0, Player);
 

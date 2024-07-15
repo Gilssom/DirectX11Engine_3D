@@ -41,6 +41,9 @@ float4 PS_DebugShape(VS_OUT _in) : SV_Target
         Alpha = pow(Alpha, 2.f);
     }
     
+    // Spot Debug
+    
+    
     float4 vOutColor = g_vec4_0;
     vOutColor.a = Alpha;
     

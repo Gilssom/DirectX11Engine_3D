@@ -23,6 +23,9 @@ public:
 	void SetOwner(CCamera* owner) { m_Camera = owner; }
 	CCamera* GetOwner() { return m_Camera; }
 
+	bool FrustumPointCheck(Vec3 worldPos);
+	bool FrustumSphereCheck(Vec3 worldPos, float radius);
+
 public:
 	void FinalTick();
 

@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "CDecal.h"
 
+#include "CDevice.h"
 #include "CTransform.h"
 
 CDecal::CDecal()
 	: CRenderComponent(COMPONENT_TYPE::DECAL)
-	, m_AsLight(true)
+	, m_AsLight(false)
 	, m_LightPower(0.4f)
 {
 	SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));

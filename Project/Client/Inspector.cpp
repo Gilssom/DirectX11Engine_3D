@@ -16,6 +16,7 @@
 #include "Light2DUI.h"
 #include "Light3DUI.h"
 #include "SkyBoxUI.h"
+#include "DecalUI.h"
 #include "ParticleSystemUI.h"
 #include "TileMapUI.h"
 #include "ScriptUI.h"
@@ -167,6 +168,7 @@ void Inspector::CreateComponentUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP] = new TileMapUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM] = new ParticleSystemUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::SKYBOX] = new SkyBoxUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::DECAL] = new DecalUI;
 
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; i++)
 	{

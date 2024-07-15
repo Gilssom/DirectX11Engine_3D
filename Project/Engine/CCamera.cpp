@@ -122,20 +122,6 @@ void CCamera::FinalTick()
 void CCamera::Render()
 {
 	// == Render Manager 로 모두 이동 ==
-	 
-	
-	//g_Trans.matView = m_matView;
-	//g_Trans.matProj = m_matProj;
-	//
-	//// Shader Domain 에 따른 물체의 분류 작업
-	//SortObject();
-	//
-	//// Shader Domain 에 따라서 순차적으로 렌더링
-	//Render_opaque();
-	//Render_masked();
-	//Render_transparent();
-	//Render_particle();
-	//Render_postprocess();
 }
 
 void CCamera::SortClear()
@@ -248,6 +234,23 @@ void CCamera::SortObject()
 					|| vecObjects[j]->GetRenderComponent()->GetMaterial() == nullptr
 					|| vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader() == nullptr)
 					continue;
+
+				// Frustum Check 기능을 사용하는지, 사용한다면 Frsutum 내부에 들어오는지 Check
+				if (vecObjects[j]->GetRenderComponent()->IsFrustumCheck())
+				{
+					// vecObjects[j] 의 Bounding Box 에 대한 Check 가 필요하다.
+
+					// 일단 현재는 원점으로 비교
+					Vec3 vWorldPos = vecObjects[j]->Transform()->GetWorldPos();
+					float radius = vecObjects[j]->Transform()->GetWorldScale().x;
+
+					// Frustum 내부에 해당 object 가 없다면 continue
+					if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+					{
+						continue;
+					}
+				}
+
 
 				SHADER_DOMAIN domain = vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader()->GetDomain();
 

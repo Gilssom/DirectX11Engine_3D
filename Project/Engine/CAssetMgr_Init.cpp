@@ -425,7 +425,7 @@ void CAssetManager::CreateDefaultMesh()
 	iSliceCount = 60;  // 원뿔의 슬라이스 개수
 
 	// Bottom center
-	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vPos = Vec3(0.f, -fHeight, 0.f);  // 이동된 위치
 	v.vUv = Vec2(0.5f, 0.5f);
 	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
 	v.vNormal = Vec3(0.f, -1.f, 0.f);  // 밑면 노멀 벡터는 아래쪽을 향함
@@ -441,7 +441,7 @@ void CAssetManager::CreateDefaultMesh()
 	{
 		float theta = i * fSliceAngle;
 
-		v.vPos = Vec3(fRadius * cosf(theta), 0.f, fRadius * sinf(theta));
+		v.vPos = Vec3(fRadius * cosf(theta), -fHeight, fRadius * sinf(theta));  // 이동된 위치
 		v.vUv = Vec2((cosf(theta) + 1.f) * 0.5f, (sinf(theta) + 1.f) * 0.5f);
 		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
 
@@ -457,14 +457,14 @@ void CAssetManager::CreateDefaultMesh()
 	// Side vertices
 	for (UINT i = 1; i <= iStackCount; ++i)
 	{
-		float y = i * fStackHeight;
+		float y = i * fStackHeight - fHeight;  // 이동된 위치
 		float r = fRadius * (1.0f - (float)i / iStackCount);
 
 		for (UINT j = 0; j <= iSliceCount; ++j)
 		{
 			float theta = j * fSliceAngle;
 
-			v.vPos = Vec3(r * cosf(theta), y, r * sinf(theta));
+			v.vPos = Vec3(r * cosf(theta), y, r * sinf(theta));  // 이동된 위치
 			v.vUv = Vec2((float)j / iSliceCount, (float)i / iStackCount);
 			v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
 
@@ -480,7 +480,7 @@ void CAssetManager::CreateDefaultMesh()
 	}
 
 	// Top vertex
-	v.vPos = Vec3(0.f, fHeight, 0.f);
+	v.vPos = Vec3(0.f, 0.f, 0.f);  // 꼭짓점이 원점
 	v.vUv = Vec2(0.5f, 0.f);
 	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
 	v.vNormal = Vec3(0.f, 1.f, 0.f);
@@ -777,6 +777,24 @@ void CAssetManager::CreateDefaultGraphicShader()
 	AddAsset<CGraphicShader>(L"PointLightShader", pShader);
 
 
+
+	// ====================
+	//	Spot Light Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\light.fx", "VS_SpotLight");
+	pShader->CreatePixelShader(strPath + L"shader\\light.fx", "PS_SpotLight");
+
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetBSType(BS_TYPE::ONE_ONE);	// 빛이 누적되어서 합쳐져야한다.
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHTING);
+
+	// Parameter 는 내부에서 직접 지정하기 때문에 외부에 노출될 이유가 없다.
+
+	AddAsset<CGraphicShader>(L"SpotLightShader", pShader);
+
+
 	// ====================
 	//	Merge Shader
 	// ====================
@@ -800,7 +818,8 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreatePixelShader(strPath + L"shader\\decal.fx", "PS_Decal");
 
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);
-	pShader->SetBSType(BS_TYPE::DECAL_BLEND);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	//pShader->SetBSType(BS_TYPE::DECAL_BLEND);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DECAL);
 
@@ -908,6 +927,12 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"PointLightMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"PointLightShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Spot Light Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"SpotLightMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"SpotLightShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Merge Material

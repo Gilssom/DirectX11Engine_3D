@@ -20,6 +20,7 @@ CRenderManager::CRenderManager()
 	 , m_Light2DBuffer(nullptr)
 	 , m_Light3DBuffer(nullptr)
 	 , m_MRT{}
+	 , m_BoundingBox(true)
 {
 	m_Light2DBuffer = new CStructuredBuffer;
 	m_Light3DBuffer = new CStructuredBuffer;

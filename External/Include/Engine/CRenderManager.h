@@ -37,6 +37,9 @@ private:
 	bool				m_OutputTarget;
 	Ptr<CTexture>		m_OutputTargetTexture;
 
+
+	bool				m_BoundingBox;
+
 public:
 	void RegisterCamera(CCamera* camera, int priority);
 	void ClearRegisterCamera() { m_vecCam.clear(); }
@@ -66,6 +69,9 @@ public:
 	}
 
 	void CopyRenderTarget();
+
+	void ShowBoundingBox(bool show) { m_BoundingBox = show; }
+	bool IsShowBoundingBox() { return m_BoundingBox; }
 
 public:
 	void Init();
