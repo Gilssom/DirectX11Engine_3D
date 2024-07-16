@@ -782,8 +782,8 @@ void CAssetManager::CreateDefaultGraphicShader()
 	//	Spot Light Shader
 	// ====================
 	pShader = new CGraphicShader;
-	pShader->CreateVertexShader(strPath + L"shader\\light.fx", "VS_SpotLight");
-	pShader->CreatePixelShader(strPath + L"shader\\light.fx", "PS_SpotLight");
+	pShader->CreateVertexShader(strPath + L"shader\\light.fx", "VS_PointLight");
+	pShader->CreatePixelShader(strPath + L"shader\\light.fx", "PS_PointLight");
 
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);
 	pShader->SetBSType(BS_TYPE::ONE_ONE);	// 빛이 누적되어서 합쳐져야한다.
@@ -824,6 +824,24 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DECAL);
 
 	AddAsset<CGraphicShader>(L"DecalShader", pShader);
+
+
+	// ====================
+	//	Tess Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\tess.fx", "VS_Tess");
+	pShader->CreatePixelShader(strPath + L"shader\\tess.fx", "PS_Tess");
+	pShader->CreateHullShader(strPath + L"shader\\tess.fx", "HS_Tess");
+	pShader->CreateDomainShader(strPath + L"shader\\tess.fx", "DS_Tess");
+
+	pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+
+	AddAsset<CGraphicShader>(L"TessShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -945,5 +963,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"DecalMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DecalShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Tess Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"TessMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"TessShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

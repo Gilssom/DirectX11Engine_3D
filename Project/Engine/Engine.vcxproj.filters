@@ -582,6 +582,9 @@
     <FxCompile Include="decal.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
+    <FxCompile Include="tess.fx">
+      <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

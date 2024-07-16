@@ -37,8 +37,9 @@ private:
 	bool				m_OutputTarget;
 	Ptr<CTexture>		m_OutputTargetTexture;
 
-
 	bool				m_BoundingBox;
+
+	UINT				m_TotalDrawCall;
 
 public:
 	void RegisterCamera(CCamera* camera, int priority);
@@ -73,10 +74,13 @@ public:
 	void ShowBoundingBox(bool show) { m_BoundingBox = show; }
 	bool IsShowBoundingBox() { return m_BoundingBox; }
 
+	void AddDrawCall() { m_TotalDrawCall++; }
+
 public:
 	void Init();
 	void Tick();
 	void Render();
+	void Render_DrawCall();
 
 	void ChangeRenderMode(RENDER_MODE renderMode)
 	{

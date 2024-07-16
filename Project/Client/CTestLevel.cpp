@@ -91,8 +91,8 @@ void CTestLevel::CreateTestLevel()
 	Player->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 	//Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
-	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"));
+	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"TessMaterial"));
 	Player->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Background.jpg"));
 
 	Player->BoundingBox()->SetAbsolute(true);

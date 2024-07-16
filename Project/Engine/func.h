@@ -25,7 +25,7 @@ void DrawDebugCube(Matrix matWorld, Vec4 vColor, float depthTest, float duration
 void DrawDebugSphere(Vec3 worldPos, float radius, Vec4 vColor, bool depthTest, float duration);
 void DrawDebugSphere(Matrix matWorld, Vec4 vColor, float depthTest, float duration);
 
-void DrawDebugCone(Vec3 worldPos, float radius, float height, Vec4 vColor, bool depthTest, float duration);
+void DrawDebugCone(Vec3 worldPos, Vec3 worldScale, Vec3 worldRotation, Vec4 vColor, bool depthTest, float duration);
 void DrawDebugCone(Matrix matWorld, Vec4 vColor, float depthTest, float duration);
 
 string ToString(const wstring& str);

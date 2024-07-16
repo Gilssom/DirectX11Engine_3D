@@ -12,6 +12,7 @@ private:
 public:
 	void SetOffset(Vec3 offset) { m_OffsetPos = offset; }
 	Vec3 GetOffset() { return m_OffsetPos; }
+	Vec3 GetWorldPos() { return m_WorldMat.Translation(); }
 
 	void SetRadius(float radius) { m_Radius = radius; }
 	float GetRadius() { return m_Radius; }

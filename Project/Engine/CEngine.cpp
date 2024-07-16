@@ -82,6 +82,9 @@ void CEngine::Progress()
 	CRenderManager::GetInst()->Render();
 	CDbgRenderManager::GetInst()->Render();
 
+	// CTimeManager::GetInst()->Render();
+	CRenderManager::GetInst()->Render_DrawCall();
+
 	// Task Execute
 	CTaskManager::GetInst()->Tick();
 }

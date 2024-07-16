@@ -15,12 +15,15 @@
 
 #include "CMRT.h"
 
+#include "CFontManager.h"
+
 CRenderManager::CRenderManager()
 	 : m_EditorCam(nullptr)
 	 , m_Light2DBuffer(nullptr)
 	 , m_Light3DBuffer(nullptr)
 	 , m_MRT{}
 	 , m_BoundingBox(true)
+	 , m_TotalDrawCall(0)
 {
 	m_Light2DBuffer = new CStructuredBuffer;
 	m_Light3DBuffer = new CStructuredBuffer;
@@ -52,6 +55,8 @@ void CRenderManager::Render()
 	if (!CLevelManager::GetInst()->GetCurrentLevel())
 		return;
 
+	m_TotalDrawCall = 0;
+
 	// MRT Clear
 	ClearMRT();
 
@@ -82,10 +87,10 @@ void CRenderManager::Render_Editor()
 	if (m_EditorCam == nullptr)
 		return;
 
-	g_Trans.matView = m_EditorCam->GetViewMat();
-	g_Trans.matViewInv = m_EditorCam->GetViewInvMat();
-	g_Trans.matProj = m_EditorCam->GetProjMat();
-	g_Trans.matProjInv = m_EditorCam->GetProjInvMat();
+	g_Trans.matView		= m_EditorCam->GetViewMat();
+	g_Trans.matViewInv	= m_EditorCam->GetViewInvMat();
+	g_Trans.matProj		= m_EditorCam->GetProjMat();
+	g_Trans.matProjInv	= m_EditorCam->GetProjInvMat();
 
 	// Shader Domain 에 따른 물체의 분류 작업
 	m_EditorCam->SortObject();
@@ -109,6 +114,7 @@ void CRenderManager::Render_Editor()
 	for (size_t i = 0; i < m_vecLight3D.size(); i++)
 	{
 		m_vecLight3D[i]->Lighting();
+		AddDrawCall();
 	}
 	
 	// Color 정보와 Light 정보를 병합
@@ -147,6 +153,7 @@ void CRenderManager::Render_Editor()
 
 	pMergeMaterial->Binding();
 	pRectMesh->Render();
+	AddDrawCall();
 
 	// Forward Rendering 진행
 	m_EditorCam->Render_opaque();
@@ -156,6 +163,15 @@ void CRenderManager::Render_Editor()
 
 	// Post Process 후처리 과정 진행
 	m_EditorCam->Render_postprocess();
+}
+
+void CRenderManager::Render_DrawCall()
+{
+	wchar_t szDrawCall[255] = {};
+
+	swprintf_s(szDrawCall, L"Total DrawCall : %d", m_TotalDrawCall);
+
+	CFontManager::GetInst()->DrawFont(szDrawCall, 10.f, 30.f, 20, FONT_RGBA(255, 30, 30, 255));
 }
 
 void CRenderManager::DataBinding()
@@ -168,6 +184,7 @@ void CRenderManager::DataBinding()
 	GlobalBuffer->SetData(&g_GlobalData);
 	GlobalBuffer->Binding();
 	GlobalBuffer->Binding_CS();
+
 
 
 	// =========

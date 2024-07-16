@@ -33,7 +33,7 @@ float4 PS_DebugShape(VS_OUT _in) : SV_Target
     // Sphere Debug
     float Alpha = 1.f;
     
-    if(g_int_0 == 4)
+    if (g_int_0 == 4)
     {
         float3 vEye = normalize(_in.vViewPos);
         Alpha = 1.f - saturate(dot(vEye, _in.vViewNormal));
@@ -42,6 +42,13 @@ float4 PS_DebugShape(VS_OUT _in) : SV_Target
     }
     
     // Spot Debug
+    if (g_int_0 == 5)
+    {
+        float3 vEye = normalize(_in.vViewPos);
+        Alpha = 1.f - saturate(dot(vEye, _in.vViewNormal));
+        
+        Alpha = pow(Alpha, 8.f);
+    }
     
     
     float4 vOutColor = g_vec4_0;

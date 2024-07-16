@@ -9,7 +9,7 @@
 #include "CRenderManager.h"
 #include "CRenderComponent.h"
 
-#include "CTransform.h"
+#include "components.h"
 
 #include "CDevice.h"
 
@@ -140,6 +140,7 @@ void CCamera::Render_deferred()
 	for (size_t i = 0; i < m_vecDeferred.size(); i++)
 	{
 		m_vecDeferred[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -148,6 +149,7 @@ void CCamera::Render_decal()
 	for (size_t i = 0; i < m_vecDecal.size(); i++)
 	{
 		m_vecDecal[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -156,6 +158,7 @@ void CCamera::Render_opaque()
 	for (size_t i = 0; i < m_vecOpaque.size(); i++)
 	{
 		m_vecOpaque[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -164,6 +167,7 @@ void CCamera::Render_masked()
 	for (size_t i = 0; i < m_vecMasked.size(); i++)
 	{
 		m_vecMasked[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -172,6 +176,7 @@ void CCamera::Render_transparent()
 	for (size_t i = 0; i < m_vecTransParent.size(); i++)
 	{
 		m_vecTransParent[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -180,6 +185,7 @@ void CCamera::Render_particle()
 	for (size_t i = 0; i < m_vecParticle.size(); i++)
 	{
 		m_vecParticle[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -191,6 +197,7 @@ void CCamera::Render_postprocess()
 		CRenderManager::GetInst()->CopyRenderTarget();
 
 		m_vecPostProcess[i]->Render();
+		CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 
@@ -239,18 +246,35 @@ void CCamera::SortObject()
 				if (vecObjects[j]->GetRenderComponent()->IsFrustumCheck())
 				{
 					// vecObjects[j] 의 Bounding Box 에 대한 Check 가 필요하다.
-
-					// 일단 현재는 원점으로 비교
-					Vec3 vWorldPos = vecObjects[j]->Transform()->GetWorldPos();
-					float radius = vecObjects[j]->Transform()->GetWorldScale().x;
-
-					// Frustum 내부에 해당 object 가 없다면 continue
-					if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+					if (vecObjects[j]->BoundingBox())
 					{
-						continue;
+						// Bounding Box 를 기준으로 비교
+						Vec3 vWorldPos = vecObjects[j]->BoundingBox()->GetWorldPos();
+						float radius = vecObjects[j]->BoundingBox()->GetRadius();
+
+						// Frustum 내부에 해당 object 가 없다면 continue
+						if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						// 원점을 기준으로 비교
+						Vec3 vWorldPos = vecObjects[j]->Transform()->GetWorldPos();
+						Vec3 vWorldScale = vecObjects[j]->Transform()->GetWorldScale();
+
+						float radius = vWorldScale.x;
+						if (radius < vWorldScale.y) radius = vWorldScale.y;
+						if (radius < vWorldScale.z) radius = vWorldScale.z;
+
+						// Frustum 내부에 해당 object 가 없다면 continue
+						if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+						{
+							continue;
+						}
 					}
 				}
-
 
 				SHADER_DOMAIN domain = vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader()->GetDomain();
 

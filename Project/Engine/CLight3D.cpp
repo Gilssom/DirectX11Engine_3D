@@ -27,8 +27,8 @@ void CLight3D::FinalTick()
 	// Debug Render ¿äÃ»
 	if (m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
 		DrawDebugSphere(m_Info.WorldPos, m_Info.Range, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
-	else if(m_Info.LightType == (UINT)LIGHT_TYPE::POINT)
-		DrawDebugCone(m_Info.WorldPos, m_Info.Range, 100.f, Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
+	else if(m_Info.LightType == (UINT)LIGHT_TYPE::SPOT)
+		DrawDebugCone(m_Info.WorldPos, Transform()->GetRelativeScale(), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
 	else
 		DrawDebugCube(m_Info.WorldPos, Vec3(50.f, 50.f, 200.f), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
 }
@@ -39,6 +39,10 @@ void CLight3D::Lighting()
 	m_LightMaterial->Binding();
 
 	if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::POINT)
+	{
+		Transform()->Binding();
+	}
+	else if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::SPOT)
 	{
 		Transform()->Binding();
 	}
