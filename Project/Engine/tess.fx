@@ -64,12 +64,12 @@ struct HS_OUT
 };
 
 // 정점 당 호출되는 함수
-[domain("tir")]
+[domain("tri")]
 [partitioning("integer")]
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [maxtessfactor(64)]
-[patchconstantfunc(PatchConstFunc)]
+[patchconstantfunc("PatchConstFunc")]
 HS_OUT HS_Tess(InputPatch<VS_OUT, 3> _Patch
                 , uint _VtxIdx : SV_OutputControlPointID
                 , uint _PatchID : SV_PrimitiveID)

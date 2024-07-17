@@ -185,6 +185,7 @@ call Copy.bat</Command>
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicShader.h" />
     <ClInclude Include="CKeyManager.h" />
+    <ClInclude Include="CLandScape.h" />
     <ClInclude Include="CLayer.h" />
     <ClInclude Include="CLevel.h" />
     <ClInclude Include="CLevelManager.h" />
@@ -248,6 +249,8 @@ call Copy.bat</Command>
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicShader.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
+    <ClCompile Include="CLandScape.cpp" />
+    <ClCompile Include="CLandScape_Init.cpp" />
     <ClCompile Include="CLayer.cpp" />
     <ClCompile Include="CLevel.cpp" />
     <ClCompile Include="CLevelManager.cpp" />
@@ -307,6 +310,12 @@ call Copy.bat</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="func.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="landscape.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

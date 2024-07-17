@@ -842,6 +842,24 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 
 	AddAsset<CGraphicShader>(L"TessShader", pShader);
+
+
+	// ====================
+	//	LandScape Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\landscape.fx", "VS_LandScape");
+	pShader->CreatePixelShader(strPath + L"shader\\landscape.fx", "PS_LandScape");
+	pShader->CreateHullShader(strPath + L"shader\\landscape.fx", "HS_LandScape");
+	pShader->CreateDomainShader(strPath + L"shader\\landscape.fx", "DS_LandScape");
+
+	pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+
+	AddAsset<CGraphicShader>(L"LandScapeShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -969,5 +987,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"TessMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"TessShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// LandScape Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"LandScapeMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"LandScapeShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

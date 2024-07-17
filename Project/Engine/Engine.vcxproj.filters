@@ -164,6 +164,12 @@
     <ClCompile Include="CBoundingBox.cpp">
       <Filter>07. Component\09. BoundingBox</Filter>
     </ClCompile>
+    <ClCompile Include="CLandScape.cpp">
+      <Filter>07. Component\Rendering\LandScape</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScape_Init.cpp">
+      <Filter>07. Component\Rendering\LandScape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -346,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="CBoundingBox.h">
       <Filter>07. Component\09. BoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CLandScape.h">
+      <Filter>07. Component\Rendering\LandScape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +592,9 @@
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
     <FxCompile Include="tess.fx">
+      <Filter>HLSL\03. 3D</Filter>
+    </FxCompile>
+    <FxCompile Include="landscape.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
   </ItemGroup>
