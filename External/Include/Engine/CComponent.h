@@ -38,6 +38,7 @@ public:
 	GET_OTHER_COMPONENT(SkyBox);
 	GET_OTHER_COMPONENT(Decal);
 	GET_OTHER_COMPONENT(BoundingBox);
+	GET_OTHER_COMPONENT(LandScape);
 
 
 	virtual void SaveToLevelFile(FILE* file) = 0;

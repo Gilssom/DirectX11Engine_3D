@@ -4,11 +4,14 @@
 class CLandScape : public CRenderComponent
 {
 private:
-	UINT	m_FaceX;
-	UINT	m_FaceZ;
+	UINT			m_FaceX;
+	UINT			m_FaceZ;
+
+	Ptr<CTexture>	m_HeightMap;
 
 public:
 	void SetFace(UINT x, UINT z);
+	void SetHeightMap(Ptr<CTexture> heightMap) { m_HeightMap = heightMap; }
 
 public:
 	void Init();
@@ -17,6 +20,7 @@ public:
 
 private:
 	void CreateMesh();
+	void Binding();
 
 public:
 	CLONE(CLandScape);

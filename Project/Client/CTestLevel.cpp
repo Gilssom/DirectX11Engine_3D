@@ -116,6 +116,20 @@ void CTestLevel::CreateTestLevel()
 
 	m_CurLevel->AddObject(0, pDecal);
 
+
+	// Land Scape
+	CGameObject* pLandScape = new CGameObject;
+	pLandScape->SetName(L"Land Scape");
+
+	pLandScape->AddComponent(new CTransform);
+	pLandScape->AddComponent(new CLandScape);
+
+	pLandScape->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	pLandScape->LandScape()->SetFace(32, 32);
+	pLandScape->LandScape()->SetHeightMap(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\HeightMap_01.jpg"));
+
+	m_CurLevel->AddObject(0, pLandScape);
+
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);
 }

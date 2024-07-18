@@ -5,7 +5,7 @@
 
 CEditorCameraScript::CEditorCameraScript()
 	: CScript(-1)
-	, m_Speed(200.f)
+	, m_Speed(1000.f)
 {
 
 }

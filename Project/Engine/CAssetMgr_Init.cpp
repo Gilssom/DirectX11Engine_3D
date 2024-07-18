@@ -853,7 +853,7 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->CreateHullShader(strPath + L"shader\\landscape.fx", "HS_LandScape");
 	pShader->CreateDomainShader(strPath + L"shader\\landscape.fx", "DS_LandScape");
 
-	pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
 	pShader->SetBSType(BS_TYPE::DEFAULT);
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);

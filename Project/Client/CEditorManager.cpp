@@ -28,6 +28,7 @@ void CEditorManager::Init()
 
 	pEditorCam->Camera()->LayerCheckAll(0xffffffff);
 	pEditorCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pEditorCam->Camera()->SetFar(100000.f);
 
 	CRenderManager::GetInst()->RegisterEditorCamera(pEditorCam->Camera());
 
