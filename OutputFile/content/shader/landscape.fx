@@ -143,29 +143,34 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
         vLocalPos.y = HEIGHT_MAP.SampleLevel(g_sam_0, vFullUV, 0).x;
     
         // Normal Vector 재계산
-        // 1. 주변 정점의 좌표를 알아낸다.
+        // 주변 정점의 좌표와 UV 좌표를 알아낸다.
         float fStep         = 1.f / _TessLevel.Inside;        
         float2 vUVStep      = fStep / float2(FACE_X, FACE_Z);
         
+        // 주변 정점의 UV 좌표
         float2 vLeftUV      = vFullUV + float2(-vUVStep.x, 0.f);
         float2 vRightUV     = vFullUV + float2(vUVStep.x, 0.f);
         float2 vUpUV        = vFullUV + float2(0.f, -vUVStep.y);
         float2 vDownUV      = vFullUV + float2(0.f, vUVStep.y);
         
+        // 주변 정점의 Local 좌표
         float3 vLeftPos     = float3(vLocalPos.x - fStep, HEIGHT_MAP.SampleLevel(g_sam_0, vLeftUV , 0).x, vLocalPos.z);
         float3 vRightPos    = float3(vLocalPos.x + fStep, HEIGHT_MAP.SampleLevel(g_sam_0, vRightUV, 0).x, vLocalPos.z);
         float3 vUpPos       = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_0, vUpUV   , 0).x, vLocalPos.z + fStep);
         float3 vDownPos     = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_0, vDownUV , 0).x, vLocalPos.z - fStep);
         
+        // 주변 정점의 Local -> World 좌표 변환
         vLeftPos    = mul(float4(vLeftPos  , 1.f), g_matWorld).xyz;
         vRightPos   = mul(float4(vRightPos , 1.f), g_matWorld).xyz;
         vUpPos      = mul(float4(vUpPos    , 1.f), g_matWorld).xyz;
         vDownPos    = mul(float4(vDownPos  , 1.f), g_matWorld).xyz;
         
+        // 현재 정점의 T, B, N Vector 방향
         vTangent    = normalize(vRightPos - vLeftPos);
         vBinormal   = normalize(vDownPos - vUpPos);
         vNormal     = normalize(cross(vTangent, vBinormal));
         
+        // 최종 T, B, N Vector World View 좌표
         output.vViewTangent     = normalize(mul(float4(vTangent, 0.f), g_matWV)).xyz;
         output.vViewBinormal    = normalize(mul(float4(vBinormal, 0.f), g_matWV)).xyz;
         output.vViewNormal      = normalize(mul(float4(vNormal, 0.f), g_matWV)).xyz;
@@ -177,14 +182,10 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
         output.vViewNormal      = normalize(mul(float4(vNormal, 0.f), g_matWV)).xyz;
     }
     
-    
     output.vPosition = mul(float4(vLocalPos, 1.f), g_matWVP);
     output.vUV = vUV;
         
     output.vViewPos = mul(float4(vLocalPos, 1.f), g_matWV).xyz;
-    //output.vViewTangent = normalize(mul(float4(vTangent, 0.f), g_matWV)).xyz;
-    //output.vViewBinormal = normalize(mul(float4(vBinormal, 0.f), g_matWV)).xyz;
-    //output.vViewNormal = normalize(mul(float4(vNormal, 0.f), g_matWV)).xyz;
     
     return output;
 }
