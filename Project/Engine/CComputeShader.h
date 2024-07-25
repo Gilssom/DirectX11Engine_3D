@@ -51,12 +51,13 @@ public:
     int Execute();
 
 
-public:
+private:
     int CreateComputeShader(const wstring& strFilePath, const string& psFuncName);
 
 
 public:
-    CComputeShader(UINT threadPerGroupX, UINT threadPerGroupY, UINT threadPerGroupZ);
+    CComputeShader(UINT threadPerGroupX, UINT threadPerGroupY, UINT threadPerGroupZ
+                , const wstring& relativePath, const string& funcName);
     ~CComputeShader();
 };
 

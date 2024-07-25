@@ -4,7 +4,7 @@
 #include "CStructuredBuffer.h"
 
 CParticleTickCS::CParticleTickCS()
-    : CComputeShader(32, 1, 1)
+    : CComputeShader(32, 1, 1, L"shader\\particletick.fx", "CS_ParticleTick")
     , m_ParticleBuffer(nullptr)
     , m_ModuleBuffer(nullptr)
     , m_SpawnCountBuffer(nullptr)

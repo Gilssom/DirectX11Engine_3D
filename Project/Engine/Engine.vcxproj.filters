@@ -170,6 +170,9 @@
     <ClCompile Include="CLandScape_Init.cpp">
       <Filter>07. Component\Rendering\06. LandScape</Filter>
     </ClCompile>
+    <ClCompile Include="CHeightMapCS.cpp">
+      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="CLandScape.h">
       <Filter>07. Component\Rendering\06. LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightMapCS.h">
+      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -544,6 +550,9 @@
     <Filter Include="07. Component\Rendering\06. LandScape">
       <UniqueIdentifier>{413f56a1-efad-4039-a6e0-09124ea92b8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\06. ComputeShader\LandScape">
+      <UniqueIdentifier>{bcc5fa4d-7eaa-4439-9a02-4734db9708b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -599,6 +608,9 @@
     </FxCompile>
     <FxCompile Include="landscape.fx">
       <Filter>HLSL\05. LandScape</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap.fx">
+      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

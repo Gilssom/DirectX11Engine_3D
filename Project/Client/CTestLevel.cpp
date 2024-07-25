@@ -125,8 +125,10 @@ void CTestLevel::CreateTestLevel()
 	pLandScape->AddComponent(new CLandScape);
 
 	pLandScape->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+
 	pLandScape->LandScape()->SetFace(32, 32);
-	pLandScape->LandScape()->SetHeightMap(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\HeightMap_01.jpg"));
+	pLandScape->LandScape()->CreateHeightMap(1024, 1024);
+	//pLandScape->LandScape()->SetHeightMap(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\HeightMap_01.jpg"));
 
 	m_CurLevel->AddObject(0, pLandScape);
 

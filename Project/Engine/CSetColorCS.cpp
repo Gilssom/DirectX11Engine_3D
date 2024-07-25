@@ -2,7 +2,7 @@
 #include "CSetColorCS.h"
 
 CSetColorCS::CSetColorCS()
-	: CComputeShader(32, 32, 1) // Thread 개수 지정 필수로 강제화
+	: CComputeShader(32, 32, 1, L"shader\\compute.fx", "CS_Test") // Thread 개수 지정 필수로 강제화
 {
 
 }

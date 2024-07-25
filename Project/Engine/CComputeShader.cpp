@@ -4,7 +4,8 @@
 #include "CDevice.h"
 #include "CConstBuffer.h"
 
-CComputeShader::CComputeShader(UINT threadPerGroupX, UINT threadPerGroupY, UINT threadPerGroupZ)
+CComputeShader::CComputeShader(UINT threadPerGroupX, UINT threadPerGroupY, UINT threadPerGroupZ
+						, const wstring& relativePath, const string& funcName)
 	: CShader(ASSET_TYPE::COMPUTE_SHADER)
 	, m_ThreadPerGroupX(threadPerGroupX)
 	, m_ThreadPerGroupY(threadPerGroupY)
@@ -13,7 +14,11 @@ CComputeShader::CComputeShader(UINT threadPerGroupX, UINT threadPerGroupY, UINT 
 	, m_GroupY(1)
 	, m_GroupZ(1)
 {
-
+	wstring strPath = CPathManager::GetInst()->GetContentPath();
+	if (FAILED(CreateComputeShader(strPath + relativePath, funcName)))
+	{
+		assert(nullptr);
+	}
 }
 
 CComputeShader::~CComputeShader()

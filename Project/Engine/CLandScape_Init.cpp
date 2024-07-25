@@ -2,6 +2,7 @@
 #include "CLandScape.h"
 
 #include "CAssetManager.h"
+#include "CTexture.h"
 
 void CLandScape::Init()
 {
@@ -11,6 +12,12 @@ void CLandScape::Init()
 	// Land Scape 전용 재질 참조
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
 	SetMaterial(pMaterial);
+
+	pMaterial->SetScalarParam(FLOAT_0, 1.f);
+	pMaterial->GetShader()->AddScalarParam("Tess Factor", FLOAT_0);
+
+	// LandScape 전용 Compute Shader 제작
+	CreateComputeShader();
 }
 
 void CLandScape::SetFace(UINT x, UINT z)
@@ -24,9 +31,6 @@ void CLandScape::SetFace(UINT x, UINT z)
 	// Land Scape 전용 재질 참조
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
 	SetMaterial(pMaterial);
-
-	pMaterial->SetScalarParam(FLOAT_0, 1.f);
-	pMaterial->GetShader()->AddScalarParam("Tess Factor", FLOAT_0);
 }
 
 void CLandScape::CreateMesh()
@@ -76,4 +80,27 @@ void CLandScape::CreateMesh()
 	Ptr<CMesh> pMesh = new CMesh;
 	pMesh->Create(vecVtx.data(), vecVtx.size(), vecIdx.data(), vecIdx.size());
 	SetMesh(pMesh);
+}
+
+void CLandScape::CreateComputeShader()
+{
+	// Height Map CS 가 있으면 찾아오고, 없으면 컴파일해서 등록한다.
+	m_HeightMapCS = (CHeightMapCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"HeightMapCS").Get();
+
+	if (m_HeightMapCS == nullptr)
+	{
+		m_HeightMapCS = new CHeightMapCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"HeightMapCS", m_HeightMapCS.Get());
+	}
+}
+
+void CLandScape::CreateHeightMap(UINT width, UINT height)
+{
+	m_IsHeightMapCreated = true;
+
+	m_HeightMap = CAssetManager::GetInst()->CreateTexture(L"LandScapeHeightMap", width, height
+													, DXGI_FORMAT_R32_FLOAT
+													, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
+
+
 }
