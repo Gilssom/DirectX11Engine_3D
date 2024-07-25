@@ -8,6 +8,7 @@ CMRT::CMRT()
 	: m_RTTex{}
 	, m_RTCount(0)
 	, m_DSTex(nullptr)
+	, m_ViewPort{}
 {
 
 }
@@ -26,6 +27,16 @@ void CMRT::Create(Ptr<CTexture>* _RTTex, UINT _RTCount, Ptr<CTexture> _DSTex)
 
 	m_RTCount = _RTCount;
 	m_DSTex = _DSTex;
+
+	// ViewPort 설정
+	m_ViewPort.TopLeftX = 0;
+	m_ViewPort.TopLeftY = 0;
+	m_ViewPort.Width = _RTTex[0]->GetWidth();
+	m_ViewPort.Height = _RTTex[0]->GetHeight();
+
+	// 깊이 텍스쳐에 저장되는 깊이 Min, Max 지정
+	m_ViewPort.MinDepth = 0;
+	m_ViewPort.MaxDepth = 1;
 }
 
 void CMRT::OMSet()
@@ -41,6 +52,9 @@ void CMRT::OMSet()
 		DSView = m_DSTex->GetDSV().Get();
 
 	CONTEXT->OMSetRenderTargets(m_RTCount, m_RTView, DSView);
+
+	// ViewPort 정보 세팅
+	CONTEXT->RSSetViewports(1, &m_ViewPort);
 }
 
 void CMRT::ClearTarget()

@@ -18,6 +18,14 @@ void CLandScape::Init()
 
 	// LandScape 전용 Compute Shader 제작
 	CreateComputeShader();
+
+	// BrushTexture 추가	
+	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_GlowScene_2.png"));
+	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_HitFlash_0.png"));
+	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_HitFlash02.png"));
+	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_Twirl02.png"));
+	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\FX_Flare.png"));
+	m_BrushIdx = 0;
 }
 
 void CLandScape::SetFace(UINT x, UINT z)

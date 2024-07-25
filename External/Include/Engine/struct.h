@@ -162,6 +162,11 @@ struct tParticleModule
 	int		Module[(UINT)PARTICLE_MODULE::END];
 };
 
+struct tRay
+{
+	Vec3	vStart;
+	Vec3	vDir;
+};
 
 // ====================
 // 상수버퍼 관련 구조체

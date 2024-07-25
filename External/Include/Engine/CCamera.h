@@ -32,6 +32,7 @@ private:
 	// 오브젝츠 계층 관계에서 부모 Layer 를 본다고 해도
 	// 자식 오브젝트는 Layer 가 다를 수 있다.
 	UINT		m_LayerCheck;
+	tRay		m_Ray;
 
 	vector<CGameObject*>	m_vecDeferred;
 	vector<CGameObject*>	m_vecDecal;
@@ -75,6 +76,9 @@ public:
 	virtual void Begin() override;
 	virtual	void FinalTick() override; // 반드시 구현
 	void Render();
+
+private:
+	void CalcRay();
 
 public:
 	void SortClear();

@@ -76,6 +76,8 @@ public:
 
 	void AddDrawCall() { m_TotalDrawCall++; }
 
+	CMRT* GetMRT(MRT_TYPE type) { return m_MRT[(UINT)type]; }
+
 public:
 	void Init();
 	void Tick();

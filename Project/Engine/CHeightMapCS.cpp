@@ -25,6 +25,14 @@ int CHeightMapCS::Binding()
     m_Const.v2Arr[0] = m_BrushPos;
     m_Const.v2Arr[1] = m_BrushScale;
 
+    if (nullptr != m_BrushTex)
+    {
+        m_BrushTex->Binding_CS_SRV(0);
+        m_Const.btex[0] = 1;
+    }
+    else
+        m_Const.btex[0] = 0;
+
     return S_OK;
 }
 
@@ -45,4 +53,10 @@ void CHeightMapCS::Clear()
 {
     m_HeightMapTex->Clear_CS_UAV(0);
     m_HeightMapTex = nullptr;
+
+    if (nullptr != m_BrushTex)
+    {
+        m_BrushTex->Clear_CS_SRV(0);
+        m_BrushTex = nullptr;
+    }
 }

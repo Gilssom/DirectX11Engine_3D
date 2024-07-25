@@ -53,19 +53,7 @@ int CDevice::Init(HWND hwnd, Vec2 resolution)
 	}
 
 	// View Port 설정
-	// 윈도우 화면에 보여질 영역을 설정한다.
-	D3D11_VIEWPORT viewPort = {};
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.Width = (float)m_RenderResolution.x;
-	viewPort.Height = (float)m_RenderResolution.y;
-
-	// 깊이 텍스처에 저장되는 깊이 Min ~ Max 지정 ( 0.f ~ 1.f )
-	viewPort.MinDepth = 0;
-	viewPort.MaxDepth = 1;
-
-	// ViewPort 정보 세팅
-	m_Context->RSSetViewports(1, &viewPort);
+	// MRT 이동
 
 	// 필요한 상수버퍼 생성
 	if (FAILED(CreateConstBuffer()))
