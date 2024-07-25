@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CHeightMapCS.h"
 
+#include "CStructuredBuffer.h"
+
 CHeightMapCS::CHeightMapCS()
     : CComputeShader(32, 32, 1, L"shader\\heightmap.fx", "CS_HeightMap")
+    , m_RaycastOut(nullptr)
 {
 
 }
@@ -14,16 +17,16 @@ CHeightMapCS::~CHeightMapCS()
 
 int CHeightMapCS::Binding()
 {
-    if (m_HeightMapTex == nullptr)
+    if (m_HeightMapTex == nullptr || m_RaycastOut == nullptr)
         return E_FAIL;
 
+    m_RaycastOut->Binding_CS_SRV(20);
     m_HeightMapTex->Binding_CS_UAV(0);
 
     m_Const.iArr[0] = (UINT)m_HeightMapTex->GetWidth();
     m_Const.iArr[1] = (UINT)m_HeightMapTex->GetHeight();
 
-    m_Const.v2Arr[0] = m_BrushPos;
-    m_Const.v2Arr[1] = m_BrushScale;
+    m_Const.v2Arr[0] = m_BrushScale;
 
     if (nullptr != m_BrushTex)
     {
@@ -51,6 +54,8 @@ void CHeightMapCS::CalculateGroupNum()
 
 void CHeightMapCS::Clear()
 {
+    m_RaycastOut->Clear_SRV();
+
     m_HeightMapTex->Clear_CS_UAV(0);
     m_HeightMapTex = nullptr;
 

@@ -55,6 +55,7 @@ public:
 	int Create(UINT elementSize, UINT elementCount, SB_TYPE type, bool sysMemMove, void* initialData = nullptr);
 	void SetData(void* data, UINT elementCount = 0);
 	void GetData(void* pDest, UINT elementCount = 0);
+	void ClearData();
 
 	void Binding(UINT registerNum);
 	void Binding_CS_SRV(UINT registerNum);

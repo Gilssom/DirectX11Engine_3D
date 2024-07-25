@@ -45,7 +45,7 @@ private:
 	void CreateMesh();
 	void CreateComputeShader();
 	void Binding();
-	void Raycasting();
+	int Raycasting();
 
 public:
 	CLONE(CLandScape);

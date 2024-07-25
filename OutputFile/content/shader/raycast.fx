@@ -4,34 +4,29 @@
 #include "value.fx"
 #include "func.fx"
 
-
-struct tRaycastOut
-{
-    float2 Location;
-    float Distance;
-    int Success;
-};
-
 RWStructuredBuffer<tRaycastOut> m_OutBuffer : register(u0);
 
-#define FACE_X      g_int_0
-#define FACE_Z      g_int_1
+#define HasHeightMap    g_btex_0
+#define HEIGHT_MAP      g_tex_0
 
-#define RayStart    g_vec4_0.xyz
-#define RayDir      g_vec4_1.xyz
+#define FACE_X          g_int_0
+#define FACE_Z          g_int_1
+
+#define RayStart        g_vec4_0.xyz
+#define RayDir          g_vec4_1.xyz
 
 [numthreads(32, 32, 1)]
-void CS_Raycast(int3 _ID : SV_DispatchThreadID)
+void CS_Raycast(uint3 _ID : SV_DispatchThreadID)
 {
-    int2 ID = _ID.xy;
+    uint2 ID = _ID.xy;
     
     // 스레드가 담당할 지역영역을 초과해서 배정된 스레드인 경우
-    if (FACE_X * 2 <= ID.x || FACE_Z <= ID.y)
+    if ((uint) FACE_X * 2 <= ID.x || (uint) FACE_Z <= ID.y)
     {
         return;
     }
         
-    float3 vTriPos[3]/* = { 0.f, 0.f, 0.f }*/;
+    float3 vTriPos[3] = { (float3) 0.f, (float3) 0.f, (float3) 0.f };
     
     if (0 == ID.x % 2)
     {
@@ -75,7 +70,11 @@ void CS_Raycast(int3 _ID : SV_DispatchThreadID)
     
     if (IntersectsRay(vTriPos, RayStart, RayDir, vCrossPos, Dist))
     {
-        m_OutBuffer[0].Location = ID.xy;
+        float2 CrossUV = vCrossPos.xz / float2(FACE_X, FACE_Z);
+        CrossUV.y = 1.f - CrossUV.y;
+        
+        m_OutBuffer[0].Location = CrossUV;
+        m_OutBuffer[0].Distance = Dist;
         m_OutBuffer[0].Success = 1;
     }
 }

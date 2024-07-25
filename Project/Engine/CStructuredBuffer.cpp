@@ -194,6 +194,11 @@ void CStructuredBuffer::GetData(void* pDest, UINT elementCount)
 	CONTEXT->Unmap(m_SB_Read.Get(), 0);
 }
 
+void CStructuredBuffer::ClearData()
+{
+	//m_SB_Main.Reset();
+}
+
 void CStructuredBuffer::Binding(UINT registerNum)
 {
 	m_SRV_Register = registerNum;

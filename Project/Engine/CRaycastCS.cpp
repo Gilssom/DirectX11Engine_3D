@@ -23,6 +23,10 @@ int CRaycastCS::Binding()
 	if (nullptr == m_OutBuffer)
 		return E_FAIL;
 
+	// Raycasting 을 정확하게 계산하기 위해 t0 에 HeightMap 전달
+	m_Const.btex[0] = !!m_HeightMap.Get();
+	m_HeightMap->Binding_CS_SRV(0);
+
 	m_OutBuffer->Binding_CS_UAV(0);
 
 	m_Const.iArr[0] = m_FaceX;

@@ -198,9 +198,49 @@ float3 GetRandom(in Texture2D _Noise, float _NormalizedThreadID)
 
 int IntersectsRay(float3 _Pos[3], float3 _vStart, float3 _vDir, out float3 _CrossPos, out float _Dist)
 {
-        
+    // 삼각형 표면 방향 벡터
+    float3 Edge[2] = { (float3) 0.f, (float3) 0.f };
+    Edge[0] = _Pos[1] - _Pos[0];
+    Edge[1] = _Pos[2] - _Pos[0];
     
-    return 0;
+    // 삼각형의 수직방향 법선(Normal) 벡터
+    float3 Normal = normalize(cross(Edge[0], Edge[1]));
+    
+    // 삼각형 법선벡터와 Ray 의 Direction(방향) 을 내적
+    float NdotD = -dot(Normal, _vDir); 
+    // 광선에서 삼각형으로 향하는 수직벡터와,
+    // 광선의 방향벡터 사이의 cos 값.
+    
+    float3 vStartToPos0 = _vStart - _Pos[0];
+    
+    // 광선을 지나는 한 점에서 삼각형 평면으로의 수직 길이
+    float VerticalDist = dot(Normal, vStartToPos0);
+    
+    // 광선이 진행하는 방향으로, 삼각형을 포함하는 평면까지의 거리
+    float RayToTriDist = VerticalDist / NdotD;
+    
+    // 광선이 삼각형을 포함하는 평면을 지나는 교점
+    // Ray 의 시작 지점 + ( t * 방향벡터 ) = Ray 와 삼각형이 충돌한 지점 (교점)
+    float3 vCrossPoint = _vStart + RayToTriDist * _vDir;
+    
+    // 위에서 구한 교점이 삼각형의 내부인지 테스트
+    float3 P0ToCross = vCrossPoint - _Pos[0];
+    
+    // 삼각형의 전체 면적(비율)
+    float Full = length(cross(Edge[0], Edge[1]));
+    
+    float U = length(cross(P0ToCross, Edge[0]));
+    float V = length(cross(P0ToCross, Edge[1]));
+    
+    // 교차 좌표가 삼각형 전체 비율을 넘어섰다면 return false
+    if (Full < U + V)
+        return 0;
+    
+    // Ray 가 삼각형 내부를 최종 통과를 했다고 판단하면 최종 거리와 교차 좌표를 전달
+    _CrossPos = vCrossPoint;
+    _Dist = RayToTriDist;
+    
+    return 1;
 }
 
 #endif
