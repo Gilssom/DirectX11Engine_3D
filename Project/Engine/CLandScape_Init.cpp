@@ -100,6 +100,14 @@ void CLandScape::CreateComputeShader()
 		m_HeightMapCS = new CHeightMapCS;
 		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"HeightMapCS", m_HeightMapCS.Get());
 	}
+
+	// RaycastCS »ý¼º
+	m_RaycastCS = (CRaycastCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"RaycastCS").Get();
+	if (nullptr == m_RaycastCS)
+	{
+		m_RaycastCS = new CRaycastCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"RaycastCS", m_RaycastCS.Get());
+	}
 }
 
 void CLandScape::CreateHeightMap(UINT width, UINT height)

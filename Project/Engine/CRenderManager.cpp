@@ -265,3 +265,11 @@ void CRenderManager::RegisterCamera(CCamera* newCamera, int priority)
 
 	m_vecCam[priority] = newCamera;
 }
+
+CCamera* CRenderManager::GetFOVCamera()
+{
+	if (m_vecCam.empty())
+		return m_EditorCam;
+	else
+		return m_vecCam[0];
+}

@@ -48,7 +48,9 @@ public:
 
 	Vec3 GetRelativeDir(DIR_TYPE type) { return m_RelativeDir[(UINT)type]; }
 	Vec3 GetWorldDir(DIR_TYPE type) { return m_WorldDir[(UINT)type]; }
+
 	const Matrix& GetWorldMat() { return m_matWorld; }
+	const Matrix& GetWorldMatInv() { return m_matWorldInv; }
 
 	void SetAbsolute(bool absolute) { m_Absolute = absolute; }
 	bool IsAbsolute() { return m_Absolute; }

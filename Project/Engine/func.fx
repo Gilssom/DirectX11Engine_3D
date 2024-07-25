@@ -196,5 +196,11 @@ float3 GetRandom(in Texture2D _Noise, float _NormalizedThreadID)
     return vNoise;
 }
 
+int IntersectsRay(float3 _Pos[3], float3 _vStart, float3 _vDir, out float3 _CrossPos, out float _Dist)
+{
+        
+    
+    return 0;
+}
 
 #endif

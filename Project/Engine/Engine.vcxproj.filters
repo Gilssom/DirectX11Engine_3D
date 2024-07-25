@@ -173,6 +173,9 @@
     <ClCompile Include="CHeightMapCS.cpp">
       <Filter>HLSL\06. ComputeShader\LandScape</Filter>
     </ClCompile>
+    <ClCompile Include="CRaycastCS.cpp">
+      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -361,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="CHeightMapCS.h">
       <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="CRaycastCS.h">
+      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -553,6 +559,9 @@
     <Filter Include="HLSL\06. ComputeShader\LandScape">
       <UniqueIdentifier>{bcc5fa4d-7eaa-4439-9a02-4734db9708b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\06. ComputeShader\Raycast">
+      <UniqueIdentifier>{baff287b-43af-4b10-9561-b395446a3b6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -611,6 +620,9 @@
     </FxCompile>
     <FxCompile Include="heightmap.fx">
       <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+    </FxCompile>
+    <FxCompile Include="raycast.fx">
+      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

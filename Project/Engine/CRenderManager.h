@@ -56,6 +56,7 @@ public:
 	Ptr<CTexture> GetOutputTarget() { return m_OutputTargetTexture; }
 
 	vector<CCamera*>& GetRegisteredCamera() { return m_vecCam; }
+	CCamera* GetFOVCamera();
 
 	int RegisterLight2D(CLight2D* light2D) 
 	{ 

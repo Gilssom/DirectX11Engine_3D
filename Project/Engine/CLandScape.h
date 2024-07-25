@@ -2,6 +2,16 @@
 #include "CRenderComponent.h"
 
 #include "CHeightMapCS.h"
+#include "CRaycastCS.h"
+
+class CStructuredBuffer;
+
+struct tRaycastOut
+{
+	Vec2	Location;
+	float	Distance;
+	int		Success;
+};
 
 class CLandScape : public CRenderComponent
 {
@@ -16,6 +26,9 @@ private:
 	Ptr<CTexture>			m_HeightMap;
 	bool					m_IsHeightMapCreated;
 	Ptr<CHeightMapCS>		m_HeightMapCS;
+
+	Ptr<CRaycastCS>			m_RaycastCS;
+	CStructuredBuffer*		m_RaycastOut;
 
 public:
 	void SetFace(UINT x, UINT z);
@@ -32,6 +45,7 @@ private:
 	void CreateMesh();
 	void CreateComputeShader();
 	void Binding();
+	void Raycasting();
 
 public:
 	CLONE(CLandScape);

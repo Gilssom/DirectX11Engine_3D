@@ -60,6 +60,7 @@ public:
 	float GetWidth() { return m_Width; }
 	float GetAspectRatio() { return m_AspectRatio; }
 	float GetScale() { return m_Scale; }
+	const tRay& GetRay() { return m_Ray; }
 
 	const Matrix& GetViewMat() { return m_matView; }
 	const Matrix& GetViewInvMat() { return m_matViewInv; }
