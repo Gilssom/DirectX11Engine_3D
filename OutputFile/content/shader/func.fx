@@ -196,7 +196,27 @@ float3 GetRandom(in Texture2D _Noise, float _NormalizedThreadID)
     return vNoise;
 }
 
-int IntersectsRay(float3 _Pos[3], float3 _vStart, float3 _vDir, out float3 _CrossPos, out float _Dist)
+
+float GetTessFactor(float _MinLevel, float _MaxLevel
+                  , float _MinRange, float _MaxRange
+                  , float3 _CamPos, float3 _Pos)
+{
+    float Dist = distance(_CamPos, _Pos);
+    
+    if (Dist < _MaxRange)
+        return pow(2.f, _MaxLevel);
+    else if (Dist > _MinRange)
+        return pow(2.f, _MinLevel);
+    else
+    {
+        float Level = 1.f + ((1.f - Dist / abs(_MaxRange - _MinRange)) * (_MaxLevel - _MinLevel - 1.f));
+        
+        return pow(2.f, Level);
+    }
+}
+
+
+int IntersectsRay(float3 _Pos[3], float3 _vStart, float3 _vDir, out float3 _CrossPos, out uint _Dist)
 {
     // 삼각형 표면 방향 벡터
     float3 Edge[2] = { (float3) 0.f, (float3) 0.f };
@@ -238,7 +258,7 @@ int IntersectsRay(float3 _Pos[3], float3 _vStart, float3 _vDir, out float3 _Cros
     
     // Ray 가 삼각형 내부를 최종 통과를 했다고 판단하면 최종 거리와 교차 좌표를 전달
     _CrossPos = vCrossPoint;
-    _Dist = RayToTriDist;
+    _Dist = (uint) RayToTriDist;
     
     return 1;
 }

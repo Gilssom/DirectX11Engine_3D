@@ -65,17 +65,31 @@ void CS_Raycast(uint3 _ID : SV_DispatchThreadID)
         vTriPos[2].y = 0.f;
     }
     
+    if (HasHeightMap)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            float2 vHeightMapUV = float2(vTriPos[i].x / (float) FACE_X, 1.f - vTriPos[i].z / (float) FACE_Z);
+            vTriPos[i].y = HEIGHT_MAP.SampleLevel(g_sam_0, vHeightMapUV, 0).r;
+        }
+    }
+    
     float3 vCrossPos = (float3) 0.f;
-    float Dist = 0.f;
+    uint Dist = 0.f;
     
     if (IntersectsRay(vTriPos, RayStart, RayDir, vCrossPos, Dist))
     {
-        float2 CrossUV = vCrossPos.xz / float2(FACE_X, FACE_Z);
-        CrossUV.y = 1.f - CrossUV.y;
-        
-        m_OutBuffer[0].Location = CrossUV;
-        m_OutBuffer[0].Distance = Dist;
-        m_OutBuffer[0].Success = 1;
+        InterlockedMin(m_OutBuffer[0].Distance, Dist);
+                 
+        // 입력한 값으로 교체가 잘 되었다.
+        if (m_OutBuffer[0].Distance == Dist)
+        {
+            float2 CrossUV = vCrossPos.xz / float2(FACE_X, FACE_Z);
+            CrossUV.y = 1.f - CrossUV.y;
+            
+            m_OutBuffer[0].Location = CrossUV;
+            m_OutBuffer[0].Success = 1;
+        }
     }
 }
 

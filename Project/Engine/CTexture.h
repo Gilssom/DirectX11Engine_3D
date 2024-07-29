@@ -18,8 +18,13 @@ private:
 	D3D11_TEXTURE2D_DESC				m_Desc;  // Animation 을 제작하기 위해 Texture 정보를 전달시키기 위함
 
 public:
+	const D3D11_TEXTURE2D_DESC& GetDesc() { return m_Desc; }
 	float GetWidth() { return (float)m_Desc.Width; }
 	float GetHeight() { return (float)m_Desc.Height; }
+	void* GetSysMem() { return m_Image.GetPixels(); }
+	const TexMetadata& GetMetaData() { return m_Image.GetMetadata(); }
+	size_t GetRowPitch() { return m_Image.GetImages()->rowPitch; }
+	size_t GetSlicePitch() { return m_Image.GetImages()->slicePitch; }
 
 	ComPtr<ID3D11Texture2D>				GetTex2D()	{ return m_Tex2D; }
 	ComPtr<ID3D11RenderTargetView>		GetRTV()	{ return m_RTV; }
@@ -48,6 +53,7 @@ public:
 	// bindFlag : D3D11_BIND_FLAG
 	int Create(UINT width, UINT height, DXGI_FORMAT pixelFormat, UINT bindFlag, D3D11_USAGE usage);
 	int Create(ComPtr<ID3D11Texture2D> tex2D);
+	int CreateArrayTexture(const vector<Ptr<CTexture>>& vecTex);
 
 
 public:

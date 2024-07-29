@@ -163,6 +163,31 @@ int CTexture::Create(ComPtr<ID3D11Texture2D> tex2D)
     return S_OK;
 }
 
+int CTexture::CreateArrayTexture(const vector<Ptr<CTexture>>& vecTex)
+{
+    m_Desc = vecTex[0]->GetDesc();
+    m_Desc.ArraySize = (UINT)vecTex.size();
+    m_Desc.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+    m_Desc.MipLevels = 1;
+
+    if(FAILED(DEVICE->CreateTexture2D(&m_Desc, nullptr, m_Tex2D.GetAddressOf())))
+    {
+        return E_FAIL;
+    }
+
+    // 각 원본 Texture 를 생성된 Array Texture 의 각 칸으로 복사시킨다.
+    for (size_t i = 0; i < vecTex.size(); i++)
+    {
+        UINT offset = D3D11CalcSubresource(0, i, 1);
+        CONTEXT->UpdateSubresource(m_Tex2D.Get(), offset, nullptr
+                                 , vecTex[i]->GetSysMem()
+                                 , vecTex[i]->GetRowPitch()
+                                 , vecTex[i]->GetSlicePitch());
+    }
+
+    return 0;
+}
+
 int CTexture::Load(const wstring& FilePath)
 {
     // 아래 함수 모두 DirectXTex 라이브러리에 있는 기능들

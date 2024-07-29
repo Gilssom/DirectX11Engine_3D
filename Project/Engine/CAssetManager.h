@@ -27,6 +27,8 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& strKey, ComPtr<ID3D11Texture2D> tex2D);
 
+    Ptr<CTexture> CreateTexture(const wstring& strKey, const vector<Ptr<CTexture>>& vecTex);
+
     // Asset 불러오기
     template<typename T>
     Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath);

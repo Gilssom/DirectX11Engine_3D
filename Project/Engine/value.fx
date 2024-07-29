@@ -89,10 +89,6 @@ cbuffer GLOBAL_DATA : register(b3)
     int     Light3DCount;       // 3D 광원 개수
 };
 
-
-SamplerState g_sam_0 : register(s0);
-SamplerState g_sam_1 : register(s1);
-
 // 기존 한장의 Texture
 Texture2D       g_tex_0     : register(t0);
 Texture2D       g_tex_1     : register(t1);
@@ -123,6 +119,10 @@ StructuredBuffer<tLightInfo> g_Light2D : register(t15);
 // Light3DInfo
 StructuredBuffer<tLightInfo> g_Light3D : register(t16);
 
+
+SamplerState g_sam_0 : register(s0);
+SamplerState g_sam_1 : register(s1);
+SamplerState g_sam_2 : register(s2);
 
 
 #define PI 3.1415926535f

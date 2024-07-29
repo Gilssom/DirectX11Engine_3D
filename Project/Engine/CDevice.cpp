@@ -183,7 +183,7 @@ int CDevice::CreateConstBuffer()
 
 int CDevice::CreateSamplerState()
 {
-	D3D11_SAMPLER_DESC desc[2] = {};
+	D3D11_SAMPLER_DESC desc[3] = {};
 
 	// ANISOTROPIC Sampler - 필터링 작업
 	desc[0].AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -214,6 +214,22 @@ int CDevice::CreateSamplerState()
 	CONTEXT->GSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
 	CONTEXT->PSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
 	CONTEXT->CSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
+
+
+	// MIN_MAG_MIP_POINT + CLAMP Sampler 
+	desc[2].AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc[2].AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc[2].AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc[2].Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	DEVICE->CreateSamplerState(desc + 2, m_Sampler[2].GetAddressOf());
+
+	CONTEXT->VSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+	CONTEXT->HSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+	CONTEXT->DSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+	CONTEXT->GSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+	CONTEXT->PSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+	CONTEXT->CSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());
+
 
 	return 0;
 }

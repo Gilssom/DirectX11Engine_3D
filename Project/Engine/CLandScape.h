@@ -9,7 +9,7 @@ class CStructuredBuffer;
 struct tRaycastOut
 {
 	Vec2	Location;
-	float	Distance;
+	UINT	Distance;
 	int		Success;
 };
 
@@ -19,16 +19,33 @@ private:
 	UINT					m_FaceX;
 	UINT					m_FaceZ;
 
+
+	// Brush
 	Vec2					m_BrushScale;
 	vector<Ptr<CTexture>>	m_vecBrush;
 	UINT					m_BrushIdx;
 
+
+	// Tessellation
+	float					m_MinLevel;			// 최소 Tess_Level
+	float					m_MaxLevel;			// 최대 Tess_Level
+	float					m_MaxLevelRange;	// 최대 Level 거리
+	float					m_MinLevelRange;	// 최소 Level 거리
+
+
+	// Height Map
 	Ptr<CTexture>			m_HeightMap;
 	bool					m_IsHeightMapCreated;
 	Ptr<CHeightMapCS>		m_HeightMapCS;
 
+
+	// Weight Map
+
+
+	// Raycasting
 	Ptr<CRaycastCS>			m_RaycastCS;
 	CStructuredBuffer*		m_RaycastOut;
+	tRaycastOut				m_Out;
 
 public:
 	void SetFace(UINT x, UINT z);

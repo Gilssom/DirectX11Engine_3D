@@ -49,6 +49,30 @@ Ptr<CTexture> CAssetManager::CreateTexture(const wstring& strKey, ComPtr<ID3D11T
 	return pTex;
 }
 
+Ptr<CTexture> CAssetManager::CreateTexture(const wstring& strKey, const vector<Ptr<CTexture>>& vecTex)
+{
+	Ptr<CTexture> pTex = FindAsset<CTexture>(strKey);
+
+	if (pTex != nullptr)
+	{
+		return pTex;
+	}
+
+	pTex = new CTexture;
+
+	if (FAILED(pTex->CreateArrayTexture(vecTex)))
+	{
+		MessageBox(nullptr, L"Array Texture 积己 角菩", L"Texture 积己 坷幅", MB_OK);
+		return nullptr;
+	}
+
+	pTex->m_Key = strKey;
+
+	m_mapAsset[(UINT)ASSET_TYPE::TEXTURE].insert(make_pair(strKey, pTex.Get()));
+
+	return pTex;
+}
+
 void CAssetManager::GetAssetNames(ASSET_TYPE type, _Out_ vector<string>& vecNames)
 {
 	for (const auto& pair : m_mapAsset[(UINT)type])

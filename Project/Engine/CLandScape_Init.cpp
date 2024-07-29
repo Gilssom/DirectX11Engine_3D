@@ -117,6 +117,4 @@ void CLandScape::CreateHeightMap(UINT width, UINT height)
 	m_HeightMap = CAssetManager::GetInst()->CreateTexture(L"LandScapeHeightMap", width, height
 													, DXGI_FORMAT_R32_FLOAT
 													, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
-
-
 }

@@ -129,7 +129,7 @@ struct tParticleModule
 struct tRaycastOut
 {
     float2  Location;
-    float   Distance;
+    uint    Distance;
     int     Success;
 };
 

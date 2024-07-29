@@ -2,6 +2,7 @@
 #define _LANDSCAPE
 
 #include "value.fx"
+#include "func.fx"
 
 // =============================
 // LandScpae Shader
@@ -14,8 +15,20 @@
 
 #define Tess_Level      g_float_0
 
+#define MIN_LEVEL       g_vec4_0.x
+#define MAX_LEVEL       g_vec4_0.y
+#define MIN_RANGE       g_vec4_0.z
+#define MAX_RANGE       g_vec4_0.w
+
+#define CAM_POS         g_vec4_1.xyz
+
 #define HEIGHT_MAP      g_tex_0
 #define HasHeightMap    g_btex_0
+
+#define IsShowBrush     g_btex_1
+#define BRUSH_TEX       g_tex_1
+#define BrushScale      g_vec2_0
+#define BrushPos        g_vec2_1
 // =============================
 
 struct VS_IN
@@ -27,6 +40,7 @@ struct VS_IN
 struct VS_OUT
 {
     float3 vPos : POSITION;
+    float3 vWorldPos : POSITION1;
     float2 vUV : TEXCOORD;
 };
 
@@ -41,6 +55,7 @@ VS_OUT VS_LandScape(VS_IN _in)
     // 다음 단계로 넘겨주는 필수 과정이기 때문이다.
     
     output.vPos = _in.vPos;
+    output.vWorldPos = mul(float4(_in.vPos, 1.f), g_matWorld).xyz;
     output.vUV = _in.vUV;
     
     return output;
@@ -60,11 +75,27 @@ struct TessLevel
 TessLevel PatchConstFunc(InputPatch<VS_OUT, 3> _Patch, uint _PatchID : SV_PrimitiveID)
 {
     TessLevel Level = (TessLevel) 0.f;
-        
-    Level.arrEdge[0]    = Tess_Level;
-    Level.arrEdge[1]    = Tess_Level;
-    Level.arrEdge[2]    = Tess_Level;
-    Level.Inside        = Tess_Level;
+    
+    
+    // Edge 0 :: 위, 아래
+    Level.arrEdge[0] = GetTessFactor(MIN_LEVEL, MAX_LEVEL
+                                    , MIN_RANGE, MAX_RANGE, CAM_POS
+                                    , (_Patch[1].vWorldPos + _Patch[2].vWorldPos) * 0.5f);
+    
+    // Edge 1 :: 좌, 우
+    Level.arrEdge[1] = GetTessFactor(MIN_LEVEL, MAX_LEVEL
+                                    , MIN_RANGE, MAX_RANGE, CAM_POS
+                                    , (_Patch[0].vWorldPos + _Patch[2].vWorldPos) * 0.5f);
+    
+    // Edge 2 :: 빗변 (서로 마주보는 변)
+    Level.arrEdge[2] = GetTessFactor(MIN_LEVEL, MAX_LEVEL
+                                    , MIN_RANGE, MAX_RANGE, CAM_POS
+                                    , (_Patch[0].vWorldPos + _Patch[1].vWorldPos) * 0.5f);
+    
+    // Inside :: 각 삼각형의 중심 (가중치의 중심)
+    Level.Inside     = GetTessFactor(MIN_LEVEL, MAX_LEVEL
+                                    , MIN_RANGE, MAX_RANGE, CAM_POS
+                                    , (_Patch[0].vWorldPos + _Patch[1].vWorldPos + _Patch[2].vWorldPos) / 3.f);
     
     return Level;
 }
@@ -77,7 +108,7 @@ struct HS_OUT
 
 // 정점 당 호출되는 함수
 [domain("tri")]
-[partitioning("integer")]
+[partitioning("fractional_odd")]
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [maxtessfactor(64)]
@@ -140,7 +171,7 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
     // Height Map 적용
     if (HasHeightMap)
     {
-        vLocalPos.y = HEIGHT_MAP.SampleLevel(g_sam_0, vFullUV, 0).x;
+        vLocalPos.y = HEIGHT_MAP.SampleLevel(g_sam_2, vFullUV, 0).x;
     
         // Normal Vector 재계산
         // 주변 정점의 좌표와 UV 좌표를 알아낸다.
@@ -154,10 +185,10 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
         float2 vDownUV      = vFullUV + float2(0.f, vUVStep.y);
         
         // 주변 정점의 Local 좌표
-        float3 vLeftPos     = float3(vLocalPos.x - fStep, HEIGHT_MAP.SampleLevel(g_sam_0, vLeftUV , 0).x, vLocalPos.z);
-        float3 vRightPos    = float3(vLocalPos.x + fStep, HEIGHT_MAP.SampleLevel(g_sam_0, vRightUV, 0).x, vLocalPos.z);
-        float3 vUpPos       = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_0, vUpUV   , 0).x, vLocalPos.z + fStep);
-        float3 vDownPos     = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_0, vDownUV , 0).x, vLocalPos.z - fStep);
+        float3 vLeftPos     = float3(vLocalPos.x - fStep, HEIGHT_MAP.SampleLevel(g_sam_2, vLeftUV , 0).x, vLocalPos.z);
+        float3 vRightPos    = float3(vLocalPos.x + fStep, HEIGHT_MAP.SampleLevel(g_sam_2, vRightUV, 0).x, vLocalPos.z);
+        float3 vUpPos       = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_2, vUpUV   , 0).x, vLocalPos.z + fStep);
+        float3 vDownPos     = float3(vLocalPos.x        , HEIGHT_MAP.SampleLevel(g_sam_2, vDownUV , 0).x, vLocalPos.z - fStep);
         
         // 주변 정점의 Local -> World 좌표 변환
         vLeftPos    = mul(float4(vLeftPos  , 1.f), g_matWorld).xyz;
@@ -205,7 +236,28 @@ PS_OUT PS_LandScape(DS_OUT _in)
 {
     PS_OUT output = (PS_OUT) 0.f;
     
+    float4 vBrush = (float4) 0.f;
+    
+    if (IsShowBrush)
+    {
+        // Brush Left Top 좌표
+        float2 BrushLT = BrushPos - (BrushScale * 0.5f);
+        
+        // 지형 기준, Pixel 위치 구하기
+        float2 vBrushUV = _in.vUV / float2(FACE_X, FACE_Z);
+        vBrushUV = (vBrushUV - BrushLT) / BrushScale;
+        
+        if (0.f <= vBrushUV.x && vBrushUV.x <= 1.f && 0.f <= vBrushUV.y && vBrushUV.y <= 1.f)
+        {
+            float BrushAlpha = BRUSH_TEX.Sample(g_sam_2, vBrushUV).a;
+            float3 BrushColor = float3(0.8f, 0.8f, 0.f);
+            
+            vBrush.rgb = (vBrush.rgb * (1 - BrushAlpha)) + (BrushColor * BrushAlpha);
+        }   
+    }
+    
     output.vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    output.vEmissive = float4(vBrush.rgb, 1.f);
     output.vNormal = float4(_in.vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
     

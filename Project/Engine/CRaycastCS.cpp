@@ -55,4 +55,7 @@ void CRaycastCS::Clear()
 {
 	m_OutBuffer->Clear_UAV();
 	m_OutBuffer = nullptr;
+
+	m_HeightMap->Clear_CS_SRV(0);
+	m_HeightMap = nullptr;
 }
