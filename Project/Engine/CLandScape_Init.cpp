@@ -74,25 +74,25 @@ void CLandScape::CreateComputeShader()
 void CLandScape::CreateTexture()
 {
 	// LandScape 전용 Texture Loading
-	m_ColorTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScape\\LandScape_Color.dds");
-	m_NormalTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScape\\LandScape_Normal.dds");
+	m_ColorTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScapeTexture\\LandScape_Color.dds");
+	m_NormalTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScapeTexture\\LandScape_Normal.dds");
 
 	// 가중치 Weight Map 전용 Structured Buffer
 	m_WeightWidth = 2048;
 	m_WeightHeight = 2048;
 
-	tWeight* pWeight = new tWeight[2048 * 2048];
+	//tWeight* pWeight = new tWeight[2048 * 2048];
+	//
+	//for (int i = 0; i < 2048 * 2048; ++i)
+	//{
+	//	tWeight weight = {};
+	//	weight.Weight[1] = 1.f;
+	//	pWeight[i] = weight;
+	//}
 
-	for (int i = 0; i < 2048 * 2048; ++i)
-	{
-		tWeight weight = {};
-		weight.Weight[1] = 1.f;
-		pWeight[i] = weight;
-	}
+	m_WeightMap->Create(sizeof(tWeight), m_WeightWidth * m_WeightHeight, SB_TYPE::SRV_UAV, true, nullptr);
 
-	m_WeightMap->Create(sizeof(tWeight), m_WeightWidth * m_WeightHeight, SB_TYPE::SRV_UAV, true, pWeight);
-
-	delete pWeight;
+	//delete pWeight;
 }
 
 void CLandScape::CreateHeightMap(UINT width, UINT height)

@@ -3,6 +3,7 @@
 
 #include "CHeightMapCS.h"
 #include "CRaycastCS.h"
+#include "CWeightMapCS.h"
 
 class CStructuredBuffer;
 
@@ -15,10 +16,10 @@ struct tRaycastOut
 
 struct tWeight
 {
-
+	float   Weight[8];
 };
 
-enum LANDSCAPE_MOD
+enum LANDSCAPE_MODE
 {
 	NONE,
 	HEIGHT_MAP,
@@ -55,6 +56,10 @@ private:
 	Ptr<CTexture>			m_ColorTex;
 	Ptr<CTexture>			m_NormalTex;
 	CStructuredBuffer*		m_WeightMap;
+	UINT                    m_WeightWidth;
+	UINT                    m_WeightHeight;
+	Ptr<CWeightMapCS>       m_WeightMapCS;
+	int                     m_WeightIdx;
 
 
 	// Raycasting
@@ -64,7 +69,7 @@ private:
 
 
 	// LandScape Mod
-	LANDSCAPE_MOD			m_Mode;
+	LANDSCAPE_MODE			m_Mode;
 
 
 public:

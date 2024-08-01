@@ -170,14 +170,14 @@
     <ClCompile Include="CLandScape_Init.cpp">
       <Filter>07. Component\Rendering\06. LandScape</Filter>
     </ClCompile>
-    <ClCompile Include="CHeightMapCS.cpp">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
-    </ClCompile>
     <ClCompile Include="CRaycastCS.cpp">
-      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\Raycast</Filter>
     </ClCompile>
     <ClCompile Include="CWeightMapCS.cpp">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\WeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightMapCS.cpp">
+      <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,14 +365,14 @@
     <ClInclude Include="CLandScape.h">
       <Filter>07. Component\Rendering\06. LandScape</Filter>
     </ClInclude>
-    <ClInclude Include="CHeightMapCS.h">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
-    </ClInclude>
     <ClInclude Include="CRaycastCS.h">
-      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\Raycast</Filter>
     </ClInclude>
     <ClInclude Include="CWeightMapCS.h">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\WeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightMapCS.h">
+      <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -565,7 +565,13 @@
     <Filter Include="HLSL\06. ComputeShader\LandScape">
       <UniqueIdentifier>{bcc5fa4d-7eaa-4439-9a02-4734db9708b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HLSL\06. ComputeShader\Raycast">
+    <Filter Include="HLSL\06. ComputeShader\LandScape\WeightMap">
+      <UniqueIdentifier>{c1419040-6329-4979-be5f-8dfba44715b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\06. ComputeShader\LandScape\HeightMap">
+      <UniqueIdentifier>{06a89677-0b65-43f7-bbe8-df2a8e5fd879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\06. ComputeShader\LandScape\Raycast">
       <UniqueIdentifier>{baff287b-43af-4b10-9561-b395446a3b6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -624,14 +630,14 @@
     <FxCompile Include="landscape.fx">
       <Filter>HLSL\05. LandScape</Filter>
     </FxCompile>
-    <FxCompile Include="heightmap.fx">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
-    </FxCompile>
     <FxCompile Include="raycast.fx">
-      <Filter>HLSL\06. ComputeShader\Raycast</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\Raycast</Filter>
     </FxCompile>
     <FxCompile Include="weightmap.fx">
-      <Filter>HLSL\06. ComputeShader\LandScape</Filter>
+      <Filter>HLSL\06. ComputeShader\LandScape\WeightMap</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap.fx">
+      <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

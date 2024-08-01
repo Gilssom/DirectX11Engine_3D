@@ -4,11 +4,6 @@
 #include "value.fx"
 #include "struct.fx"
 
-struct tWeight
-{
-    float Weight[8];
-};
-
 RWStructuredBuffer<tWeight>     WEIGHT_MAP : register(u0);
 StructuredBuffer<tRaycastOut>   Raycast : register(t20);
 
@@ -25,7 +20,30 @@ void CS_WeightMap(int3 _ID : SV_DispatchThreadID)
     if (WIDTH <= _ID.x || HEIGHT <= _ID.y || !Raycast[0].Success)
         return;
     
+    // 마우스 피킹위치를 2차원 Index 로 변환
+    int2 CenterPos = float2(WIDTH, HEIGHT) * Raycast[0].Location;
     
+    // Brush 범위를 해상도 단위로 변경
+    int2 Scale = float2(WIDTH, HEIGHT) * BRUSH_SCALE;
     
+    // 마우스 피킹위치를 중심으로 Brush 범위를 벗어난 영역에 대한 스레드들은 종료
+    if (_ID.x < CenterPos.x - Scale.x / 2 || _ID.x > CenterPos.x + Scale.x / 2
+        || _ID.y < CenterPos.y - Scale.y / 2 || _ID.y > CenterPos.y + Scale.y / 2)
+    {
+        return;
+    }
+    
+    // (Thread 좌표 - LeftTop 좌표) / Brush Scale 
+    // = 해당 Thread 가 참조해야하는 Brush Texture 의 UV 위치
+    int2 LeftTop = CenterPos - Scale / 2.f;
+    float2 vBrushUV = (float2)(_ID.xy - LeftTop) / (float2)Scale;
+    float Alpha = BRUSH_TEX.SampleLevel(g_sam_0, vBrushUV, 0).a;
+    
+    // Thread 가 담당한 Weight Map 에서의 1차원 Index 를 구한다.
+    int WeightMapIdx = WIDTH * _ID.y + _ID.x;
+    
+    WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX / 4][WEIGHT_IDX % 4] += 1.f * DeltaTime_Engine * Alpha;
+    saturate(WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX / 4][WEIGHT_IDX % 4]);
+
 }
 #endif

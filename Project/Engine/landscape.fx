@@ -284,7 +284,7 @@ PS_OUT PS_LandScape(DS_OUT _in)
         
         for (int i = 0; i < TEXTURE_ARRSIZE; ++i)
         {
-            float Weight = WEIGHT_MAP[WeightIdx].Weight[i];
+            float Weight = WEIGHT_MAP[WeightIdx].Weight[i / 4][i % 4];
             vColor += COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, i)) * Weight;
             
             // 제일 높았던 가중치를 기록

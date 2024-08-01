@@ -31,7 +31,7 @@ public:
 
     // Asset 불러오기
     template<typename T>
-    Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath = 0);
+    Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath = L"");
 
     // Asset 검색
     template<typename T>

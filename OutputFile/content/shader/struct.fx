@@ -133,4 +133,9 @@ struct tRaycastOut
     int     Success;
 };
 
+struct tWeight
+{
+    float4 Weight[2];
+};
+
 #endif
