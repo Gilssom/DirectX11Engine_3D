@@ -22,7 +22,15 @@ CLandScape::CLandScape()
 	, m_BrushIdx(-1)
 	, m_BrushScale(Vec2(0.2f, 0.2f))
 	, m_IsHeightMapCreated(false)
+	, m_WeightMap(nullptr)
+	, m_WeightWidth(0)
+	, m_WeightHeight(0)
+	, m_WeightIdx(0)
+	, m_Mode(LANDSCAPE_MODE::SPLATING)
 {
+	// 가중치 맵
+	m_WeightMap = new CStructuredBuffer;
+
 	Init();
 	SetFrustumCheck(false);
 
@@ -34,23 +42,55 @@ CLandScape::CLandScape()
 CLandScape::~CLandScape()
 {
 	delete m_RaycastOut;
+	delete m_WeightMap;
 }
 
 void CLandScape::FinalTick()
 {
+	// Mode Change
+	if (KEY_TAP(KEY::_7))
+	{
+		if (m_Mode == HEIGHT_MAP)
+			m_Mode = SPLATING;
+		else if (m_Mode == SPLATING)
+			m_Mode = NONE;
+		else
+			m_Mode = HEIGHT_MAP;
+	}
+
+	if (m_Mode == NONE)
+		return;
+
 	Raycasting();
 
-	if (m_IsHeightMapCreated && KEY_PRESSED(KEY::LBTN))
+	if (m_Mode == HEIGHT_MAP)
 	{
-		// RayCasting
-		if (m_Out.Success)
+		if (m_IsHeightMapCreated && KEY_PRESSED(KEY::LBTN))
 		{
-			// 높이맵 설정
-			m_HeightMapCS->SetBrushPos(m_RaycastOut);
-			m_HeightMapCS->SetBrushScale(m_BrushScale);
-			m_HeightMapCS->SetHeightMap(m_HeightMap);
-			m_HeightMapCS->SetBrushTex(m_vecBrush[m_BrushIdx]);
-			m_HeightMapCS->Execute();
+			// RayCasting
+			if (m_Out.Success)
+			{
+				// 높이맵 설정
+				m_HeightMapCS->SetBrushPos(m_RaycastOut);
+				m_HeightMapCS->SetBrushScale(m_BrushScale);
+				m_HeightMapCS->SetHeightMap(m_HeightMap);
+				m_HeightMapCS->SetBrushTex(m_vecBrush[m_BrushIdx]);
+				m_HeightMapCS->Execute();
+			}
+		}
+	}
+	else if (m_Mode == SPLATING)
+	{
+		if (KEY_PRESSED(KEY::LBTN) && m_WeightWidth != 0 && m_WeightHeight != 0)
+		{
+			m_WeightMapCS->SetBrushPos(m_RaycastOut);
+			m_WeightMapCS->SetBrushScale(m_BrushScale);
+			m_WeightMapCS->SetBrushTex(m_vecBrush[m_BrushIdx]);
+			m_WeightMapCS->SetWeightMap(m_WeightMap);
+			m_WeightMapCS->SetWeightIdx(m_WeightIdx);
+			m_WeightMapCS->SetWeightMapWidthHeight(m_WeightWidth, m_WeightHeight);
+
+			m_WeightMapCS->Execute();
 		}
 	}
 
@@ -67,7 +107,13 @@ void CLandScape::Render()
 {
 	Binding();
 
+	// WeightMap
+	m_WeightMap->Binding(20);
+
 	GetMesh()->Render();
+
+	// WeightMap
+	m_WeightMap->Clear_SRV();
 }
 
 void CLandScape::Binding()
@@ -77,7 +123,7 @@ void CLandScape::Binding()
 
 
 	// Wire Frame Test Setting
-	GetMaterial()->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
+	//GetMaterial()->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 
 
 	// 재질 정보 (지형에 대한 데이터 전달)
@@ -85,15 +131,22 @@ void CLandScape::Binding()
 
 	GetMaterial()->SetScalarParam(INT_0, m_FaceX);
 	GetMaterial()->SetScalarParam(INT_1, m_FaceZ);
+	GetMaterial()->SetScalarParam(INT_2, m_Mode);
+	GetMaterial()->SetScalarParam(INT_3, (int)m_ColorTex->GetArraySize());
+
 	GetMaterial()->SetScalarParam(VEC4_0, Vec4(m_MinLevel, m_MaxLevel, m_MinLevelRange, m_MaxLevelRange));
 	GetMaterial()->SetScalarParam(VEC4_1, pCam->Transform()->GetWorldPos());
+
 	GetMaterial()->SetTexParam(TEX_0, m_HeightMap);
+	GetMaterial()->SetTexParam(TEX_ARR_0, m_ColorTex);
+	GetMaterial()->SetTexParam(TEX_ARR_1, m_NormalTex);
 
 
 	// Brush 정보
 	GetMaterial()->SetTexParam(TEX_1, m_vecBrush[m_BrushIdx]);
 	GetMaterial()->SetScalarParam(VEC2_0, m_BrushScale);
 	GetMaterial()->SetScalarParam(VEC2_1, m_Out.Location);
+	GetMaterial()->SetScalarParam(VEC2_2, Vec2(m_WeightWidth, m_WeightHeight));
 
 	GetMaterial()->Binding();
 }

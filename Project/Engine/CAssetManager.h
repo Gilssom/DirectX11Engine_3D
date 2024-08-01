@@ -31,7 +31,7 @@ public:
 
     // Asset 불러오기
     template<typename T>
-    Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath);
+    Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath = 0);
 
     // Asset 검색
     template<typename T>
@@ -118,7 +118,11 @@ inline Ptr<T> CAssetManager::Load(const wstring& strKey, const wstring& strRelat
     else
     {
         wstring strFullPath = CPathManager::GetInst()->GetContentPath();
-        strFullPath += strRelativePath;
+
+        if(!strRelativePath.empty())
+            strFullPath += strRelativePath;
+        else
+            strFullPath += strKey;
 
         pAsset = new T;
 

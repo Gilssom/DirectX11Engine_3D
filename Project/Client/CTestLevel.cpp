@@ -21,6 +21,27 @@
 
 void CTestLevel::CreateTestLevel()
 {
+	#pragma region Texture Save Test
+	// Texture Save Test
+	//Ptr<CTexture> pTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Character.png");
+	//wstring contentPath = CPathManager::GetInst()->GetContentPath();
+	//pTex->Save(contentPath + L"texture\\Character2.png");
+
+	// Array Texture Save Test
+	//vector<Ptr<CTexture>> vecTex;
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_I_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_II_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_III_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_IV_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_V_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VI_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VII_normal.TGA"));
+	//
+	//Ptr<CTexture> pArrTex = CAssetManager::GetInst()->CreateTexture(L"LandScapeTexture", vecTex);
+	//wstring contentPath = CPathManager::GetInst()->GetContentPath();
+	//pArrTex->Save(contentPath + L"texture\\LandScapeTexture\\LandScape_Normal.dds");
+	#pragma endregion
+
 	// Prefab 제작 및 Asset Manager 에 등록
 	//CreatePrefab();
 

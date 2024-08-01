@@ -2,9 +2,11 @@
 #include "CTexture.h"
 
 #include "CDevice.h"
+#include "CPathManager.h"
 
 CTexture::CTexture(bool bEngine)
     : CAsset(ASSET_TYPE::TEXTURE, bEngine)
+    , m_Desc{}
 {
 }
 
@@ -185,6 +187,20 @@ int CTexture::CreateArrayTexture(const vector<Ptr<CTexture>>& vecTex)
                                  , vecTex[i]->GetSlicePitch());
     }
 
+    // Shader Resource View »ý¼º
+    D3D11_SHADER_RESOURCE_VIEW_DESC tSRVDesc = {};
+
+    tSRVDesc.Format                         = m_Desc.Format;
+    tSRVDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+    tSRVDesc.Texture2DArray.MipLevels       = 1;
+    tSRVDesc.Texture2DArray.MostDetailedMip = 0;
+    tSRVDesc.Texture2DArray.ArraySize       = m_Desc.ArraySize;
+
+    if (FAILED(DEVICE->CreateShaderResourceView(m_Tex2D.Get(), &tSRVDesc, m_SRV.GetAddressOf())))
+    {
+        E_FAIL;
+    }
+    
     return 0;
 }
 
@@ -252,5 +268,31 @@ int CTexture::Load(const wstring& FilePath)
 
 int CTexture::Save(const wstring& FilePath)
 {
-    return 0;
+    // GPU -> System
+    CaptureTexture(DEVICE, CONTEXT, m_Tex2D.Get(), m_Image);
+
+    // System -> File
+    wstring strRelativePath = CPathManager::GetInst()->GetRelativePath(FilePath);
+    SetRelativePath(strRelativePath);
+
+    HRESULT hr = E_FAIL;
+
+    if (m_Image.GetMetadata().arraySize == 1)
+    {
+        // png, jpg, jpeg, bmp
+        hr = SaveToWICFile(*m_Image.GetImages()
+                    , WIC_FLAGS_NONE
+                    , GetWICCodec(WICCodecs::WIC_CODEC_PNG)
+                    , FilePath.c_str());    
+    }
+    else
+    {
+        hr = SaveToDDSFile(m_Image.GetImages()
+                    , m_Image.GetMetadata().arraySize
+                    , m_Image.GetMetadata()
+                    , DDS_FLAGS_NONE
+                    , FilePath.c_str());
+    }
+
+    return hr;
 }

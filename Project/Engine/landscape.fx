@@ -10,8 +10,10 @@
 // DOMAIN   : Deferred
 // Mesh     : 자체 Mesh 
 // Parameter
-#define FACE_X          g_int_0
-#define FACE_Z          g_int_1
+#define FACE_X              g_int_0
+#define FACE_Z              g_int_1
+#define MODE                g_int_2
+#define TEXTURE_ARRSIZE     g_int_3
 
 #define Tess_Level      g_float_0
 
@@ -25,10 +27,19 @@
 #define HEIGHT_MAP      g_tex_0
 #define HasHeightMap    g_btex_0
 
+#define HasColorTex     g_btexarr_0
+#define HasNormalTex    g_btexarr_1
+
+#define COLOR_TEX       g_texarr_0
+#define NORMAL_TEX      g_texarr_1
+
 #define IsShowBrush     g_btex_1
 #define BRUSH_TEX       g_tex_1
 #define BrushScale      g_vec2_0
 #define BrushPos        g_vec2_1
+
+StructuredBuffer<tWeight> WEIGHT_MAP : register(t20);
+#define WEIGHT_RESOLUTION   g_vec2_2
 // =============================
 
 struct VS_IN
@@ -134,6 +145,7 @@ struct DS_OUT
 {
     float4 vPosition : SV_Position;
     float2 vUV : TEXCOORD;
+    float2 vFullUV : TEXCOORD1;
     
     float3 vViewPos : POSITION;
     float3 vViewTangent : TANGENT;
@@ -166,12 +178,12 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
     }
     
     // 지형 전체 기준 UV 좌표
-    float2 vFullUV = vUV / float2((float) FACE_X, (float) FACE_Z);
+    output.vFullUV = vUV / float2((float) FACE_X, (float) FACE_Z);
     
     // Height Map 적용
     if (HasHeightMap)
     {
-        vLocalPos.y = HEIGHT_MAP.SampleLevel(g_sam_2, vFullUV, 0).x;
+        vLocalPos.y = HEIGHT_MAP.SampleLevel(g_sam_2, output.vFullUV, 0).x;
     
         // Normal Vector 재계산
         // 주변 정점의 좌표와 UV 좌표를 알아낸다.
@@ -179,10 +191,10 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
         float2 vUVStep      = fStep / float2(FACE_X, FACE_Z);
         
         // 주변 정점의 UV 좌표
-        float2 vLeftUV      = vFullUV + float2(-vUVStep.x, 0.f);
-        float2 vRightUV     = vFullUV + float2(vUVStep.x, 0.f);
-        float2 vUpUV        = vFullUV + float2(0.f, -vUVStep.y);
-        float2 vDownUV      = vFullUV + float2(0.f, vUVStep.y);
+        float2 vLeftUV      = output.vFullUV + float2(-vUVStep.x, 0.f);
+        float2 vRightUV     = output.vFullUV + float2(vUVStep.x, 0.f);
+        float2 vUpUV        = output.vFullUV + float2(0.f, -vUVStep.y);
+        float2 vDownUV      = output.vFullUV + float2(0.f, vUVStep.y);
         
         // 주변 정점의 Local 좌표
         float3 vLeftPos     = float3(vLocalPos.x - fStep, HEIGHT_MAP.SampleLevel(g_sam_2, vLeftUV , 0).x, vLocalPos.z);
@@ -238,7 +250,7 @@ PS_OUT PS_LandScape(DS_OUT _in)
     
     float4 vBrush = (float4) 0.f;
     
-    if (IsShowBrush)
+    if (IsShowBrush && MODE)
     {
         // Brush Left Top 좌표
         float2 BrushLT = BrushPos - (BrushScale * 0.5f);
@@ -256,9 +268,52 @@ PS_OUT PS_LandScape(DS_OUT _in)
         }   
     }
     
-    output.vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    float4 vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    float3 vViewNormal = _in.vViewNormal;
+    
+    if(HasColorTex)
+    {
+        //vColor = COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, 1.f));
+        float2 vColRow = _in.vFullUV * WEIGHT_RESOLUTION;
+        int WeightIdx = WEIGHT_RESOLUTION.x * vColRow.y + vColRow.x;
+
+        vColor = (float4) 0.f;
+        
+        int WeightMaxIdx = -1;
+        float WeightMax = 0.f;
+        
+        for (int i = 0; i < TEXTURE_ARRSIZE; ++i)
+        {
+            float Weight = WEIGHT_MAP[WeightIdx].Weight[i];
+            vColor += COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, i)) * Weight;
+            
+            // 제일 높았던 가중치를 기록
+            if (WeightMax < Weight)
+            {
+                WeightMax = Weight;
+                WeightMaxIdx = i;
+            }
+        }
+        
+        if (WeightMaxIdx != -1)
+        {
+            float3 vNormal = NORMAL_TEX.Sample(g_sam_0, float3(_in.vUV, WeightMaxIdx));
+            vNormal = vNormal * 2.f - 1.f;
+        
+            float3x3 Rot =
+            {
+                _in.vViewTangent,
+                _in.vViewBinormal,
+                _in.vViewNormal
+            };
+        
+            vViewNormal = normalize(mul(vNormal, Rot));
+        }
+    }
+    
+    output.vColor = vColor;
     output.vEmissive = float4(vBrush.rgb, 1.f);
-    output.vNormal = float4(_in.vViewNormal, 1.f);
+    output.vNormal = float4(vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
     
     return output;

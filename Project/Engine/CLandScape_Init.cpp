@@ -4,6 +4,8 @@
 #include "CAssetManager.h"
 #include "CTexture.h"
 
+#include "CStructuredBuffer.h"
+
 void CLandScape::Init()
 {
 	// Land Scape 전용 Mesh 생성
@@ -13,11 +15,11 @@ void CLandScape::Init()
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
 	SetMaterial(pMaterial);
 
-	pMaterial->SetScalarParam(FLOAT_0, 1.f);
-	pMaterial->GetShader()->AddScalarParam("Tess Factor", FLOAT_0);
-
 	// LandScape 전용 Compute Shader 제작
 	CreateComputeShader();
+
+	// LandScape 전용 Texture 생성 및 로딩
+	CreateTexture();
 
 	// BrushTexture 추가	
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_GlowScene_2.png"));
@@ -39,6 +41,67 @@ void CLandScape::SetFace(UINT x, UINT z)
 	// Land Scape 전용 재질 참조
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
 	SetMaterial(pMaterial);
+}
+
+void CLandScape::CreateComputeShader()
+{
+	// Height Map CS 가 있으면 찾아오고, 없으면 컴파일해서 등록한다.
+	m_HeightMapCS = (CHeightMapCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"HeightMapCS").Get();
+
+	if (m_HeightMapCS == nullptr)
+	{
+		m_HeightMapCS = new CHeightMapCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"HeightMapCS", m_HeightMapCS.Get());
+	}
+
+	// RaycastCS 생성
+	m_RaycastCS = (CRaycastCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"RaycastCS").Get();
+	if (nullptr == m_RaycastCS)
+	{
+		m_RaycastCS = new CRaycastCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"RaycastCS", m_RaycastCS.Get());
+	}
+
+	// WeightMapCS 생성
+	m_WeightMapCS = (CWeightMapCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"WeightMapCS").Get();
+	if (nullptr == m_WeightMapCS)
+	{
+		m_WeightMapCS = new CWeightMapCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"WeightMapCS", m_WeightMapCS.Get());
+	}
+}
+
+void CLandScape::CreateTexture()
+{
+	// LandScape 전용 Texture Loading
+	m_ColorTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScape\\LandScape_Color.dds");
+	m_NormalTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScape\\LandScape_Normal.dds");
+
+	// 가중치 Weight Map 전용 Structured Buffer
+	m_WeightWidth = 2048;
+	m_WeightHeight = 2048;
+
+	tWeight* pWeight = new tWeight[2048 * 2048];
+
+	for (int i = 0; i < 2048 * 2048; ++i)
+	{
+		tWeight weight = {};
+		weight.Weight[1] = 1.f;
+		pWeight[i] = weight;
+	}
+
+	m_WeightMap->Create(sizeof(tWeight), m_WeightWidth * m_WeightHeight, SB_TYPE::SRV_UAV, true, pWeight);
+
+	delete pWeight;
+}
+
+void CLandScape::CreateHeightMap(UINT width, UINT height)
+{
+	m_IsHeightMapCreated = true;
+
+	m_HeightMap = CAssetManager::GetInst()->CreateTexture(L"LandScapeHeightMap", width, height
+													, DXGI_FORMAT_R32_FLOAT
+													, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
 }
 
 void CLandScape::CreateMesh()
@@ -88,33 +151,4 @@ void CLandScape::CreateMesh()
 	Ptr<CMesh> pMesh = new CMesh;
 	pMesh->Create(vecVtx.data(), vecVtx.size(), vecIdx.data(), vecIdx.size());
 	SetMesh(pMesh);
-}
-
-void CLandScape::CreateComputeShader()
-{
-	// Height Map CS 가 있으면 찾아오고, 없으면 컴파일해서 등록한다.
-	m_HeightMapCS = (CHeightMapCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"HeightMapCS").Get();
-
-	if (m_HeightMapCS == nullptr)
-	{
-		m_HeightMapCS = new CHeightMapCS;
-		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"HeightMapCS", m_HeightMapCS.Get());
-	}
-
-	// RaycastCS 생성
-	m_RaycastCS = (CRaycastCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"RaycastCS").Get();
-	if (nullptr == m_RaycastCS)
-	{
-		m_RaycastCS = new CRaycastCS;
-		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"RaycastCS", m_RaycastCS.Get());
-	}
-}
-
-void CLandScape::CreateHeightMap(UINT width, UINT height)
-{
-	m_IsHeightMapCreated = true;
-
-	m_HeightMap = CAssetManager::GetInst()->CreateTexture(L"LandScapeHeightMap", width, height
-													, DXGI_FORMAT_R32_FLOAT
-													, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
 }

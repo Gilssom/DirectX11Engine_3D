@@ -13,6 +13,18 @@ struct tRaycastOut
 	int		Success;
 };
 
+struct tWeight
+{
+
+};
+
+enum LANDSCAPE_MOD
+{
+	NONE,
+	HEIGHT_MAP,
+	SPLATING,
+};
+
 class CLandScape : public CRenderComponent
 {
 private:
@@ -40,12 +52,20 @@ private:
 
 
 	// Weight Map
+	Ptr<CTexture>			m_ColorTex;
+	Ptr<CTexture>			m_NormalTex;
+	CStructuredBuffer*		m_WeightMap;
 
 
 	// Raycasting
 	Ptr<CRaycastCS>			m_RaycastCS;
 	CStructuredBuffer*		m_RaycastOut;
 	tRaycastOut				m_Out;
+
+
+	// LandScape Mod
+	LANDSCAPE_MOD			m_Mode;
+
 
 public:
 	void SetFace(UINT x, UINT z);
@@ -61,6 +81,7 @@ public:
 private:
 	void CreateMesh();
 	void CreateComputeShader();
+	void CreateTexture();
 	void Binding();
 	int Raycasting();
 

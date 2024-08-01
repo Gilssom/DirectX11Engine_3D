@@ -12,6 +12,7 @@
 // Parameter
 #define FACE_X          g_int_0
 #define FACE_Z          g_int_1
+#define MODE            g_int_2
 
 #define Tess_Level      g_float_0
 
@@ -24,6 +25,12 @@
 
 #define HEIGHT_MAP      g_tex_0
 #define HasHeightMap    g_btex_0
+
+#define HasColorTex     g_btexarr_0
+#define HasNormalTex    g_btexarr_1
+
+#define COLOR_TEX       g_texarr_0
+#define NORMAL_TEX      g_texarr_1
 
 #define IsShowBrush     g_btex_1
 #define BRUSH_TEX       g_tex_1
@@ -238,7 +245,7 @@ PS_OUT PS_LandScape(DS_OUT _in)
     
     float4 vBrush = (float4) 0.f;
     
-    if (IsShowBrush)
+    if (IsShowBrush && MODE)
     {
         // Brush Left Top ÁÂÇ¥
         float2 BrushLT = BrushPos - (BrushScale * 0.5f);
@@ -256,7 +263,14 @@ PS_OUT PS_LandScape(DS_OUT _in)
         }   
     }
     
-    output.vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    float4 vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    
+    if(HasColorTex)
+    {
+        vColor = COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, 1.f));
+    }
+    
+    output.vColor = vColor;
     output.vEmissive = float4(vBrush.rgb, 1.f);
     output.vNormal = float4(_in.vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);

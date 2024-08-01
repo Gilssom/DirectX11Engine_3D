@@ -25,6 +25,7 @@ public:
 	const TexMetadata& GetMetaData() { return m_Image.GetMetadata(); }
 	size_t GetRowPitch() { return m_Image.GetImages()->rowPitch; }
 	size_t GetSlicePitch() { return m_Image.GetImages()->slicePitch; }
+	UINT GetArraySize() { return m_Desc.ArraySize; }
 
 	ComPtr<ID3D11Texture2D>				GetTex2D()	{ return m_Tex2D; }
 	ComPtr<ID3D11RenderTargetView>		GetRTV()	{ return m_RTV; }
@@ -46,6 +47,8 @@ public:
 
 private:
 	virtual int Load(const wstring& FilePath) override;
+
+public:
 	virtual int Save(const wstring& FilePath) override;
 
 

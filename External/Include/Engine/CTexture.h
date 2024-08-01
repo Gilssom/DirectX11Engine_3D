@@ -46,6 +46,8 @@ public:
 
 private:
 	virtual int Load(const wstring& FilePath) override;
+
+public:
 	virtual int Save(const wstring& FilePath) override;
 
 
