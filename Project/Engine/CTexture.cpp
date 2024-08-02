@@ -204,6 +204,62 @@ int CTexture::CreateArrayTexture(const vector<Ptr<CTexture>>& vecTex)
     return 0;
 }
 
+int CTexture::GenerateMip(UINT mipLevel)
+{
+    // Cube Texture 는 Mip Map 생성 금지
+    assert(m_Desc.MiscFlags * D3D11_SRV_DIMENSION_TEXTURECUBE == false);
+
+    m_Tex2D = nullptr;
+    m_RTV = nullptr;
+    m_DSV = nullptr;
+    m_SRV = nullptr;
+    m_UAV = nullptr;
+
+    m_Desc.MipLevels = mipLevel;
+    m_Desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+    m_Desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+    if (FAILED(DEVICE->CreateTexture2D(&m_Desc, nullptr, m_Tex2D.GetAddressOf())))
+    {
+        return E_FAIL;
+    }
+
+    for (UINT i = 0; i < m_Desc.ArraySize; i++)
+    {
+        UINT iSubIdx = D3D11CalcSubresource(0, i, m_Desc.MipLevels);
+
+        CONTEXT->UpdateSubresource(m_Tex2D.Get(), iSubIdx, nullptr
+                                , m_Image.GetImage(0, i, 0)->pixels
+                                , m_Image.GetImage(0, i, 0)->rowPitch
+                                , m_Image.GetImage(0, i, 0)->slicePitch);
+    }
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
+
+    if (m_Desc.ArraySize >= 2)
+    {
+        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+        SRVDesc.Texture2DArray.ArraySize = m_Desc.ArraySize;
+        SRVDesc.Texture2DArray.MipLevels = m_Desc.MipLevels;
+        SRVDesc.Texture2DArray.MostDetailedMip = 0;
+    }
+    else
+    {
+        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        SRVDesc.Texture2D.MipLevels = m_Desc.MipLevels;
+        SRVDesc.Texture2D.MostDetailedMip = 0;
+    }
+
+    if (FAILED(DEVICE->CreateShaderResourceView(m_Tex2D.Get(), &SRVDesc, m_SRV.GetAddressOf())))
+    {
+        return E_FAIL;
+    }
+
+    CONTEXT->GenerateMips(m_SRV.Get());
+
+    return S_OK;
+}
+
 int CTexture::Load(const wstring& FilePath)
 {
     // 아래 함수 모두 DirectXTex 라이브러리에 있는 기능들

@@ -58,6 +58,7 @@ public:
 	int Create(ComPtr<ID3D11Texture2D> tex2D);
 	int CreateArrayTexture(const vector<Ptr<CTexture>>& vecTex);
 
+	int GenerateMip(UINT mipLevel);
 
 public:
 	CLONE_DISABLE(CTexture);

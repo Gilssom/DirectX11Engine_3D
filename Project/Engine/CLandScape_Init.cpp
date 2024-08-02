@@ -75,7 +75,10 @@ void CLandScape::CreateTexture()
 {
 	// LandScape 전용 Texture Loading
 	m_ColorTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScapeTexture\\LandScape_Color.dds");
+	m_ColorTex->GenerateMip(6);
+
 	m_NormalTex = CAssetManager::GetInst()->Load<CTexture>(L"texture\\LandScapeTexture\\LandScape_Normal.dds");
+	m_NormalTex->GenerateMip(6);
 
 	// 가중치 Weight Map 전용 Structured Buffer
 	m_WeightWidth = 2048;

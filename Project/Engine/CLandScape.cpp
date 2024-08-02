@@ -48,7 +48,7 @@ CLandScape::~CLandScape()
 void CLandScape::FinalTick()
 {
 	// Mode Change
-	if (KEY_TAP(KEY::_7))
+	if (KEY_TAP(KEY::_6))
 	{
 		if (m_Mode == HEIGHT_MAP)
 			m_Mode = SPLATING;
@@ -56,6 +56,24 @@ void CLandScape::FinalTick()
 			m_Mode = NONE;
 		else
 			m_Mode = HEIGHT_MAP;
+	}
+
+	// Brush Change
+	if (KEY_TAP(KEY::_7))
+	{
+		++m_BrushIdx;
+
+		if (m_vecBrush.size() <= m_BrushIdx)
+			m_BrushIdx = 0;
+	}
+
+	// Weight Map Change
+	if (KEY_TAP(KEY::_8))
+	{
+		++m_WeightIdx;
+
+		if (m_ColorTex->GetArraySize() <= m_WeightIdx)
+			m_WeightIdx = 0;
 	}
 
 	if (m_Mode == NONE)
@@ -92,14 +110,6 @@ void CLandScape::FinalTick()
 
 			m_WeightMapCS->Execute();
 		}
-	}
-
-	if (KEY_TAP(KEY::_8))
-	{
-		++m_BrushIdx;
-
-		if (m_vecBrush.size() <= m_BrushIdx)
-			m_BrushIdx = 0;
 	}
 }
 

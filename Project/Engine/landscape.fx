@@ -273,9 +273,12 @@ PS_OUT PS_LandScape(DS_OUT _in)
     
     if(HasColorTex)
     {
+        float2 derivX = ddx(_in.vUV);
+        float2 derivY = ddy(_in.vUV);
+        
         //vColor = COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, 1.f));
-        float2 vColRow = _in.vFullUV * WEIGHT_RESOLUTION;
-        int WeightIdx = WEIGHT_RESOLUTION.x * vColRow.y + vColRow.x;
+        int2 vColRow = _in.vFullUV * WEIGHT_RESOLUTION;
+        int WeightMapIdx = WEIGHT_RESOLUTION.x * vColRow.y + vColRow.x;
 
         vColor = (float4) 0.f;
         
@@ -284,8 +287,13 @@ PS_OUT PS_LandScape(DS_OUT _in)
         
         for (int i = 0; i < TEXTURE_ARRSIZE; ++i)
         {
-            float Weight = WEIGHT_MAP[WeightIdx].Weight[i / 4][i % 4];
-            vColor += COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, i)) * Weight;
+            float Weight = WEIGHT_MAP[WeightMapIdx].Weight[i];
+            
+            if(Weight != 0.f)
+            {
+                //vColor += COLOR_TEX.SampleLevel(g_sam_0, float3(_in.vUV, i), 3) * Weight;
+                vColor += COLOR_TEX.SampleGrad(g_sam_0, float3(_in.vUV, i), derivX * 0.25f, derivY * 0.25f) * Weight;
+            }
             
             // 제일 높았던 가중치를 기록
             if (WeightMax < Weight)

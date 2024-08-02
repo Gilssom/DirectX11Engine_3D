@@ -190,6 +190,8 @@ int CDevice::CreateSamplerState()
 	desc[0].AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc[0].AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc[0].Filter = D3D11_FILTER_ANISOTROPIC;
+	desc[0].MinLOD = 0;
+	desc[0].MaxLOD = D3D11_FLOAT32_MAX;
 	DEVICE->CreateSamplerState(desc, m_Sampler[0].GetAddressOf());
 
 	CONTEXT->VSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
@@ -206,6 +208,8 @@ int CDevice::CreateSamplerState()
 	desc[1].AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc[1].AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc[1].Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	desc[1].MinLOD = 0;
+	desc[1].MaxLOD = D3D11_FLOAT32_MAX;
 	DEVICE->CreateSamplerState(desc + 1, m_Sampler[1].GetAddressOf());
 
 	CONTEXT->VSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
@@ -221,6 +225,8 @@ int CDevice::CreateSamplerState()
 	desc[2].AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	desc[2].AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	desc[2].Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	desc[2].MinLOD = 0;
+	desc[2].MaxLOD = D3D11_FLOAT32_MAX;
 	DEVICE->CreateSamplerState(desc + 2, m_Sampler[2].GetAddressOf());
 
 	CONTEXT->VSSetSamplers(2, 1, m_Sampler[2].GetAddressOf());

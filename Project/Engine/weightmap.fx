@@ -42,8 +42,36 @@ void CS_WeightMap(int3 _ID : SV_DispatchThreadID)
     // Thread 가 담당한 Weight Map 에서의 1차원 Index 를 구한다.
     int WeightMapIdx = WIDTH * _ID.y + _ID.x;
     
-    WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX / 4][WEIGHT_IDX % 4] += 1.f * DeltaTime_Engine * Alpha;
-    saturate(WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX / 4][WEIGHT_IDX % 4]);
+    // 가중치 값 확인
+    float weight = WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX];
+    float Add = 2.f * DeltaTime_Engine * Alpha;
+    
+    // 최종 가중치 추가
+    WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX] = saturate(weight + Add);
+    
+    // 가중치 초과량 확인
+    float Total = 0.f;
+    for (int i = 0; i < 8; i++)
+    {
+        Total += WEIGHT_MAP[WeightMapIdx].Weight[i];
+    }
+    
+    if (Total > 1.f)
+    {
+        float Over = Total - 1.f;
 
+        for (int i = 0; i < 8; i++)
+        {
+            if(i == WEIGHT_IDX)
+                continue;
+            
+            float Ratio = WEIGHT_MAP[WeightMapIdx].Weight[i] / (Total - WEIGHT_MAP[WeightMapIdx].Weight[WEIGHT_IDX]);
+            
+            WEIGHT_MAP[WeightMapIdx].Weight[i] -= Ratio * Over;
+            
+            if (WEIGHT_MAP[WeightMapIdx].Weight[i] < 0.f)
+                WEIGHT_MAP[WeightMapIdx].Weight[i] = 0.f;
+        }
+    }
 }
 #endif

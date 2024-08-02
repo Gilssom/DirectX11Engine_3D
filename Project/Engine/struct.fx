@@ -135,7 +135,7 @@ struct tRaycastOut
 
 struct tWeight
 {
-    float4 Weight[2];
+    float Weight[8];
 };
 
 #endif
