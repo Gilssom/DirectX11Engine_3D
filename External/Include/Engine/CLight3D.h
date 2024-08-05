@@ -5,6 +5,8 @@
 #include "CMesh.h"
 #include "CMaterial.h"
 
+class CMRT;
+
 class CLight3D : public CComponent
 {
 // 광원의 개수는 월드에 여러개가 있을 수 있다.
@@ -17,6 +19,9 @@ private:
 
 	Ptr<CMesh>		m_VolumeMesh;
 	Ptr<CMaterial>	m_LightMaterial;
+	
+	CGameObject*	m_LightCamObject;	// 광원 전용 Camera Object
+	CMRT*			m_ShadowMapMRT;		// Shadow Map MRT
 
 public:
 	void SetLightType(LIGHT_TYPE type);
@@ -31,6 +36,7 @@ public:
 	const tLightInfo& GetLightInfo() { return m_Info; }
 
 public:
+	void Render_ShadowMap();
 	void Lighting();
 
 public:
@@ -43,6 +49,6 @@ public:
 
 public:
 	CLight3D();
+	CLight3D(const CLight3D& origin);
 	~CLight3D();
 };
-

@@ -93,6 +93,7 @@ public:
 private:
 	void Render_Play();
 	void Render_Editor();
+	void Render_ShadowMap();
 
 private:
 	void DataBinding();

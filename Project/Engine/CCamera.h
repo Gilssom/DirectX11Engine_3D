@@ -43,6 +43,10 @@ private:
 	vector<CGameObject*>	m_vecParticle;
 	vector<CGameObject*>	m_vecPostProcess;
 
+
+	// Shadow Map
+	vector<CGameObject*>	m_vecShadowMap;
+
 public:
 	void SetCameraPriority(int priority);
 
@@ -72,6 +76,7 @@ public:
 	const UINT GetLayerCheck() { return m_LayerCheck; }
 
 	void SortObject();
+	void SortObject_ShadowMap();
 
 public:
 	virtual void Begin() override;
@@ -91,6 +96,8 @@ public:
 	void Render_transparent();
 	void Render_particle();
 	void Render_postprocess();
+
+	void Render_shadowmap();
 
 public:
 	virtual void SaveToLevelFile(FILE* file) override;

@@ -22,6 +22,8 @@ CTileMap::CTileMap()
 	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"TileMapMaterial"));
 
 	m_TileBuffer = new CStructuredBuffer;
+
+	SetDynamicShadow(false);
 }
 
 CTileMap::CTileMap(const CTileMap& other)

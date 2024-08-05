@@ -17,8 +17,11 @@ private:
 
 	bool				m_FrustumCheck;		// Frustum Culling 적용 여부
 
+	bool				m_DynamicShadow;	// 동적그림자 생성 여부
+
 public:
 	virtual void Render() = 0;
+	virtual void Render_shadowmap();
 
 public:
 	void SetMesh(Ptr<CMesh> mesh) { m_Mesh = mesh; }
@@ -33,6 +36,9 @@ public:
 
 	void SetFrustumCheck(bool check) { m_FrustumCheck = check; }
 	bool IsFrustumCheck() { return m_FrustumCheck; }
+
+	void SetDynamicShadow(bool use) { m_DynamicShadow = use; }
+	bool IsDynamicShadow() { return m_DynamicShadow; }
 
 	virtual void SaveToLevelFile(FILE* file) override;
 	virtual void LoadFromLevelFile(FILE* file) override;

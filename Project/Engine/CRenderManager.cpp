@@ -22,6 +22,7 @@ CRenderManager::CRenderManager()
 	 , m_Light2DBuffer(nullptr)
 	 , m_Light3DBuffer(nullptr)
 	 , m_MRT{}
+	 , m_OutputTarget(false)
 	 , m_BoundingBox(true)
 	 , m_TotalDrawCall(0)
 {
@@ -70,6 +71,14 @@ void CRenderManager::Render()
 	DataClear();
 }
 
+void CRenderManager::Render_ShadowMap()
+{
+	for (size_t i = 0; i < m_vecLight3D.size(); i++)
+	{
+		m_vecLight3D[i]->Render_ShadowMap();
+	}
+}
+
 void CRenderManager::Render_Play()
 {
 	// Camera Draw in Render Target
@@ -86,6 +95,9 @@ void CRenderManager::Render_Editor()
 {
 	if (m_EditorCam == nullptr)
 		return;
+
+	// Shadow Map Create
+	Render_ShadowMap();
 
 	g_Trans.matView		= m_EditorCam->GetViewMat();
 	g_Trans.matViewInv	= m_EditorCam->GetViewInvMat();

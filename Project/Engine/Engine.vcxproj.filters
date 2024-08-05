@@ -639,6 +639,9 @@
     <FxCompile Include="heightmap.fx">
       <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
     </FxCompile>
+    <FxCompile Include="shadowmap.fx">
+      <Filter>HLSL\04. Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

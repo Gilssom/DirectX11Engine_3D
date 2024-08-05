@@ -10,6 +10,7 @@ CSkyBox::CSkyBox()
 	SetSkyBoxType(m_Type);
 
 	SetFrustumCheck(false);
+	SetDynamicShadow(false);
 }
 
 CSkyBox::~CSkyBox()

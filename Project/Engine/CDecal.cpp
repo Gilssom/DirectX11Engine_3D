@@ -9,6 +9,8 @@ CDecal::CDecal()
 	, m_AsLight(false)
 	, m_LightPower(0.4f)
 {
+	SetDynamicShadow(false);
+
 	SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh"));
 	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DecalMaterial"));
 

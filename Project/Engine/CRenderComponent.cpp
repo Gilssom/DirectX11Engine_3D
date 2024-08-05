@@ -1,9 +1,12 @@
 #include "pch.h"
 #include "CRenderComponent.h"
 
+#include "CTransform.h"
+
 CRenderComponent::CRenderComponent(COMPONENT_TYPE type)
 	: CComponent(type)
 	, m_FrustumCheck(true)
+	, m_DynamicShadow(true)
 {
 
 }
@@ -14,6 +17,8 @@ CRenderComponent::CRenderComponent(const CRenderComponent& other)
 	, m_CurMaterial(nullptr)
 	, m_SharedMaterial(other.m_SharedMaterial)
 	, m_DynamicMaterial(nullptr)
+	, m_FrustumCheck(other.m_FrustumCheck)
+	, m_DynamicShadow(other.m_DynamicShadow)
 {
 	// 원본 Object 가 동적 재질을 가지고 있었고, 그걸 지금 사용 중이라면 복제
 	if (other.m_DynamicMaterial != nullptr && other.m_DynamicMaterial == other.m_CurMaterial)
@@ -77,6 +82,16 @@ void CRenderComponent::RestoreMaterial()
 	// Shared 재질로 다시 복구
 	m_CurMaterial = m_SharedMaterial;
 	m_DynamicMaterial = nullptr;
+}
+
+void CRenderComponent::Render_shadowmap()
+{
+	Transform()->Binding();
+
+	//Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
+	//pShadowMapMaterial->Binding();
+
+	GetMesh()->Render();
 }
 
 void CRenderComponent::SaveToLevelFile(FILE* file)

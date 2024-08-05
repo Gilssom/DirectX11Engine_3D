@@ -233,6 +233,14 @@ void CCamera::Render_postprocess()
 	}
 }
 
+void CCamera::Render_shadowmap()
+{
+	for (size_t i = 0; i < m_vecShadowMap.size(); i++)
+	{
+		m_vecShadowMap[i]->GetRenderComponent()->Render_shadowmap();
+	}
+}
+
 void CCamera::SetCameraPriority(int priority)
 {
 	// 카메라 우선순위 설정
@@ -270,6 +278,7 @@ void CCamera::SortObject()
 			{
 				// Render Com 있는지 확인 > Material 있는지 확인 > Shader 있는지 확인 후 처리
 				if (!vecObjects[j]->GetRenderComponent() 
+					|| vecObjects[j]->GetRenderComponent()->GetMesh() == nullptr
 					|| vecObjects[j]->GetRenderComponent()->GetMaterial() == nullptr
 					|| vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader() == nullptr)
 					continue;
@@ -335,6 +344,72 @@ void CCamera::SortObject()
 				case SHADER_DOMAIN::DOMAIN_POSTPROCESS:
 					m_vecPostProcess.push_back(vecObjects[j]);
 					break;
+				}
+			}
+		}
+	}
+}
+
+void CCamera::SortObject_ShadowMap()
+{
+	m_vecShadowMap.clear();
+
+	// Shader 의 속성마다 렌더링이 달라지기 때문에 오브젝트 정렬이 필요하다.
+	CLevel* pCurLevel = CLevelManager::GetInst()->GetCurrentLevel();
+
+	for (UINT i = 0; i < MAX_LAYER; i++)
+	{
+		// 해당 i번째 Layer 에 비트 체크가 되어 있는지 확인
+		if (m_LayerCheck & (1 << i))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(i);
+			const vector<CGameObject*>& vecObjects = pLayer->GetObjects();
+
+			for (size_t j = 0; j < vecObjects.size(); j++)
+			{
+				// Render Com 있는지 확인 > Material 있는지 확인 > Shader 있는지 확인 후 처리
+				if (!vecObjects[j]->GetRenderComponent()
+					|| vecObjects[j]->GetRenderComponent()->GetMesh() == nullptr
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial() == nullptr
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader() == nullptr
+					|| vecObjects[j]->GetRenderComponent()->IsDynamicShadow() == false)
+					continue;
+
+				//// Frustum Check 기능을 사용하는지, 사용한다면 Frsutum 내부에 들어오는지 Check
+				//if (vecObjects[j]->GetRenderComponent()->IsFrustumCheck())
+				//{
+				//	// vecObjects[j] 의 Bounding Box 에 대한 Check 가 필요하다.
+				//	if (vecObjects[j]->BoundingBox())
+				//	{
+				//		// Bounding Box 를 기준으로 비교
+				//		Vec3 vWorldPos = vecObjects[j]->BoundingBox()->GetWorldPos();
+				//		float radius = vecObjects[j]->BoundingBox()->GetRadius();
+
+				//		// Frustum 내부에 해당 object 가 없다면 continue
+				//		if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+				//		{
+				//			continue;
+				//		}
+				//	}
+				//	else
+				//	{
+				//		// 원점을 기준으로 비교
+				//		Vec3 vWorldPos = vecObjects[j]->Transform()->GetWorldPos();
+				//		Vec3 vWorldScale = vecObjects[j]->Transform()->GetWorldScale();
+
+				//		float radius = vWorldScale.x;
+				//		if (radius < vWorldScale.y) radius = vWorldScale.y;
+				//		if (radius < vWorldScale.z) radius = vWorldScale.z;
+
+				//		// Frustum 내부에 해당 object 가 없다면 continue
+				//		if (m_Frustum.FrustumSphereCheck(vWorldPos, radius) == false)
+				//		{
+				//			continue;
+				//		}
+				//	}
+				//}
+
+					m_vecShadowMap.push_back(vecObjects[j]);
 				}
 			}
 		}
