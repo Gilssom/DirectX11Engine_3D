@@ -17,6 +17,8 @@ public:
 	void ClearDepthStencil(); // 깊이 텍스처는 공유해서 사용하기 때문에 독립적으로 분리
 	void OMSet(); // 최종 출력 지정
 
+	Ptr<CTexture> GetRenderTarget(UINT idx) { return m_RTTex[idx]; }
+
 	void SetViewPort(const D3D11_VIEWPORT& viewPort) { m_ViewPort = viewPort; }
 	const D3D11_VIEWPORT& GetViewPort() { return m_ViewPort; }
 

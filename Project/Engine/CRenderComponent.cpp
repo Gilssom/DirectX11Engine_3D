@@ -88,8 +88,8 @@ void CRenderComponent::Render_shadowmap()
 {
 	Transform()->Binding();
 
-	//Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
-	//pShadowMapMaterial->Binding();
+	Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
+	pShadowMapMaterial->Binding();
 
 	GetMesh()->Render();
 }

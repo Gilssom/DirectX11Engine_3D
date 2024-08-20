@@ -811,6 +811,21 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 
 	// ====================
+	//	ShadowMap Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\shadowmap.fx", "VS_ShadowMap");
+	pShader->CreatePixelShader(strPath + L"shader\\shadowmap.fx", "PS_ShadowMap");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_SHADOWMAP);
+
+	AddAsset<CGraphicShader>(L"ShadowMapShader", pShader);
+
+
+	// ====================
 	//	Decal Shader
 	// ====================
 	pShader = new CGraphicShader;
@@ -972,6 +987,12 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"MergeMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"MergeShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// ShadowMapMtrl
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"ShadowMapMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"ShadowMapShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Decal Material

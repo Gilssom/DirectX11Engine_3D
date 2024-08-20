@@ -12,6 +12,9 @@
 #define LightIdx        g_int_0
 #define PositionTarget  g_tex_0
 #define NormalTarget    g_tex_1
+
+#define SHADOW_MAP      g_tex_2
+#define LIGHT_VP        g_mat_0
 // =============================
 
 struct VS_IN
@@ -56,14 +59,46 @@ PS_OUT PS_DirLight(VS_OUT _in)
         discard;
     }
     
+    
+    // 빛을 받을 위치를 월드 좌표계 기준으로 변경한다.
+    float3 vWorldPos = mul(float4(vPosition.xyz, 1.f), g_matViewInv);
+    
+    float4 vLightProjPos = mul(float4(vWorldPos, 1.f), LIGHT_VP);
+
+    float2 vShadowMapUV = vLightProjPos.xy / vLightProjPos.w;
+    
+    // 광원 시점에서 바라본 최종 UV 좌표
+    vShadowMapUV.x = vShadowMapUV.x / 2.f + 0.5f;
+    vShadowMapUV.y = 1.f - (vShadowMapUV.y / 2.f + 0.5f);
+    
+    // 광원 시점에서 그림자를 판별할 부분의 기존 깊이 값
+    float Depth = vLightProjPos.z / vLightProjPos.w;
+    
+    // 그림자 맵에 기록되어 있는 깊이 값
+    float fShadowPower = 0.f;
+    float fShadowDepth = SHADOW_MAP.Sample(g_sam_0, vShadowMapUV);
+
+    // fShadowDepth 가 기존 Depth 값 보다 작으면 그림자 영역이 된다.
+    // 기존 지점까지 가는 도중에 더 가까운 무언가의 깊이 값이 잡혔기 때문이다.
+    if (vShadowMapUV.x >= 0.f && vShadowMapUV.x <= 1.f
+        && vShadowMapUV.y >= 0.f && vShadowMapUV.y <= 1.f)
+    {
+        // 그림자 판정
+        if (fShadowDepth + 0.001f < Depth)
+        {
+            fShadowPower = 0.9f;
+        }
+    }
+    
+    // 빛 계산 과정
     // 호출된 픽셀과 동일한 위치에 기록된 Normal 값을 가져온다.
     float4 vNormal = NormalTarget.Sample(g_sam_0, _in.vUV);
     
     tLight light = (tLight) 0.f;
     CalLight3D(LightIdx, vPosition.xyz, vNormal.xyz, light);
     
-    output.vDiffuse = light.vDiffuse + light.vAmbient;
-    output.vSpecular = light.vMaxSpecular;
+    output.vDiffuse = (light.vDiffuse + light.vAmbient) * (1.f - fShadowPower);
+    output.vSpecular = light.vMaxSpecular * (1.f - fShadowPower);
     
     output.vDiffuse.a = vPosition.z;
     output.vSpecular.a = vPosition.z;

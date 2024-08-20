@@ -55,6 +55,11 @@ void CLight3D::FinalTick()
 		DrawDebugCone(m_Info.WorldPos, Transform()->GetRelativeScale(), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), false, 0.f);
 	else
 		DrawDebugCube(m_Info.WorldPos, Vec3(50.f, 50.f, 200.f), Transform()->GetRelativeRotation(), Vec4(1.f, 1.f, 0.f, 1.f), true, 0.f);
+
+
+	// 광원 카메라 정보 갱신
+	*m_LightCamObject->Transform() = *Transform();
+	m_LightCamObject->Camera()->FinalTick();
 }
 
 void CLight3D::Render_ShadowMap()
@@ -63,6 +68,8 @@ void CLight3D::Render_ShadowMap()
 		return;
 
 	// Shadow Map 으로 교체
+	m_ShadowMapMRT->ClearTarget();
+	m_ShadowMapMRT->ClearDepthStencil();
 	m_ShadowMapMRT->OMSet();
 
 	// 광원 시점의 Camera 를 기준
@@ -80,8 +87,22 @@ void CLight3D::Render_ShadowMap()
 
 void CLight3D::Lighting()
 {
+	Binding();
+	m_VolumeMesh->Render();
+}
+
+void CLight3D::Binding()
+{
 	m_LightMaterial->SetScalarParam(INT_0, m_LightIdx);
-	m_LightMaterial->Binding();
+
+	if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::DIRECTIONAL)
+	{
+		Ptr<CTexture> pRTTex = m_ShadowMapMRT->GetRenderTarget(0);
+		m_LightMaterial->SetTexParam(TEX_2, pRTTex);
+
+		Matrix matVP = m_LightCamObject->Camera()->GetViewMat() * m_LightCamObject->Camera()->GetProjMat();
+		m_LightMaterial->SetScalarParam(MAT_0, matVP);
+	}
 
 	if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::POINT)
 	{
@@ -92,7 +113,7 @@ void CLight3D::Lighting()
 		Transform()->Binding();
 	}
 
-	m_VolumeMesh->Render();
+	m_LightMaterial->Binding();
 }
 
 void CLight3D::SetRange(float range)
@@ -115,25 +136,27 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 		m_LightMaterial->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"PositionTargetTex"));
 		m_LightMaterial->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"NormalTargetTex"));
 
-		if (m_ShadowMapMRT)
+		if (m_ShadowMapMRT != nullptr)
 		{
 			delete m_ShadowMapMRT;
-			m_ShadowMapMRT = new CMRT;
-
-			// 1. ShadowMap Target
-			Ptr<CTexture> pShadowMap = CAssetManager::GetInst()->CreateTexture(L"ShadowMapTargetTex"
-										, 4096, 4096
-										, DXGI_FORMAT_R32_FLOAT
-										, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-
-			// Depth Stencil Texture 생성
-			Ptr<CTexture> DSTex = CAssetManager::GetInst()->CreateTexture(L"ShadowMapDSTex"
-										, 4096, 4096
-										, DXGI_FORMAT_D24_UNORM_S8_UINT
-										, D3D11_BIND_DEPTH_STENCIL);
-
-			m_ShadowMapMRT->Create(&pShadowMap, 1, DSTex);
+			m_ShadowMapMRT = nullptr;
 		}
+
+		m_ShadowMapMRT = new CMRT;
+
+		// 1. ShadowMap Target
+		Ptr<CTexture> pShadowMap = CAssetManager::GetInst()->CreateTexture(L"ShadowMapTargetTex"
+									, 4096, 4096
+									, DXGI_FORMAT_R32_FLOAT
+									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+
+		// Depth Stencil Texture 생성
+		Ptr<CTexture> DSTex = CAssetManager::GetInst()->CreateTexture(L"ShadowMapDSTex"
+									, 4096, 4096
+									, DXGI_FORMAT_D24_UNORM_S8_UINT
+									, D3D11_BIND_DEPTH_STENCIL);
+
+		m_ShadowMapMRT->Create(&pShadowMap, 1, DSTex);
 
 		// 광원의 위치에 상관없이 일정한 방향으로 그림자가 나와야 한다. (직교투영)
 		m_LightCamObject->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);

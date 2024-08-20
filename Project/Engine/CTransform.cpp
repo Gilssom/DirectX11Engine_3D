@@ -143,6 +143,24 @@ Vec3 CTransform::GetWorldRotation()
 	return Vec3();
 }
 
+CTransform& CTransform::operator=(const CTransform& other)
+{
+	m_RelativePos = other.m_RelativePos;
+	m_RelativeScale = other.m_RelativeScale;
+	m_RelativeRotation = other.m_RelativeRotation;
+	m_matWorld = other.m_matWorld;
+	m_matWorldInv = other.m_matWorldInv;
+	m_Absolute = other.m_Absolute;
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_RelativeDir[i] = other.m_RelativeDir[i];
+		m_WorldDir[i] = other.m_WorldDir[i];
+	}
+
+	return *this;
+}
+
 void CTransform::SaveToLevelFile(FILE* file)
 {
 	fwrite(&m_RelativePos, sizeof(Vec3), 1, file);

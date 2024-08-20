@@ -39,6 +39,9 @@ public:
 	void Render_ShadowMap();
 	void Lighting();
 
+private:
+	void Binding();
+
 public:
 	virtual void FinalTick() override;
 

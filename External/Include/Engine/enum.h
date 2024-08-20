@@ -217,6 +217,7 @@ enum class SHADER_DOMAIN
 	DOMAIN_DEFERRED,	// 디퍼드 전용
 	DOMAIN_DECAL,		// 디퍼드 데칼
 	DOMAIN_LIGHTING,	// 디퍼드 라이팅(광원)
+	DOMAIN_SHADOWMAP,	// 쉐도우맵 생성
 
 	DOMAIN_OPAQUE,		// 불투명
 	DOMAIN_MASKED,		// 일부 투명

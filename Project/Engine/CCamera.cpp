@@ -60,7 +60,7 @@ void CCamera::Begin()
 void CCamera::FinalTick()
 {
 	// View 행렬 계산
-	Vec3 vCamWorldPos = Transform()->GetRelativePos();
+	Vec3 vCamWorldPos = Transform()->GetWorldPos();
 
 	// 1. 이동 행렬 만들기
 	// 오브젝트들은 카메라 이동량의 반대만큼 계산을 해주어야함
@@ -89,9 +89,9 @@ void CCamera::FinalTick()
 	// 전치 행렬이 곧 회전 행렬이 된다.
 
 	// 카메라의 우, 상, 전 벡터
-	Vec3 vR = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
-	Vec3 vU = Transform()->GetRelativeDir(DIR_TYPE::UP);
-	Vec3 vF = Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+	Vec3 vU = Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vec3 vF = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 	Matrix matViewtRot = XMMatrixIdentity();
 
@@ -409,8 +409,7 @@ void CCamera::SortObject_ShadowMap()
 				//	}
 				//}
 
-					m_vecShadowMap.push_back(vecObjects[j]);
-				}
+				m_vecShadowMap.push_back(vecObjects[j]);
 			}
 		}
 	}

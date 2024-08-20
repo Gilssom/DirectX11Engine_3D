@@ -29,17 +29,17 @@ void CTestLevel::CreateTestLevel()
 
 	// Array Texture Save Test
 	//vector<Ptr<CTexture>> vecTex;
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_I_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_II_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_III_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_IV_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_V_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VI_normal.TGA"));
-	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VII_normal.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_I_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_II_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_III_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_IV_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_V_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VI_albedo.TGA"));
+	//vecTex.push_back(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\LandScapeTexture\\gl1_ground_VII_albedo.TGA"));
 	//
 	//Ptr<CTexture> pArrTex = CAssetManager::GetInst()->CreateTexture(L"LandScapeTexture", vecTex);
 	//wstring contentPath = CPathManager::GetInst()->GetContentPath();
-	//pArrTex->Save(contentPath + L"texture\\LandScapeTexture\\LandScape_Normal.dds");
+	//pArrTex->Save(contentPath + L"texture\\LandScapeTexture\\LandScape_Color.dds");
 	#pragma endregion
 
 	// Prefab 제작 및 Asset Manager 에 등록
@@ -69,7 +69,7 @@ void CTestLevel::CreateTestLevel()
 	pLight->AddComponent(new CTransform);
 	pLight->AddComponent(new CLight3D);
 	
-	pLight->Transform()->SetRelativePos(500.f, 100.f, 500.f);
+	pLight->Transform()->SetRelativePos(-500.f, 3000.f, -500.f);
 	pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
 
 	pLight->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);

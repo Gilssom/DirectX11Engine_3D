@@ -55,6 +55,9 @@ public:
 	void SetAbsolute(bool absolute) { m_Absolute = absolute; }
 	bool IsAbsolute() { return m_Absolute; }
 
+	CTransform& operator = (const CTransform& other);
+
+public:
 	void SetLeft(bool isLeft) { m_IsLeft = isLeft; }
 	void SetRight(bool isRight) { m_IsRight = isRight; }
 
