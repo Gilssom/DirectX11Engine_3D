@@ -441,3 +441,5 @@ Project/Scripts/x64/Debug/Scripts_d.pch
 Project/Client/x64/Debug/Client.pch
 Project/Engine/x64/Debug/Engine_d.pch
 *.pch
+*.TGA
+*.dds
