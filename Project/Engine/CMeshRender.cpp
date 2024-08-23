@@ -24,8 +24,8 @@ void CMeshRender::FinalTick()
 
 void CMeshRender::Render()
 {
-	// 만약 Mesh 나 Material 이 없다면 (동적 재질이 있으면 동적 재질을 반환함)
-	if (GetMesh() == nullptr || GetMaterial() == nullptr)
+	// 만약 Mesh 가 없다면
+	if (GetMesh() == nullptr)
 	{
 		return;
 	}
@@ -33,20 +33,27 @@ void CMeshRender::Render()
 	// 오브젝트의 위치값을 상수버퍼를 통해서 바인딩
 	Transform()->Binding();
 
-	// 오브젝트가 Animator 컴포넌트가 있다면
-	if (Animator2D())
+	// 메쉬의 모든 부위를 렌더링 한다.
+	UINT iMtrlCount = GetMaterialCount();
+	for (int i = 0; i < iMtrlCount; ++i)
 	{
-		Animator2D()->Binding();
-	}
-	else
-	{
-		// 이전 오브젝트의 상수 버퍼 영향을 안받게 Clear 를 해야함
-		CAnim2D::Clear();
-	}
+		if (nullptr == GetMaterial(i))
+			continue;
 
-	// 사용할 머테리얼(쉐이더, 텍스처) 바인딩
-	GetMaterial()->Binding();
+		// 오브젝트가 Animator 컴포넌트가 있다면..
+		if (Animator2D())
+		{
+			Animator2D()->Binding();
+		}
+		else
+		{
+			CAnim2D::Clear();
+		}
 
-	// Mesh , Shader Render
-	GetMesh()->Render();
+		// 사용할 쉐이더 바인딩
+		GetMaterial(i)->Binding();
+
+		// 메시 바인딩 및 렌더링
+		GetMesh()->Render(i);
+	}
 }

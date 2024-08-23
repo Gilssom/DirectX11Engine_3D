@@ -120,7 +120,7 @@ void CLandScape::Render()
 	// WeightMap
 	m_WeightMap->Binding(20);
 
-	GetMesh()->Render();
+	GetMesh()->Render(0);
 
 	// WeightMap
 	m_WeightMap->Clear_SRV();
@@ -139,26 +139,26 @@ void CLandScape::Binding()
 	// 재질 정보 (지형에 대한 데이터 전달)
 	CCamera* pCam = CRenderManager::GetInst()->GetFOVCamera();
 
-	GetMaterial()->SetScalarParam(INT_0, m_FaceX);
-	GetMaterial()->SetScalarParam(INT_1, m_FaceZ);
-	GetMaterial()->SetScalarParam(INT_2, m_Mode);
-	GetMaterial()->SetScalarParam(INT_3, (int)m_ColorTex->GetArraySize());
+	GetMaterial(0)->SetScalarParam(INT_0, m_FaceX);
+	GetMaterial(0)->SetScalarParam(INT_1, m_FaceZ);
+	GetMaterial(0)->SetScalarParam(INT_2, m_Mode);
+	GetMaterial(0)->SetScalarParam(INT_3, (int)m_ColorTex->GetArraySize());
 
-	GetMaterial()->SetScalarParam(VEC4_0, Vec4(m_MinLevel, m_MaxLevel, m_MinLevelRange, m_MaxLevelRange));
-	GetMaterial()->SetScalarParam(VEC4_1, pCam->Transform()->GetWorldPos());
+	GetMaterial(0)->SetScalarParam(VEC4_0, Vec4(m_MinLevel, m_MaxLevel, m_MinLevelRange, m_MaxLevelRange));
+	GetMaterial(0)->SetScalarParam(VEC4_1, pCam->Transform()->GetWorldPos());
 
-	GetMaterial()->SetTexParam(TEX_0, m_HeightMap);
-	GetMaterial()->SetTexParam(TEX_ARR_0, m_ColorTex);
-	GetMaterial()->SetTexParam(TEX_ARR_1, m_NormalTex);
+	GetMaterial(0)->SetTexParam(TEX_0, m_HeightMap);
+	GetMaterial(0)->SetTexParam(TEX_ARR_0, m_ColorTex);
+	GetMaterial(0)->SetTexParam(TEX_ARR_1, m_NormalTex);
 
 
 	// Brush 정보
-	GetMaterial()->SetTexParam(TEX_1, m_vecBrush[m_BrushIdx]);
-	GetMaterial()->SetScalarParam(VEC2_0, m_BrushScale);
-	GetMaterial()->SetScalarParam(VEC2_1, m_Out.Location);
-	GetMaterial()->SetScalarParam(VEC2_2, Vec2(m_WeightWidth, m_WeightHeight));
+	GetMaterial(0)->SetTexParam(TEX_1, m_vecBrush[m_BrushIdx]);
+	GetMaterial(0)->SetScalarParam(VEC2_0, m_BrushScale);
+	GetMaterial(0)->SetScalarParam(VEC2_1, m_Out.Location);
+	GetMaterial(0)->SetScalarParam(VEC2_2, Vec2(m_WeightWidth, m_WeightHeight));
 
-	GetMaterial()->Binding();
+	GetMaterial(0)->Binding();
 }
 
 int CLandScape::Raycasting()

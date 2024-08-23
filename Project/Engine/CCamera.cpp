@@ -279,8 +279,8 @@ void CCamera::SortObject()
 				// Render Com 있는지 확인 > Material 있는지 확인 > Shader 있는지 확인 후 처리
 				if (!vecObjects[j]->GetRenderComponent() 
 					|| vecObjects[j]->GetRenderComponent()->GetMesh() == nullptr
-					|| vecObjects[j]->GetRenderComponent()->GetMaterial() == nullptr
-					|| vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader() == nullptr)
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial(0) == nullptr
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial(0)->GetShader() == nullptr)
 					continue;
 
 				// Frustum Check 기능을 사용하는지, 사용한다면 Frsutum 내부에 들어오는지 Check
@@ -317,7 +317,7 @@ void CCamera::SortObject()
 					}
 				}
 
-				SHADER_DOMAIN domain = vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader()->GetDomain();
+				SHADER_DOMAIN domain = vecObjects[j]->GetRenderComponent()->GetMaterial(0)->GetShader()->GetDomain();
 
 				switch (domain)
 				{
@@ -370,8 +370,8 @@ void CCamera::SortObject_ShadowMap()
 				// Render Com 있는지 확인 > Material 있는지 확인 > Shader 있는지 확인 후 처리
 				if (!vecObjects[j]->GetRenderComponent()
 					|| vecObjects[j]->GetRenderComponent()->GetMesh() == nullptr
-					|| vecObjects[j]->GetRenderComponent()->GetMaterial() == nullptr
-					|| vecObjects[j]->GetRenderComponent()->GetMaterial()->GetShader() == nullptr
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial(0) == nullptr
+					|| vecObjects[j]->GetRenderComponent()->GetMaterial(0)->GetShader() == nullptr
 					|| vecObjects[j]->GetRenderComponent()->IsDynamicShadow() == false)
 					continue;
 

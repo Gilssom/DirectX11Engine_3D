@@ -44,6 +44,16 @@ using std::wstring;
 using namespace std::filesystem;
 
 
+// Fbx Loader
+#include <FBXLoader\fbxsdk.h>
+
+#ifdef _DEBUG
+#pragma comment(lib, "FBXLoader/debug/libfbxsdk-md.lib")
+#else
+#pragma comment(lib, "FBXLoader/release/libfbxsdk-md")
+#endif
+
+
 #include "define.h"
 #include "enum.h"
 #include "struct.h"

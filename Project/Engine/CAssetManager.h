@@ -29,6 +29,8 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& strKey, const vector<Ptr<CTexture>>& vecTex);
 
+    Ptr<CMeshData> LoadFBX(const wstring& strPath);
+
     // Asset 불러오기
     template<typename T>
     Ptr<T> Load(const wstring& strKey, const wstring& strRelativePath = L"");
@@ -74,6 +76,10 @@ ASSET_TYPE GetAssetType()
     if constexpr (std::is_same_v<T, CMesh>)
     {
         return ASSET_TYPE::MESH;
+    }
+    if constexpr (std::is_same_v<T, CMeshData>)
+    {
+        return ASSET_TYPE::MESHDATA;
     }
     if constexpr (std::is_same_v<T, CGraphicShader>)
     {

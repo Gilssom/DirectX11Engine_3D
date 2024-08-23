@@ -2,7 +2,7 @@
 #include "MeshDataUI.h"
 
 MeshDataUI::MeshDataUI()
-	: AssetUI("MeshDataUI", "##MeshDataUI", ASSET_TYPE::MESH_DATA)
+	: AssetUI("MeshDataUI", "##MeshDataUI", ASSET_TYPE::MESHDATA)
 {
 
 }

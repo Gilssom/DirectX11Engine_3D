@@ -24,7 +24,7 @@ CParticleSystem::CParticleSystem()
 
 	// Particle System 이 사용할 Mesh 와 Material 설정
 	SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"PointMesh")); // 정점 하나를 기준으로 Geometry Shader 로 보낸다.
-	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"ParticleMaterial"));
+	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"ParticleMaterial"), 0);
 
 
 	// Particle 정보를 저장할 구조화 버퍼 생성
@@ -156,8 +156,8 @@ void CParticleSystem::Render()
 	m_ModuleBuffer->Binding(18);
 	Transform()->Binding();
 
-	GetMaterial()->SetTexParam(TEX_0, m_ParticleTex);
-	GetMaterial()->Binding();
+	GetMaterial(0)->SetTexParam(TEX_0, m_ParticleTex);
+	GetMaterial(0)->Binding();
 
 	// Instance 로 Render 시 Inatance 고유 ID(몇번째) 를 자동으로 넘겨줌
 	// 모든 입자들을 반복문을 통해 Render 할 때보다 인스턴싱이 훨씬 더 프레임 방어도 잘되고 효율적임

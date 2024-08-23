@@ -19,7 +19,7 @@ CTileMap::CTileMap()
 	, m_CaptureTexMaxResolution(Vec2(2048, 2048))
 {
 	SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"TileMapMaterial"));
+	SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"TileMapMaterial"), 0);
 
 	m_TileBuffer = new CStructuredBuffer;
 
@@ -68,15 +68,15 @@ void CTileMap::Render()
 	Transform()->Binding();
 
 	// 재질 정보
-	GetMaterial()->SetTexParam(TEX_0, m_Atlas);
-	GetMaterial()->SetScalarParam(VEC2_0, m_AtlasResolution);
-	GetMaterial()->SetScalarParam(VEC2_1, m_AtlasTileEachSize);
-	GetMaterial()->SetScalarParam(VEC2_2, Vec2(m_Col, m_Row));
-	GetMaterial()->SetScalarParam(INT_0, m_AtlasMaxRow);
-	GetMaterial()->SetScalarParam(INT_1, m_AtlasMaxCol);
-	GetMaterial()->SetScalarParam(INT_2, 0);
-	GetMaterial()->SetScalarParam(INT_3, 0); // Capture Mode 여부
-	GetMaterial()->Binding();
+	GetMaterial(0)->SetTexParam(TEX_0, m_Atlas);
+	GetMaterial(0)->SetScalarParam(VEC2_0, m_AtlasResolution);
+	GetMaterial(0)->SetScalarParam(VEC2_1, m_AtlasTileEachSize);
+	GetMaterial(0)->SetScalarParam(VEC2_2, Vec2(m_Col, m_Row));
+	GetMaterial(0)->SetScalarParam(INT_0, m_AtlasMaxRow);
+	GetMaterial(0)->SetScalarParam(INT_1, m_AtlasMaxCol);
+	GetMaterial(0)->SetScalarParam(INT_2, 0);
+	GetMaterial(0)->SetScalarParam(INT_3, 0); // Capture Mode 여부
+	GetMaterial(0)->Binding();
 
 	// Tile Info Binding
 	if (m_TileBuffer->GetElementCount() < m_vecTileInfo.size())
@@ -87,7 +87,7 @@ void CTileMap::Render()
 	m_TileBuffer->Binding(20);
 
 	// Mesh Binding 및 Rendering
-	GetMesh()->Render();
+	GetMesh()->Render(0);
 
 	// Editor 용 Capture Image Rendering
 	if (m_EditorCapture)
@@ -125,9 +125,9 @@ void CTileMap::CaptureRender()
 
 	// 3. Tile 을 교체된 Render Target 에 Rendering 을 한다.
 	// 좌표변환 같은 과정이 필요 없다.
-	GetMaterial()->SetScalarParam(INT_3, 1); // Capture Mode 체크
-	GetMaterial()->Binding();
-	GetMesh()->Render();
+	GetMaterial(0)->SetScalarParam(INT_3, 1); // Capture Mode 체크
+	GetMaterial(0)->Binding();
+	GetMesh()->Render(0);
 
 
 	// 4. Rendering 이 끝난 후에는 Reder Target 을 원상 복구 시켜야 한다.

@@ -76,13 +76,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_d</TargetName>
     <OutDir>$(SolutionDir)External\Library\$(ProjectName)\</OutDir>
-    <IncludePath>$(SolutionDir)External\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\Library\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\Include\;$(SolutionDir)External\Include\FBXLoader\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Library\;$(SolutionDir)External\Library\FBXLoader\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)External\Library\$(ProjectName)\</OutDir>
-    <IncludePath>$(SolutionDir)External\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\Library\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\Include\;$(SolutionDir)External\Include\FBXLoader\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Library\;$(SolutionDir)External\Library\FBXLoader\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -180,6 +180,7 @@ call Copy.bat</Command>
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CEntity.h" />
+    <ClInclude Include="CFBXLoader.h" />
     <ClInclude Include="CFontManager.h" />
     <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
@@ -193,6 +194,7 @@ call Copy.bat</Command>
     <ClInclude Include="CLight2D.h" />
     <ClInclude Include="CLight3D.h" />
     <ClInclude Include="CMesh.h" />
+    <ClInclude Include="CMeshData.h" />
     <ClInclude Include="CMeshRender.h" />
     <ClInclude Include="CMRT.h" />
     <ClInclude Include="components.h" />
@@ -247,6 +249,7 @@ call Copy.bat</Command>
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CEntity.cpp" />
+    <ClCompile Include="CFBXLoader.cpp" />
     <ClCompile Include="CFontManager.cpp" />
     <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
@@ -261,6 +264,7 @@ call Copy.bat</Command>
     <ClCompile Include="CLight2D.cpp" />
     <ClCompile Include="CLight3D.cpp" />
     <ClCompile Include="CMesh.cpp" />
+    <ClCompile Include="CMeshData.cpp" />
     <ClCompile Include="CMeshRender.cpp" />
     <ClCompile Include="CMRT.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />

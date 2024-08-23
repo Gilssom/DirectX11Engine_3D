@@ -12,7 +12,7 @@ private:
 
 
 public:
-	const wstring& GetName() { return m_Name; }
+	const wstring& GetName() const { return m_Name; }
 	void SetName(const wstring& name) { m_Name = name; }
 	void ChangeName(const wstring& newName) { m_Name = newName; }
 	UINT GetID() { return m_ID; }

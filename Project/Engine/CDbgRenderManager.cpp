@@ -20,9 +20,6 @@ CDbgRenderManager::CDbgRenderManager()
 
 	// Debug용 렌더
 	m_DebugRenderObj->AddComponent(new CMeshRender); 
-
-	// Debug용 재질
-	m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"));
 }
 
 CDbgRenderManager::~CDbgRenderManager()
@@ -55,50 +52,56 @@ void CDbgRenderManager::Render()
 		{
 		case DEBUG_SHAPE::RECT:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh_Debug"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::CIRCLE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CircleMesh_Debug"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::LINE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"LineMesh"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_BACK);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_BACK);
 			break;
 		case DEBUG_SHAPE::CUBE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"CubeMesh_Debug"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_NONE);
 			break;
 		case DEBUG_SHAPE::SPHERE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_FRONT);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_FRONT);
 			break;
 		case DEBUG_SHAPE::CONE:
 			m_DebugRenderObj->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"ConeMesh"));
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetRSType(RS_TYPE::CULL_FRONT);
+			m_DebugRenderObj->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DebugShapeMaterial"), 0);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::CULL_FRONT);
 			break;
 		default:
 			break;
 		}
 		
 		// Debug용 Object Render
-		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(INT_0, iter->Shape);
-		m_DebugRenderObj->MeshRender()->GetMaterial()->SetScalarParam(VEC4_0, iter->Color);
+		m_DebugRenderObj->MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, iter->Shape);
+		m_DebugRenderObj->MeshRender()->GetMaterial(0)->SetScalarParam(VEC4_0, iter->Color);
 
 		// Depth 판정 여부에 따라 깊이 테스트 실행 체크
 		if (iter->DepthTest)
 		{
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetDSType(DS_TYPE::NO_WRITE);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetDSType(DS_TYPE::NO_WRITE);
 		}
 		else
 		{
-			m_DebugRenderObj->MeshRender()->GetMaterial()->GetShader()->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+			m_DebugRenderObj->MeshRender()->GetMaterial(0)->GetShader()->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 		}
 
 		m_DebugRenderObj->Render();

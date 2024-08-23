@@ -20,12 +20,34 @@ public:
 	void SetScalarParam(SCALAR_PARAM param, const T& value);
 	void SetTexParam(TEX_PARAM param, Ptr<CTexture> tex);
 
+	void SetMaterialCoefficient(Vec4 vDiff, Vec4 vSpec, Vec4 vAmb, Vec4 vEmis)
+	{
+		m_Const.mtrl.vDiff = vDiff;
+		m_Const.mtrl.vAmb = vAmb;
+		m_Const.mtrl.vSpec = vSpec;
+		m_Const.mtrl.vEmv = vEmis;
+	}
+
 	void* GetScalarParam(SCALAR_PARAM param);
 	Ptr<CTexture>& GetTexParam(TEX_PARAM texParam) { return m_arrTex[texParam]; }
 
 	bool IsDynamic() { return m_bDynamic; }
 
 	Ptr<CMaterial> GetDynamicMaterial();
+
+	void operator = (const CMaterial& otherMtrl)
+	{
+		SetName(otherMtrl.GetName());
+
+		m_Const = otherMtrl.m_Const;
+
+		for (UINT i = 0; i < (UINT)TEX_PARAM::END; ++i)
+		{
+			m_arrTex[i] = otherMtrl.m_arrTex[i];
+		}
+
+		m_Shader = otherMtrl.m_Shader;
+	}
 
 public:
 	void Binding();

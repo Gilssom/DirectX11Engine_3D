@@ -24,7 +24,7 @@ void MeshRenderUI::Render_Tick()
 
 	CMeshRender* pMeshRender = GetTarget()->MeshRender();
 	Ptr<CMesh> pMesh = pMeshRender->GetMesh();
-	Ptr<CMaterial> pMaterial = pMeshRender->GetMaterial();
+	Ptr<CMaterial> pMaterial = pMeshRender->GetMaterial(0);
 
 	// ImGuiInputTextFlags_ : ImGui 의 Flag 는 모두 _ 를 붙이고, 조합을 할 수 있다. (비트)
 	string strMeshKey;
@@ -108,7 +108,7 @@ void MeshRenderUI::Render_Tick()
 			Ptr<CAsset> pAsset = (CAsset*)dwData;
 			if (pAsset->GetAssetType() == ASSET_TYPE::MATERIAL)
 			{
-				pMeshRender->SetMaterial((CMaterial*)pAsset.Get());
+				pMeshRender->SetMaterial((CMaterial*)pAsset.Get(), 0);
 			}
 		}
 
@@ -161,7 +161,7 @@ UINT MeshRenderUI::SelectMaterial(DWORD_PTR selected)
 
 	assert(GetTarget() != nullptr && pMaterial != nullptr);
 
-	GetTarget()->GetRenderComponent()->SetMaterial(pMaterial);
+	GetTarget()->GetRenderComponent()->SetMaterial(pMaterial, 0);
 
 	SetFocus();
 

@@ -189,15 +189,26 @@ struct tTransform
 // 전역 변수 - extern.cpp 에서 선언해줘서 사용 가능하게
 extern tTransform g_Trans;
 
+// Material 계수
+struct tMtrlData
+{
+	Vec4 vDiff;
+	Vec4 vSpec;
+	Vec4 vAmb;
+	Vec4 vEmv;
+};
+
 // 상수버퍼 Material 관련 구조체
 struct tMtrlConst
 {
-	int		iArr[4];
-	float	fArr[4];
-	Vec2	v2Arr[4];
-	Vec4	v4Arr[4];
-	Matrix	matArr[4];
-	UINT	btex[16];
+	tMtrlData	mtrl;
+
+	int			iArr[4];
+	float		fArr[4];
+	Vec2		v2Arr[4];
+	Vec4		v4Arr[4];
+	Matrix		matArr[4];
+	UINT		btex[16];
 };
 
 struct tAnim2DInfo

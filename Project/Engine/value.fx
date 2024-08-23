@@ -23,6 +23,8 @@ cbuffer TRANSFORM : register(b0)
 cbuffer MATERIAL_CONST : register(b1)
 {
     // 배열은 메모리 접근에 문제가 생긴다.
+    tMtrlData        MtrlData;
+    
     int              g_int_0;
     int              g_int_1;
     int              g_int_2;

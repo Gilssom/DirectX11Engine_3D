@@ -22,6 +22,7 @@ public:
 	int GetRefCount() { return m_RefCount; }
 
 protected:
+	void SetKey(const wstring& key) { m_Key = key; }
 	void SetRelativePath(const wstring& strPath) { m_RelativePath = strPath; }
 
 private:
@@ -54,5 +55,5 @@ public:
 	friend class Ptr;
 
 	friend class CAssetManager;
+	friend class CFBXLoader;
 };
-

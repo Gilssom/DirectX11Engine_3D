@@ -29,9 +29,4 @@ void MeshUI::Render_Tick()
 	int VertexCount = pMesh->GetVertexCount();
 	ImGui::Text("Vertex Count"); SAME_SET(110);
 	ImGui::InputInt("##VertexCountMeshUI", &VertexCount, 0, 100, ImGuiInputTextFlags_ReadOnly);
-
-	// Triangle Count
-	int IndexCount = pMesh->GetIndexCount() / 3;
-	ImGui::Text("Triangle Count"); SAME_SET(110);
-	ImGui::InputInt("##TriangleCountMeshUI", &IndexCount, 0, 100, ImGuiInputTextFlags_ReadOnly);
 }

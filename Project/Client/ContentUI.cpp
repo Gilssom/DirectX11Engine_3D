@@ -90,8 +90,8 @@ void ContentUI::ReloadContent()
 		case ASSET_TYPE::MESH:
 			CAssetManager::GetInst()->Load<CMesh>(m_vecContentName[i], m_vecContentName[i]);
 			break;
-		case ASSET_TYPE::MESH_DATA:
-			//CAssetManager::GetInst()->Load<CMeshData>(m_vecContentName[i], m_vecContentName[i]); _¹Ì±¸Çö
+		case ASSET_TYPE::MESHDATA:
+			CAssetManager::GetInst()->Load<CMeshData>(m_vecContentName[i], m_vecContentName[i]);
 			break;
 		case ASSET_TYPE::MATERIAL:
 			CAssetManager::GetInst()->Load<CMaterial>(m_vecContentName[i], m_vecContentName[i]);
@@ -216,7 +216,7 @@ ASSET_TYPE ContentUI::GetAssetTypeFromExt(const path& assetName)
 
 	else if (ext == L".mdat" || ext == L".MDAT")
 	{
-		return ASSET_TYPE::MESH_DATA;
+		return ASSET_TYPE::MESHDATA;
 	}
 
 	else if (ext == L".mtrl" || ext == L".MTRL")

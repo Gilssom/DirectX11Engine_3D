@@ -73,6 +73,30 @@ Ptr<CTexture> CAssetManager::CreateTexture(const wstring& strKey, const vector<P
 	return pTex;
 }
 
+Ptr<CMeshData> CAssetManager::LoadFBX(const wstring& strPath)
+{
+	wstring strFileName = path(strPath).stem();
+
+	wstring strName = L"meshdata\\";
+	strName += strFileName + L".mdat";
+
+	Ptr<CMeshData> pMeshData = FindAsset<CMeshData>(strName);
+
+	if (nullptr != pMeshData)
+		return pMeshData;
+
+	pMeshData = CMeshData::LoadFromFBX(strPath);
+	pMeshData->SetKey(strName);
+	pMeshData->SetRelativePath(strName);
+
+	m_mapAsset[(UINT)ASSET_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.Get()));
+
+	// meshdata 를 실제파일로 저장
+	pMeshData->Save(CPathManager::GetInst()->GetContentPath() + strName);
+
+	return pMeshData;
+}
+
 void CAssetManager::GetAssetNames(ASSET_TYPE type, _Out_ vector<string>& vecNames)
 {
 	for (const auto& pair : m_mapAsset[(UINT)type])

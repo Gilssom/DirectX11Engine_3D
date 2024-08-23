@@ -113,8 +113,8 @@ void CTestLevel::CreateTestLevel()
 	//Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
 	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"TessMaterial"));
-	Player->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Background.jpg"));
+	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"), 0);
+	Player->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Character.png"));
 
 	Player->BoundingBox()->SetAbsolute(true);
 	Player->BoundingBox()->SetOffset(Vec3(0.f, 0.f, 0.f));
@@ -152,6 +152,21 @@ void CTestLevel::CreateTestLevel()
 	//pLandScape->LandScape()->SetHeightMap(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\HeightMap_01.jpg"));
 
 	m_CurLevel->AddObject(0, pLandScape);
+
+	// ============
+	// FBX Loading
+	// ============	
+	Ptr<CMeshData> pMeshData = nullptr;
+	CGameObject* pObj = nullptr;
+
+	//pMeshData = CAssetManager::GetInst()->LoadFBX(L"fbx\\house.fbx");
+	pMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\house.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"House");
+
+	pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 100.f));
+
+	m_CurLevel->AddObject(0, pObj);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);

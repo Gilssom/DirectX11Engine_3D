@@ -198,6 +198,7 @@ void CS_ParticleTick(int3 _ID : SV_DispatchThreadID)
         else
         {
             // World Space Type
+            Particle.vLocalPos += Particle.vVelocity * DeltaTime;
             Particle.vWorldPos += Particle.vVelocity * DeltaTime;
         }
             

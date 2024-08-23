@@ -88,7 +88,7 @@ void CLight3D::Render_ShadowMap()
 void CLight3D::Lighting()
 {
 	Binding();
-	m_VolumeMesh->Render();
+	m_VolumeMesh->Render(0);
 }
 
 void CLight3D::Binding()

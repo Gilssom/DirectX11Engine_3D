@@ -164,7 +164,7 @@ void CRenderManager::Render_Editor()
 	}
 
 	pMergeMaterial->Binding();
-	pRectMesh->Render();
+	pRectMesh->Render(0);
 	AddDrawCall();
 
 	// Forward Rendering ม๘วเ

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CRenderComponent.h"
 
+#include "CLevelManager.h"
+#include "CLevel.h"
 #include "CTransform.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE type)
@@ -14,26 +16,31 @@ CRenderComponent::CRenderComponent(COMPONENT_TYPE type)
 CRenderComponent::CRenderComponent(const CRenderComponent& other)
 	: CComponent(other)
 	, m_Mesh(other.m_Mesh)
-	, m_CurMaterial(nullptr)
-	, m_SharedMaterial(other.m_SharedMaterial)
-	, m_DynamicMaterial(nullptr)
 	, m_FrustumCheck(other.m_FrustumCheck)
 	, m_DynamicShadow(other.m_DynamicShadow)
 {
-	// 원본 Object 가 동적 재질을 가지고 있었고, 그걸 지금 사용 중이라면 복제
-	if (other.m_DynamicMaterial != nullptr && other.m_DynamicMaterial == other.m_CurMaterial)
-	{
-		// 복사되는 Object 도 자신만의 동적 재질을 가져야 하고,
-		GetDynamicMaterial();
+	m_vecMtrls.resize(other.m_vecMtrls.size());
 
-		// 원본 Object 의 동적 재질 Setting 값을 똑같이 받아와야 한다.
-		m_DynamicMaterial = other.m_DynamicMaterial;
-	}
-	
-	// 원본 Object 의 현재 사용 재질이 Shared Material 이면, 복사본도 똑같이 지정해준다.
-	else if (other.m_SharedMaterial != nullptr && other.m_SharedMaterial == other.m_CurMaterial)
+	for (size_t i = 0; i < other.m_vecMtrls.size(); ++i)
 	{
-		m_CurMaterial = other.m_SharedMaterial;
+		m_vecMtrls[i].pCurMtrl = other.m_vecMtrls[i].pCurMtrl;
+		m_vecMtrls[i].pSharedMtrl = other.m_vecMtrls[i].pSharedMtrl;
+
+		// 원본 오브젝트가 공유재질을 참조하고 있고, 현재 사용재질은 공유재질이 아닌경우
+		if (other.m_vecMtrls[i].pSharedMtrl != other.m_vecMtrls[i].pCurMtrl)
+		{
+			assert(other.m_vecMtrls[i].pDynamicMtrl.Get());
+
+			// 복사 렌더 컴포넌트도 별도의 동적재질을 생성한다.
+			GetDynamicMaterial(i);
+
+			// 원본 렌더컴포넌트의 동적재질 값을 현재 생성한 동적재질로 복사한다.
+			*m_vecMtrls[i].pDynamicMtrl.Get() = *other.m_vecMtrls[i].pDynamicMtrl.Get();
+		}
+		else
+		{
+			m_vecMtrls[i].pCurMtrl = m_vecMtrls[i].pSharedMtrl;
+		}
 	}
 }
 
@@ -42,46 +49,73 @@ CRenderComponent::~CRenderComponent()
 
 }
 
-void CRenderComponent::SetMaterial(Ptr<CMaterial> material)
+void CRenderComponent::SetMesh(Ptr<CMesh> mesh)
 {
-	if (material == nullptr)
+	m_Mesh = mesh;
+
+	if (!m_vecMtrls.empty())
 	{
-		m_CurMaterial = m_SharedMaterial = material;
-		return;
+		m_vecMtrls.clear();
+		vector<tMtrlSet> vecMtrls;
+		m_vecMtrls.swap(vecMtrls);
 	}
+
+	if (m_Mesh != nullptr)
+		m_vecMtrls.resize(m_Mesh->GetSubsetCount());
+}
+
+void CRenderComponent::SetMaterial(Ptr<CMaterial> material, UINT idx)
+{
 	// 동적 재질을 세팅받을 수 없다.
 	assert(!material->IsDynamic());
 
-	m_CurMaterial = m_SharedMaterial = material;
+	// 재질이 변경되면 기존에 복사본을 받아둔 DynamicMaterial 을 삭제한다.
+	m_vecMtrls[idx].pSharedMtrl = material;
+	m_vecMtrls[idx].pCurMtrl = material;
+	m_vecMtrls[idx].pDynamicMtrl = nullptr;
 }
 
-Ptr<CMaterial> CRenderComponent::GetDynamicMaterial()
+Ptr<CMaterial> CRenderComponent::GetMaterial(UINT idx)
+{
+	return m_vecMtrls[idx].pCurMtrl;
+}
+
+Ptr<CMaterial> CRenderComponent::GetSharedMaterial(UINT idx)
+{
+	// 공유재질을 가져오는 것으로, 현재 사용재질을 동적재질에서 회복하도록 한다.
+	m_vecMtrls[idx].pCurMtrl = m_vecMtrls[idx].pSharedMtrl;
+
+	if (m_vecMtrls[idx].pDynamicMtrl.Get())
+	{
+		m_vecMtrls[idx].pDynamicMtrl = nullptr;
+	}
+
+	return m_vecMtrls[idx].pSharedMtrl;
+}
+
+Ptr<CMaterial> CRenderComponent::GetDynamicMaterial(UINT idx)
 {
 	// 동적 재질을 생성할 수 있는 조건은 해당 Level 이 Play 상태이여야 한다.
-
-
-	// 재질 자체를 참조한 적이 없다면 nullptr 반환
-	if (m_SharedMaterial == nullptr)
+	CLevel* pCurLevel = CLevelManager::GetInst()->GetCurrentLevel();
+	if (pCurLevel->GetState() != LEVEL_STATE::PLAY)
 		return nullptr;
 
-	// 동적 재질을 이전에 생성을 했었다면 반환
-	if (m_DynamicMaterial != nullptr)
+	// 원본 재질이 없다 -> nullptr 반환
+	if (nullptr == m_vecMtrls[idx].pSharedMtrl)
 	{
-		m_CurMaterial = m_DynamicMaterial;
-		return m_DynamicMaterial;
+		m_vecMtrls[idx].pCurMtrl = nullptr;
+		m_vecMtrls[idx].pDynamicMtrl = nullptr;
+		return m_vecMtrls[idx].pCurMtrl;
 	}
-	
-	// 현재 사용되고 있는 재질도 동적 재질로 변경
-	m_CurMaterial = m_DynamicMaterial = m_SharedMaterial->GetDynamicMaterial();
 
-	return m_DynamicMaterial;
-}
+	if (nullptr == m_vecMtrls[idx].pDynamicMtrl)
+	{
+		m_vecMtrls[idx].pDynamicMtrl = m_vecMtrls[idx].pSharedMtrl->Clone();
+		m_vecMtrls[idx].pDynamicMtrl->SetName(m_vecMtrls[idx].pSharedMtrl->GetName() + L"_Clone");
+		m_vecMtrls[idx].pCurMtrl = m_vecMtrls[idx].pDynamicMtrl;
+	}
 
-void CRenderComponent::RestoreMaterial()
-{
-	// Shared 재질로 다시 복구
-	m_CurMaterial = m_SharedMaterial;
-	m_DynamicMaterial = nullptr;
+	return m_vecMtrls[idx].pCurMtrl;
 }
 
 void CRenderComponent::Render_shadowmap()
@@ -91,19 +125,39 @@ void CRenderComponent::Render_shadowmap()
 	Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
 	pShadowMapMaterial->Binding();
 
-	GetMesh()->Render();
+	GetMesh()->Render(0);
 }
 
 void CRenderComponent::SaveToLevelFile(FILE* file)
 {
+	// 메쉬 참조정보 저장
 	SaveAssetRef(m_Mesh, file);
-	SaveAssetRef(m_SharedMaterial, file);
+
+	// 재질 참조정보 저장
+	UINT iMtrlCount = GetMaterialCount();
+	fwrite(&iMtrlCount, sizeof(UINT), 1, file);
+
+	for (UINT i = 0; i < iMtrlCount; i++)
+	{
+		SaveAssetRef(m_vecMtrls[i].pSharedMtrl, file);
+	}
+
+	fwrite(&m_DynamicShadow, 1, 1, file);
 }
 
 void CRenderComponent::LoadFromLevelFile(FILE* file)
 {
+	// 메쉬 참조정보 불러오기
 	LoadAssetRef(m_Mesh, file);
-	LoadAssetRef(m_SharedMaterial, file);
 
-	SetMaterial(m_SharedMaterial);
+	// 재질 참조정보 불러오기
+	UINT iMtrlCount = GetMaterialCount();
+	fread(&iMtrlCount, sizeof(UINT), 1, file);
+
+	for (UINT i = 0; i < iMtrlCount; ++i)
+	{
+		LoadAssetRef(m_vecMtrls[i].pSharedMtrl, file);
+	}
+
+	fread(&m_DynamicShadow, 1, 1, file);
 }

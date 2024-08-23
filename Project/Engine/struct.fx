@@ -1,6 +1,14 @@
 #ifndef _STRUCT
 #define _STRUCT
 
+struct tMtrlData
+{
+    float4 vDiff;
+    float4 vSpec;
+    float4 vAmb;
+    float4 vEmv;
+};
+
 // 광원 관련 구조체
 struct tLight
 {

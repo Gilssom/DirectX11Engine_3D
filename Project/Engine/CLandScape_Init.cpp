@@ -13,7 +13,7 @@ void CLandScape::Init()
 
 	// Land Scape 전용 재질 참조
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
-	SetMaterial(pMaterial);
+	SetMaterial(pMaterial, 0);
 
 	// LandScape 전용 Compute Shader 제작
 	CreateComputeShader();
@@ -40,7 +40,7 @@ void CLandScape::SetFace(UINT x, UINT z)
 
 	// Land Scape 전용 재질 참조
 	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"LandScapeMaterial");
-	SetMaterial(pMaterial);
+	SetMaterial(pMaterial, 0);
 }
 
 void CLandScape::CreateComputeShader()

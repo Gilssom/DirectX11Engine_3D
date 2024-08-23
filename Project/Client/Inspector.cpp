@@ -204,7 +204,7 @@ void Inspector::CreateComponentUI()
 void Inspector::CreateAssetUI()
 {
 	m_arrAssetUI[(UINT)ASSET_TYPE::MESH] = new MeshUI;
-	m_arrAssetUI[(UINT)ASSET_TYPE::MESH_DATA] = new MeshDataUI;
+	m_arrAssetUI[(UINT)ASSET_TYPE::MESHDATA] = new MeshDataUI;
 	m_arrAssetUI[(UINT)ASSET_TYPE::MATERIAL] = new MaterialUI;
 	m_arrAssetUI[(UINT)ASSET_TYPE::TEXTURE] = new TextureUI;
 	m_arrAssetUI[(UINT)ASSET_TYPE::PREFAB] = new PrefabUI;

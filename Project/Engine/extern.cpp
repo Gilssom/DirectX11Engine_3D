@@ -35,7 +35,7 @@ extern const char* ASSET_TYPE_STRING[(UINT)ASSET_TYPE::END]
 {
 	"Prefab",
 	"Mesh",
-	"Mesh Data",
+	"MeshData",
 	"Material",
 	"Texture",
 	"Sound",

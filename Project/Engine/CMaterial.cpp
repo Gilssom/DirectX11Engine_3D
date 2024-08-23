@@ -27,7 +27,8 @@ void CMaterial::SetShader(Ptr<CGraphicShader> shader)
 	// 1. 지금 같은 Shader 가 아니고, 2. Engine 전용이 아니며, 3. 동적도 아니고, 
 	// 4. 현재 Stop 모드일 경우에만 저장 가능
 	CLevel* pCurLevel = CLevelManager::GetInst()->GetCurrentLevel();
-	if (m_Shader != shader && !IsEngineAsset() && !m_bDynamic && pCurLevel->GetState() == LEVEL_STATE::STOP)
+
+	if (m_Shader != shader && !IsEngineAsset() && !m_bDynamic && (!pCurLevel || pCurLevel->GetState() == LEVEL_STATE::STOP))
 	{
 		bSave = true;
 	}

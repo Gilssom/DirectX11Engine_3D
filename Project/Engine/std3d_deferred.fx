@@ -9,8 +9,7 @@
 // g_tex_0  : Color Texture
 // g_tex_1  : Normal Texture
 // g_tex_2  : Specualr Texture
-// g_tex_3  : HeightMap Texture
-// g_tex_4  : Emissive Texture
+// g_tex_3  : Emissive Texture
 // ============================
 
 struct VS_IN
@@ -67,7 +66,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     float4 vObjectColor = float4(1.f, 0.f, 1.f, 1.f);
     if (g_btex_0)
     {
-        vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+        vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV) * MtrlData.vDiff;
     }
 
     
@@ -91,11 +90,19 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         vViewNormal = normalize(mul(vNormal, Rot));
     }
     
+    // ======= Emissive Texture =======    
+    float4 vEmissive = (float4) 0.f;
+    if(g_btex_3)
+    {
+        vEmissive = g_tex_3.Sample(g_sam_0, _in.vUV) * MtrlData.vEmv;
+    }
+    
     output.vColor       = float4(vObjectColor.xyz, 1.f);
     output.vNormal      = float4(vViewNormal, 1.f);
     output.vPosition    = float4(_in.vViewPos, 1.f);
-    //output.vEmissive  
-    //output.vData      
+    output.vEmissive    = vEmissive;
+    
+    //output.vData
     
     return output;
 }

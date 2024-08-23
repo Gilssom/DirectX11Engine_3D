@@ -179,6 +179,12 @@
     <ClCompile Include="CHeightMapCS.cpp">
       <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
     </ClCompile>
+    <ClCompile Include="CFBXLoader.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="CMeshData.cpp">
+      <Filter>08. Asset\MeshData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -373,6 +379,12 @@
     </ClInclude>
     <ClInclude Include="CHeightMapCS.h">
       <Filter>HLSL\06. ComputeShader\LandScape\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="CFBXLoader.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="CMeshData.h">
+      <Filter>08. Asset\MeshData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
