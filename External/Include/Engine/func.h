@@ -75,6 +75,9 @@ inline void LoadAssetRef(_Out_ Ptr<T>& asset, FILE* file)
 }
 
 
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
+
+
 template<typename T, int size>
 void Safe_Del_Array(T* (&Array)[size])
 {

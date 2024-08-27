@@ -28,6 +28,9 @@ public:
 		m_Const.mtrl.vEmv = vEmis;
 	}
 
+	void SetAnim3D(bool bTrue) { m_Const.arrAnimData[0] = (int)bTrue; }
+	void SetBoneCount(int iBoneCount) { m_Const.arrAnimData[1] = iBoneCount; }
+
 	void* GetScalarParam(SCALAR_PARAM param);
 	Ptr<CTexture>& GetTexParam(TEX_PARAM texParam) { return m_arrTex[texParam]; }
 

@@ -54,7 +54,7 @@ void CHeightMapCS::CalculateGroupNum()
 
 void CHeightMapCS::Clear()
 {
-    m_RaycastOut->Clear_SRV();
+    m_RaycastOut->Clear_CS_SRV();
 
     m_HeightMapTex->Clear_CS_UAV(0);
     m_HeightMapTex = nullptr;

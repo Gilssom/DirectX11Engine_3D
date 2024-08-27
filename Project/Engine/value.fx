@@ -65,6 +65,10 @@ cbuffer MATERIAL_CONST : register(b1)
     uint             g_btexarr_1;
     uint             g_btexarr_2;
     uint             g_btexarr_3;
+    
+    // 3D Animation Á¤º¸
+    int              g_iAnim;
+    int              g_iBoneCount;
 };
 
 
@@ -120,6 +124,10 @@ StructuredBuffer<tLightInfo> g_Light2D : register(t15);
 
 // Light3DInfo
 StructuredBuffer<tLightInfo> g_Light3D : register(t16);
+
+
+// Animation 3D Bone Matrix Buffer
+StructuredBuffer<Matrix> g_arrBoneMat : register(t17);
 
 
 SamplerState g_sam_0 : register(s0);

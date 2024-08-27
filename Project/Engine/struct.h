@@ -21,6 +21,11 @@ struct Vtx
 	Vec3 vTangent;		// 접선 벡터
 	Vec3 vNormal;		// 법선	벡터
 	Vec3 vBinormal;		// 종법선 벡터
+
+
+	// 3D Animation Bone Mesh 추가로 인한 요소
+	Vec4 vWeights;		// Bone 가중치
+	Vec4 vIndices;		// Bone 인덱스
 };
 
 // Debug Render 요청 정보
@@ -168,6 +173,51 @@ struct tRay
 	Vec3	vDir;
 };
 
+// =================
+//   Animation 3D
+// =================
+struct tFrameTrans
+{
+	Vec4 vTranslate;	// 위치
+	Vec4 vScale;		// 크기
+	Vec4 qRot;			// 회전
+};
+
+struct tMTKeyFrame
+{
+	double	dTime;		// 키 프레임 시간
+	int		iFrame;		// 키 프레임 인덱스
+	Vec3	vTranslate;	// 위치
+	Vec3	vScale;		// 크기
+	Vec4	qRot;		// 회전
+};
+
+struct tMTBone
+{
+	wstring				strBoneName;	// 본 이름
+	int					iDepth;			// 본 깊이
+	int					iParentIndx;	// 부모 본의 인덱스
+	Matrix				matOffset;		// Inverse 행렬( Skin 정점을 -> 기본상태로 되돌림)
+	Matrix				matBone;		// 본 행려 
+	vector<tMTKeyFrame>	vecKeyFrame;	// 키 프레임 목록
+};
+
+struct tMTAnimClip
+{
+	wstring			strAnimName;		// 애니메이션 이름
+	int				iStartFrame;		// 애니메이션 시작 프레임
+	int				iEndFrame;			// 애니메이션 종료 프레임
+	int				iFrameLength;		// 애니메이션 총 프레임 수
+
+	double			dStartTime;			// 애니메이션 시작 시간
+	double			dEndTime;			// 애니메이션 종료 시간
+	double			dTimeLength;		// 애니메이션 지속 시간
+	float			fUpdateTime;		// 이거 안씀
+
+	FbxTime::EMode	eMode;				// 애니메이션 시간 모드(프레임 or 시간)
+};
+
+
 // ====================
 // 상수버퍼 관련 구조체
 // ====================
@@ -208,7 +258,10 @@ struct tMtrlConst
 	Vec2		v2Arr[4];
 	Vec4		v4Arr[4];
 	Matrix		matArr[4];
-	UINT		btex[16];
+	UINT		btex[14];
+
+	// 3D Animation 정보
+	int			arrAnimData[2];
 };
 
 struct tAnim2DInfo

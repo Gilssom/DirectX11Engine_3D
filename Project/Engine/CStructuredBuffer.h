@@ -61,8 +61,10 @@ public:
 	void Binding_CS_SRV(UINT registerNum);
 	void Binding_CS_UAV(UINT registerNum);
 
-	void Clear_SRV();
-	void Clear_UAV();
+	void Clear();
+
+	void Clear_CS_SRV();
+	void Clear_CS_UAV();
 
 
 	CLONE(CStructuredBuffer);

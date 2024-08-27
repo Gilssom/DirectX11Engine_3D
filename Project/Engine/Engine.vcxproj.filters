@@ -185,6 +185,12 @@
     <ClCompile Include="CMeshData.cpp">
       <Filter>08. Asset\MeshData</Filter>
     </ClCompile>
+    <ClCompile Include="CAnimator3D.cpp">
+      <Filter>07. Component\06. Animator3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimation3DShader.cpp">
+      <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -386,6 +392,12 @@
     <ClInclude Include="CMeshData.h">
       <Filter>08. Asset\MeshData</Filter>
     </ClInclude>
+    <ClInclude Include="CAnimator3D.h">
+      <Filter>07. Component\06. Animator3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimation3DShader.h">
+      <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -586,6 +598,9 @@
     <Filter Include="HLSL\06. ComputeShader\LandScape\Raycast">
       <UniqueIdentifier>{baff287b-43af-4b10-9561-b395446a3b6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\06. ComputeShader\3DAnimation">
+      <UniqueIdentifier>{f00edc1c-9ba1-4030-8c28-6134d071e0f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -653,6 +668,9 @@
     </FxCompile>
     <FxCompile Include="shadowmap.fx">
       <Filter>HLSL\04. Light</Filter>
+    </FxCompile>
+    <FxCompile Include="animation.fx">
+      <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

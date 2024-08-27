@@ -49,14 +49,14 @@ void CParticleTickCS::CalculateGroupNum()
 
 void CParticleTickCS::Clear()
 {
-    m_ParticleBuffer->Clear_UAV();
+    m_ParticleBuffer->Clear_CS_UAV();
     m_ParticleBuffer = nullptr;
 
-    m_SpawnCountBuffer->Clear_UAV();
+    m_SpawnCountBuffer->Clear_CS_UAV();
     m_SpawnCountBuffer = nullptr;
 
     m_NoiseTex->Clear_CS_SRV(20);
 
-    m_ModuleBuffer->Clear_SRV();
+    m_ModuleBuffer->Clear_CS_SRV();
     m_ModuleBuffer = nullptr;
 }

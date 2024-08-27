@@ -225,7 +225,7 @@ void CStructuredBuffer::Binding_CS_UAV(UINT registerNum)
 	CONTEXT->CSSetUnorderedAccessViews(registerNum, 1, m_UAV.GetAddressOf(), &i);
 }
 
-void CStructuredBuffer::Clear_SRV()
+void CStructuredBuffer::Clear()
 {
 	ID3D11ShaderResourceView* pSRV = nullptr;
 	CONTEXT->VSSetShaderResources(m_SRV_Register, 1, &pSRV);
@@ -236,7 +236,13 @@ void CStructuredBuffer::Clear_SRV()
 	CONTEXT->CSSetShaderResources(m_SRV_Register, 1, &pSRV);
 }
 
-void CStructuredBuffer::Clear_UAV()
+void CStructuredBuffer::Clear_CS_SRV()
+{
+	ID3D11ShaderResourceView* pSRV = nullptr; 
+	CONTEXT->CSSetShaderResources(m_SRV_Register, 1, &pSRV);
+}
+
+void CStructuredBuffer::Clear_CS_UAV()
 {
 	ID3D11UnorderedAccessView* pUAV = nullptr;
 

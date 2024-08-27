@@ -879,6 +879,7 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 #include "CSetColorCS.h"
 #include "CParticleTickCS.h"
+#include "CAnimation3DShader.h"
 
 void CAssetManager::CreateDefaultComputeShader()
 {
@@ -893,6 +894,11 @@ void CAssetManager::CreateDefaultComputeShader()
 	// Particle Tick
 	pComputeShader = new CParticleTickCS;
 	AddAsset<CComputeShader>(L"ParticleTickCS", pComputeShader);
+
+
+	// Animation3D
+	pComputeShader = new CAnimation3DShader;
+	AddAsset<CComputeShader>(L"Animation3DUpdateCS", pComputeShader);
 }
 
 void CAssetManager::CreateDefaultMaterial()

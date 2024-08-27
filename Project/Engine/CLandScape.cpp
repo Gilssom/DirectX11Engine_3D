@@ -123,7 +123,7 @@ void CLandScape::Render()
 	GetMesh()->Render(0);
 
 	// WeightMap
-	m_WeightMap->Clear_SRV();
+	m_WeightMap->Clear();
 }
 
 void CLandScape::Binding()

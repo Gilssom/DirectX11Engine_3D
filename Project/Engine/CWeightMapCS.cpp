@@ -50,6 +50,6 @@ void CWeightMapCS::CalculateGroupNum()
 void CWeightMapCS::Clear()
 {
 	m_BrushTex->Clear_CS_SRV(0);
-	m_WeightMap->Clear_UAV();
-	m_RaycastOut->Clear_SRV();
+	m_WeightMap->Clear_CS_UAV();
+	m_RaycastOut->Clear_CS_SRV();
 }

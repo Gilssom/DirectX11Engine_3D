@@ -159,12 +159,14 @@ void CTestLevel::CreateTestLevel()
 	Ptr<CMeshData> pMeshData = nullptr;
 	CGameObject* pObj = nullptr;
 
-	//pMeshData = CAssetManager::GetInst()->LoadFBX(L"fbx\\house.fbx");
-	pMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\house.mdat");
+	//pMeshData = CAssetManager::GetInst()->LoadFBX(L"fbx\\Monster.fbx");
+	pMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Monster.mdat");
 	pObj = pMeshData->Instantiate();
-	pObj->SetName(L"House");
+	pObj->SetName(L"Monster");
+	pObj->GetRenderComponent()->SetFrustumCheck(false);
 
 	pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 100.f));
+	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
 	m_CurLevel->AddObject(0, pObj);
 

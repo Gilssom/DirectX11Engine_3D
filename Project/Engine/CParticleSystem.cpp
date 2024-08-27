@@ -164,8 +164,8 @@ void CParticleSystem::Render()
 	GetMesh()->Render_Particle(m_MaxParticle);
 
 	// Clear
-	m_ParticleBuffer->Clear_SRV();
-	m_ModuleBuffer->Clear_SRV();
+	m_ParticleBuffer->Clear();
+	m_ModuleBuffer->Clear();
 }
 
 void CParticleSystem::SetMaxParticleCount(UINT max)

@@ -236,6 +236,19 @@ void DrawDebugCone(Matrix matWorld, Vec4 vColor, float depthTest, float duration
 	CDbgRenderManager::GetInst()->AddDebugShapeInfo(info);
 }
 
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat)
+{
+	Matrix mat;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			mat.m[i][j] = (float)_mat.Get(i, j);
+		}
+	}
+	return mat;
+}
+
 string ToString(const wstring& str)
 {
 	return string(str.begin(), str.end());

@@ -51,7 +51,7 @@ int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string&
 	}
 
 	// Vertex Layout 정보 생성
-	D3D11_INPUT_ELEMENT_DESC Layoutdesc[6] = {};
+	D3D11_INPUT_ELEMENT_DESC Layoutdesc[8] = {};
 
 	Layoutdesc[0].AlignedByteOffset = 0; // 정점 정보의 시작 위치
 	Layoutdesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT; // 그에 맞는 픽셀 크기
@@ -101,8 +101,23 @@ int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string&
 	Layoutdesc[5].SemanticName = "BINORMAL";
 	Layoutdesc[5].SemanticIndex = 0;
 
+	Layoutdesc[6].SemanticName = "BLENDWEIGHT";
+	Layoutdesc[6].SemanticIndex = 0;
+	Layoutdesc[6].AlignedByteOffset = 72;
+	Layoutdesc[6].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[6].InputSlot = 0;
+	Layoutdesc[6].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	Layoutdesc[6].InstanceDataStepRate = 0;
 
-	if (FAILED(DEVICE->CreateInputLayout(Layoutdesc, 6
+	Layoutdesc[7].SemanticName = "BLENDINDICES";
+	Layoutdesc[7].SemanticIndex = 0;
+	Layoutdesc[7].AlignedByteOffset = 88;
+	Layoutdesc[7].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[7].InputSlot = 0;
+	Layoutdesc[7].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	Layoutdesc[7].InstanceDataStepRate = 0;
+
+	if (FAILED(DEVICE->CreateInputLayout(Layoutdesc, 8
 		, m_VSBlob->GetBufferPointer()
 		, m_VSBlob->GetBufferSize()
 		, m_Layout.GetAddressOf())))
