@@ -118,6 +118,11 @@ Ptr<CMaterial> CRenderComponent::GetDynamicMaterial(UINT idx)
 	return m_vecMtrls[idx].pCurMtrl;
 }
 
+void CRenderComponent::Render(UINT iSubset)
+{
+	Render();
+}
+
 void CRenderComponent::Render_shadowmap()
 {
 	Transform()->Binding();
@@ -126,6 +131,15 @@ void CRenderComponent::Render_shadowmap()
 	pShadowMapMaterial->Binding();
 
 	GetMesh()->Render(0);
+}
+
+ULONG64 CRenderComponent::GetInstID(UINT iMtrlIdx)
+{
+	if (m_Mesh == nullptr || m_vecMtrls[iMtrlIdx].pCurMtrl == nullptr)
+		return 0;
+
+	uInstID id{ (UINT)m_Mesh->GetID(), (WORD)m_vecMtrls[iMtrlIdx].pCurMtrl->GetID(), (WORD)iMtrlIdx };
+	return id.LLID;
 }
 
 void CRenderComponent::SaveToLevelFile(FILE* file)

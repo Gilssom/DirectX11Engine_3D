@@ -51,6 +51,7 @@ private:
 public:
 	UINT GetElementSize() { return m_ElementSize; }
 	UINT GetElementCount() { return m_ElementCount; }
+	UINT GetBufferSize() { return m_ElementSize * m_ElementCount; }
 
 	int Create(UINT elementSize, UINT elementCount, SB_TYPE type, bool sysMemMove, void* initialData = nullptr);
 	void SetData(void* data, UINT elementCount = 0);

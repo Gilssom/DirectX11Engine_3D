@@ -30,6 +30,7 @@ private:
 
 public:
 	virtual void Render() = 0;
+	virtual void Render(UINT iSubset);
 	virtual void Render_shadowmap();
 
 public:
@@ -50,6 +51,8 @@ public:
 
 	void SetDynamicShadow(bool use) { m_DynamicShadow = use; }
 	bool IsDynamicShadow() { return m_DynamicShadow; }
+
+	ULONG64 GetInstID(UINT iMtrlIdx);
 
 	virtual void SaveToLevelFile(FILE* file) override;
 	virtual void LoadFromLevelFile(FILE* file) override;

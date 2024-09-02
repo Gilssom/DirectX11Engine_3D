@@ -13,6 +13,7 @@
 #include "CTaskManager.h"
 #include "CSoundManager.h"
 #include "CFontManager.h"
+#include "CInstancingBuffer.h"
 
 CEngine::CEngine()
 	: m_hMainHwnd(nullptr)
@@ -53,6 +54,7 @@ int CEngine::Init(HWND hwnd, Vec2 resolution, PREFAB_SAVE_FUNC save, PREFAB_LOAD
 	CRenderManager::GetInst()->Init();
 	CLevelManager::GetInst()->Init();
 	CFontManager::GetInst()->Init();
+	CInstancingBuffer::GetInst()->Init();
 
 	// Prefab Save & Load 함수 설정
 	CPrefab::SetPrefabSaveFunc(save);

@@ -191,6 +191,12 @@
     <ClCompile Include="CAnimation3DShader.cpp">
       <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
     </ClCompile>
+    <ClCompile Include="CCopyBoneShader.cpp">
+      <Filter>HLSL\06. ComputeShader\CobyBone</Filter>
+    </ClCompile>
+    <ClCompile Include="CInstancingBuffer.cpp">
+      <Filter>04. Manager\12. InstancingBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -398,6 +404,12 @@
     <ClInclude Include="CAnimation3DShader.h">
       <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
     </ClInclude>
+    <ClInclude Include="CCopyBoneShader.h">
+      <Filter>HLSL\06. ComputeShader\CobyBone</Filter>
+    </ClInclude>
+    <ClInclude Include="CInstancingBuffer.h">
+      <Filter>04. Manager\12. InstancingBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -601,6 +613,12 @@
     <Filter Include="HLSL\06. ComputeShader\3DAnimation">
       <UniqueIdentifier>{f00edc1c-9ba1-4030-8c28-6134d071e0f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\06. ComputeShader\CobyBone">
+      <UniqueIdentifier>{7ab4ee6b-d006-4e0a-8eb3-f063574facda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Manager\12. InstancingBuffer">
+      <UniqueIdentifier>{c6beda52-3d95-4393-acff-d1450a2b787e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -671,6 +689,9 @@
     </FxCompile>
     <FxCompile Include="animation.fx">
       <Filter>HLSL\06. ComputeShader\3DAnimation</Filter>
+    </FxCompile>
+    <FxCompile Include="copybone.fx">
+      <Filter>HLSL\06. ComputeShader\CobyBone</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

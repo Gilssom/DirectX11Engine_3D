@@ -177,6 +177,7 @@ call Copy.bat</Command>
     <ClInclude Include="CComponent.h" />
     <ClInclude Include="CComputeShader.h" />
     <ClInclude Include="CConstBuffer.h" />
+    <ClInclude Include="CCopyBoneShader.h" />
     <ClInclude Include="CDbgRenderManager.h" />
     <ClInclude Include="CDecal.h" />
     <ClInclude Include="CDevice.h" />
@@ -188,6 +189,7 @@ call Copy.bat</Command>
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicShader.h" />
     <ClInclude Include="CHeightMapCS.h" />
+    <ClInclude Include="CInstancingBuffer.h" />
     <ClInclude Include="CKeyManager.h" />
     <ClInclude Include="CLandScape.h" />
     <ClInclude Include="CLayer.h" />
@@ -248,6 +250,7 @@ call Copy.bat</Command>
     <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CComputeShader.cpp" />
     <ClCompile Include="CConstBuffer.cpp" />
+    <ClCompile Include="CCopyBoneShader.cpp" />
     <ClCompile Include="CDbgRenderManager.cpp" />
     <ClCompile Include="CDecal.cpp" />
     <ClCompile Include="CDevice.cpp" />
@@ -259,6 +262,7 @@ call Copy.bat</Command>
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicShader.cpp" />
     <ClCompile Include="CHeightMapCS.cpp" />
+    <ClCompile Include="CInstancingBuffer.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
     <ClCompile Include="CLandScape.cpp" />
     <ClCompile Include="CLandScape_Init.cpp" />
@@ -312,6 +316,12 @@ call Copy.bat</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="compute.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="copybone.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>

@@ -3,6 +3,7 @@
 
 #include "CDevice.h"
 #include "CStructuredBuffer.h"
+#include "CInstancingBuffer.h"
 
 CMesh::CMesh(bool bEngine)
 	: CAsset(ASSET_TYPE::MESH, bEngine)
@@ -276,6 +277,19 @@ void CMesh::Binding(UINT iSubset)
 	CONTEXT->IASetIndexBuffer(m_vecIdxInfo[iSubset].pIB.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
+void CMesh::Binding_Inst(UINT iSubset)
+{
+	if (iSubset >= m_vecIdxInfo.size())
+		assert(nullptr);
+
+	ID3D11Buffer* arrBuffer[2] = { m_VB.Get(), CInstancingBuffer::GetInst()->GetBuffer().Get() };
+	UINT		  iStride[2] = { sizeof(Vtx), sizeof(tInstancingData) };
+	UINT		  iOffset[2] = { 0, 0 };
+
+	CONTEXT->IASetVertexBuffers(0, 2, arrBuffer, iStride, iOffset);
+	CONTEXT->IASetIndexBuffer(m_vecIdxInfo[iSubset].pIB.Get(), DXGI_FORMAT_R32_UINT, 0);
+}
+
 void CMesh::Render(UINT iSubset)
 {
 	Binding(iSubset);
@@ -293,6 +307,14 @@ void CMesh::Render_Particle(UINT instance)
 	// Instance 의 개수에 따라 정해진 개수의 객체를 한번에 Rendering 을 돌릴 수 있는 함수
 	// 단, 모든 세팅 데이터가 모두 동일해야한다.
 	CONTEXT->DrawIndexedInstanced(m_vecIdxInfo[0].iIdxCount, instance, 0, 0, 0);
+}
+
+void CMesh::Render_Instancing(UINT SubSet)
+{
+	Binding_Inst(SubSet);
+
+	CONTEXT->DrawIndexedInstanced(m_vecIdxInfo[SubSet].iIdxCount
+		, CInstancingBuffer::GetInst()->GetInstanceCount(), 0, 0, 0);
 }
 
 int CMesh::Save(const wstring& _FilePath)

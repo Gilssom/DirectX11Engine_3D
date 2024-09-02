@@ -54,6 +54,7 @@ public:
 
 public:
 	void Binding();
+	void Binding_Inst();
 
 	virtual int Load(const wstring& FilePath);
 	virtual int Save(const wstring& FilePath);

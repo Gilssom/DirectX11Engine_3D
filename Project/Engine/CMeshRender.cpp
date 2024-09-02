@@ -78,3 +78,39 @@ void CMeshRender::Render()
 		Animator3D()->ClearData();
 	}
 }
+
+void CMeshRender::Render(UINT iSubset)
+{
+	if (nullptr == GetMesh() || nullptr == GetMaterial(iSubset))
+		return;
+
+	// Transform 에 UpdateData 요청
+	Transform()->Binding();
+
+	// Animator2D 컴포넌트가 있다면
+	if (Animator2D())
+	{
+		Animator2D()->Binding();
+	}
+
+	// Animator3D 업데이트
+	if (Animator3D())
+	{
+		Animator3D()->Binding();
+		GetMaterial(iSubset)->SetAnim3D(true); // Animation Mesh 알리기
+		GetMaterial(iSubset)->SetBoneCount(Animator3D()->GetBoneCount());
+	}
+
+	// 사용할 재질 업데이트
+	GetMaterial(iSubset)->Binding();
+
+	// 사용할 메쉬 업데이트 및 렌더링
+	GetMesh()->Render(iSubset);
+
+	// Animation 관련 정보 제거
+	if (Animator2D())
+		CAnim2D::Clear();
+
+	if (Animator3D())
+		Animator3D()->ClearData();
+}

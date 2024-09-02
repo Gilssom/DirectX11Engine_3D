@@ -56,9 +56,11 @@ public:
 	int Create(Vtx* VtxSysMem, size_t VtxCount, UINT* IdxSysMem, size_t IdxCount);
 	void Render(UINT iSubset);
 	void Render_Particle(UINT instance);
+	void Render_Instancing(UINT SubSet);
 
 private:
 	void Binding(UINT _Subset);
+	void Binding_Inst(UINT iSubset);
 
 public:
 	virtual int Load(const wstring& _FilePath) override;

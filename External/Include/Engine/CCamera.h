@@ -34,7 +34,12 @@ private:
 	UINT		m_LayerCheck;
 	tRay		m_Ray;
 
-	vector<CGameObject*>	m_vecDeferred;
+	//vector<CGameObject*>	m_vecDeferred; -> Instancing 추가로 세분화
+	// 물체 분류 세분화
+	map<ULONG64, vector<tInstObject>> m_mapInstGroup_D;		// Deferred Object
+	map<ULONG64, vector<tInstObject>> m_mapInstGroup_F;		// Foward Object (Opaque, Mask)
+	map<INT_PTR, vector<tInstObject>> m_mapSingleObject;	// Single Object
+
 	vector<CGameObject*>	m_vecDecal;
 
 	vector<CGameObject*>	m_vecOpaque;

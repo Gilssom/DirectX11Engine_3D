@@ -218,6 +218,37 @@ struct tMTAnimClip
 };
 
 
+// ============
+//  Instancing
+// ============
+union uInstID
+{
+	struct 
+	{
+		UINT iMesh;
+		WORD iMtrl;
+		WORD iMtrlIdx;
+	};
+
+	ULONG64	LLID;
+};
+
+class CGameObject;
+struct tInstObject
+{
+	CGameObject*	pObject;
+	UINT			iMtrlIdx;
+};
+
+struct tInstancingData
+{
+	Matrix	matWorld;
+	Matrix	matWV;
+	Matrix	matWVP;
+	int		iRowIdx;
+};
+
+
 // ====================
 // 상수버퍼 관련 구조체
 // ====================

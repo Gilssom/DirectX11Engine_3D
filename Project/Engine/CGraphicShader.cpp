@@ -21,37 +21,8 @@ CGraphicShader::~CGraphicShader()
 
 int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string& vsFuncName)
 {
-	// Vertex Shader 생성
-	if (FAILED(D3DCompileFromFile(strFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
-		, vsFuncName.c_str(), "vs_5_0", D3DCOMPILE_DEBUG, 0
-		, m_VSBlob.GetAddressOf()
-		, m_ErrBlob.GetAddressOf())))
-	{
-		if (m_ErrBlob != nullptr)
-		{
-			MessageBoxA(nullptr
-				, (char*)m_ErrBlob->GetBufferPointer()
-				, "Vertex Shader Compile 오류", MB_OK);
-		}
-		else
-		{
-			MessageBox(nullptr
-				, L"파일을 찾을 수 없습니다."
-				, L"Vertex Shader Compile 오류", MB_OK);
-		}
-
-		return E_FAIL;
-	}
-
-	if (FAILED(DEVICE->CreateVertexShader(m_VSBlob->GetBufferPointer()
-										, m_VSBlob->GetBufferSize()
-										, nullptr, m_VS.GetAddressOf())))
-	{
-		return E_FAIL;
-	}
-
 	// Vertex Layout 정보 생성
-	D3D11_INPUT_ELEMENT_DESC Layoutdesc[8] = {};
+	D3D11_INPUT_ELEMENT_DESC Layoutdesc[21] = {};
 
 	Layoutdesc[0].AlignedByteOffset = 0; // 정점 정보의 시작 위치
 	Layoutdesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT; // 그에 맞는 픽셀 크기
@@ -117,12 +88,169 @@ int CGraphicShader::CreateVertexShader(const wstring& strFilePath, const string&
 	Layoutdesc[7].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	Layoutdesc[7].InstanceDataStepRate = 0;
 
+	// 두번째 슬롯
+	Layoutdesc[8].SemanticName = "WORLD";
+	Layoutdesc[8].SemanticIndex = 0;
+	Layoutdesc[8].AlignedByteOffset = 0;
+	Layoutdesc[8].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[8].InputSlot = 1;
+	Layoutdesc[8].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[8].InstanceDataStepRate = 1;
+
+	Layoutdesc[9].SemanticName = "WORLD";
+	Layoutdesc[9].SemanticIndex = 1;
+	Layoutdesc[9].AlignedByteOffset = 16;
+	Layoutdesc[9].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[9].InputSlot = 1;
+	Layoutdesc[9].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[9].InstanceDataStepRate = 1;
+
+	Layoutdesc[10].SemanticName = "WORLD";
+	Layoutdesc[10].SemanticIndex = 2;
+	Layoutdesc[10].AlignedByteOffset = 32;
+	Layoutdesc[10].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[10].InputSlot = 1;
+	Layoutdesc[10].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[10].InstanceDataStepRate = 1;
+
+	Layoutdesc[11].SemanticName = "WORLD";
+	Layoutdesc[11].SemanticIndex = 3;
+	Layoutdesc[11].AlignedByteOffset = 48;
+	Layoutdesc[11].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[11].InputSlot = 1;
+	Layoutdesc[11].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[11].InstanceDataStepRate = 1;
+
+	Layoutdesc[12].SemanticName = "WV";
+	Layoutdesc[12].SemanticIndex = 0;
+	Layoutdesc[12].AlignedByteOffset = 64;
+	Layoutdesc[12].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[12].InputSlot = 1;
+	Layoutdesc[12].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[12].InstanceDataStepRate = 1;
+
+	Layoutdesc[13].SemanticName = "WV";
+	Layoutdesc[13].SemanticIndex = 1;
+	Layoutdesc[13].AlignedByteOffset = 80;
+	Layoutdesc[13].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[13].InputSlot = 1;
+	Layoutdesc[13].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[13].InstanceDataStepRate = 1;
+
+	Layoutdesc[14].SemanticName = "WV";
+	Layoutdesc[14].SemanticIndex = 2;
+	Layoutdesc[14].AlignedByteOffset = 96;
+	Layoutdesc[14].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[14].InputSlot = 1;
+	Layoutdesc[14].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[14].InstanceDataStepRate = 1;
+
+	Layoutdesc[15].SemanticName = "WV";
+	Layoutdesc[15].SemanticIndex = 3;
+	Layoutdesc[15].AlignedByteOffset = 112;
+	Layoutdesc[15].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[15].InputSlot = 1;
+	Layoutdesc[15].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[15].InstanceDataStepRate = 1;
+	
+	Layoutdesc[16].SemanticName = "WVP";
+	Layoutdesc[16].SemanticIndex = 0;
+	Layoutdesc[16].AlignedByteOffset = 128;
+	Layoutdesc[16].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[16].InputSlot = 1;
+	Layoutdesc[16].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[16].InstanceDataStepRate = 1;
+	
+	Layoutdesc[17].SemanticName = "WVP";
+	Layoutdesc[17].SemanticIndex = 1;
+	Layoutdesc[17].AlignedByteOffset = 144;
+	Layoutdesc[17].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[17].InputSlot = 1;
+	Layoutdesc[17].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[17].InstanceDataStepRate = 1;
+	
+	Layoutdesc[18].SemanticName = "WVP";
+	Layoutdesc[18].SemanticIndex = 2;
+	Layoutdesc[18].AlignedByteOffset = 160;
+	Layoutdesc[18].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[18].InputSlot = 1;
+	Layoutdesc[18].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[18].InstanceDataStepRate = 1;
+	
+	Layoutdesc[19].SemanticName = "WVP";
+	Layoutdesc[19].SemanticIndex = 3;
+	Layoutdesc[19].AlignedByteOffset = 176;
+	Layoutdesc[19].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	Layoutdesc[19].InputSlot = 1;
+	Layoutdesc[19].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[19].InstanceDataStepRate = 1;
+	
+	Layoutdesc[20].SemanticName = "ROWINDEX";
+	Layoutdesc[20].SemanticIndex = 0;
+	Layoutdesc[20].AlignedByteOffset = 192;
+	Layoutdesc[20].Format = DXGI_FORMAT_R32_UINT;
+	Layoutdesc[20].InputSlot = 1;
+	Layoutdesc[20].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	Layoutdesc[20].InstanceDataStepRate = 1;
+
+
+	if (FAILED(D3DCompileFromFile(strFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, vsFuncName.c_str(), "vs_5_0", D3DCOMPILE_DEBUG, 0
+		, m_VSBlob.GetAddressOf()
+		, m_ErrBlob.GetAddressOf())))
+	{
+		if (nullptr != m_ErrBlob)
+		{
+			MessageBoxA(nullptr
+				, (char*)m_ErrBlob->GetBufferPointer()
+				, "버텍스 쉐이더 컴파일 오류", MB_OK);
+		}
+		else
+		{
+			MessageBox(nullptr
+				, L"파일을 찾을 수 없습니다."
+				, L"버텍스 쉐이더 컴파일 오류", MB_OK);
+		}
+
+		return E_FAIL;
+	}
+
+
+	if (FAILED(DEVICE->CreateVertexShader(m_VSBlob->GetBufferPointer()
+		, m_VSBlob->GetBufferSize()
+		, nullptr, m_VS.GetAddressOf())))
+	{
+		return E_FAIL;
+	}
+
+
 	if (FAILED(DEVICE->CreateInputLayout(Layoutdesc, 8
 		, m_VSBlob->GetBufferPointer()
 		, m_VSBlob->GetBufferSize()
 		, m_Layout.GetAddressOf())))
 	{
 		return E_FAIL;
+	}
+
+
+	// 추가 버텍스쉐이더(Instancing 버전) 컴파일
+	if (FAILED(D3DCompileFromFile(strFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, (vsFuncName + "_Inst").c_str(), "vs_5_0", D3DCOMPILE_DEBUG, 0
+		, m_VSInstBlob.GetAddressOf()
+		, m_ErrBlob.GetAddressOf())))
+	{
+		// Instancing 버전이 없어도 문제는 없다.
+		return S_OK;
+	}
+	else
+	{
+		// 컴파일 된 코드로 Vertex Instancing Shader 객체 만들기
+		DEVICE->CreateVertexShader(m_VSInstBlob->GetBufferPointer(), m_VSInstBlob->GetBufferSize(), nullptr, m_VSInst.GetAddressOf());
+
+		DEVICE->CreateInputLayout(Layoutdesc, 21
+			, m_VSInstBlob->GetBufferPointer()
+			, m_VSInstBlob->GetBufferSize()
+			, m_LayoutInst.GetAddressOf());
 	}
 
 	return S_OK;
@@ -281,6 +409,26 @@ int CGraphicShader::Binding()
 	CONTEXT->OMSetDepthStencilState(CDevice::GetInst()->GetDS(m_DSType).Get(), 0);
 
 	CONTEXT->OMSetBlendState(CDevice::GetInst()->GetBS(m_BSType).Get(), Vec4(0.f, 0.f, 0.f, 0.f), 0xffffffff); // 0xffffffff 모든 마스킹 비트가 출력 될 수 있게
+
+	return S_OK;
+}
+
+int CGraphicShader::Binding_Inst()
+{
+	CONTEXT->IASetInputLayout(m_LayoutInst.Get());
+	CONTEXT->IASetPrimitiveTopology(m_Topology);
+
+	CONTEXT->VSSetShader(m_VSInst.Get(), nullptr, 0);
+	CONTEXT->HSSetShader(m_HS.Get(), nullptr, 0);
+	CONTEXT->DSSetShader(m_DS.Get(), nullptr, 0);
+	CONTEXT->GSSetShader(m_GS.Get(), nullptr, 0);
+
+	CONTEXT->RSSetState(CDevice::GetInst()->GetRS(m_RSType).Get());
+
+	CONTEXT->PSSetShader(m_PS.Get(), nullptr, 0);
+
+	CONTEXT->OMSetDepthStencilState(CDevice::GetInst()->GetDS(m_DSType).Get(), 0);
+	CONTEXT->OMSetBlendState(CDevice::GetInst()->GetBS(m_BSType).Get(), Vec4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 	return S_OK;
 }

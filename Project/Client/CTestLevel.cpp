@@ -161,14 +161,28 @@ void CTestLevel::CreateTestLevel()
 
 	//pMeshData = CAssetManager::GetInst()->LoadFBX(L"fbx\\Monster.fbx");
 	pMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Monster.mdat");
+
+	// Instancing Test
+	/*for (int i = 0; i < 10; i++)
+	{
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Monster" + i);
+		pObj->GetRenderComponent()->SetFrustumCheck(false);
+
+		pObj->Transform()->SetRelativePos(Vec3((i + 1) * 50.f, 0.f, 100.f));
+		pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+
+		m_CurLevel->AddObject(0, pObj, false);
+	}*/
+
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Monster");
 	pObj->GetRenderComponent()->SetFrustumCheck(false);
 
-	pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 100.f));
+	pObj->Transform()->SetRelativePos(Vec3(50.f, 0.f, 100.f));
 	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
-	m_CurLevel->AddObject(0, pObj);
+	m_CurLevel->AddObject(0, pObj, false);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);
