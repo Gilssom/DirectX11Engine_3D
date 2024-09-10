@@ -195,7 +195,7 @@ void CCamera::Render_deferred()
 		// instancing 개수 조건 미만이거나
 		// Animation2D 오브젝트거나(스프라이트 애니메이션 오브젝트)
 		// Shader 가 Instancing 을 지원하지 않는경우
-		if (pair.second.size() <= 1
+		if (pair.second.size() <= 10
 			|| pair.second[0].pObject->Animator2D()
 			|| pair.second[0].pObject->GetRenderComponent()->GetMaterial(pair.second[0].iMtrlIdx)->GetShader()->GetVSInst() == nullptr)
 		{
@@ -300,6 +300,19 @@ void CCamera::Render_opaque()
 	{
 		m_vecOpaque[i]->Render();
 		CRenderManager::GetInst()->AddDrawCall();
+	}
+
+	// m_mapInstGroup_F 에 있는 객체들에 대한 렌더링 처리 추가
+	for (auto& pair : m_mapInstGroup_F)
+	{
+		CGameObject* pObj = pair.second[0].pObject;
+		pObj->Render();
+		//Ptr<CMesh> pMesh = pObj->GetRenderComponent()->GetMesh();
+		//Ptr<CMaterial> pMtrl = pObj->GetRenderComponent()->GetMaterial(pair.second[0].iMtrlIdx);
+		//
+		//pMtrl->Binding_Inst();
+		//pMesh->Render_Instancing(pair.second[0].iMtrlIdx);
+		//CRenderManager::GetInst()->AddDrawCall();
 	}
 }
 

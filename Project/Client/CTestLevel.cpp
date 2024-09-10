@@ -91,11 +91,11 @@ void CTestLevel::CreateTestLevel()
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 
-	pSkyBox->SkyBox()->SetSkyBoxType(SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky02.jpg"));
+	//pSkyBox->SkyBox()->SetSkyBoxType(SPHERE);
+	//pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\Sky02.jpg"));
 
-	//pSkyBox->SkyBox()->SetSkyBoxType(CUBE);
-	//pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\SkyDawn.dds"));
+	pSkyBox->SkyBox()->SetSkyBoxType(CUBE);
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\skybox\\SkyDawn.dds"));
 
 	m_CurLevel->AddObject(0, pSkyBox);
 
