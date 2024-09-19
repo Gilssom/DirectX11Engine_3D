@@ -577,6 +577,8 @@ void CCamera::SortObject_ShadowMap()
 			}
 		}
 	}
+
+	int a = m_vecShadowMap.size();
 }
 
 void CCamera::SaveToLevelFile(FILE* file)

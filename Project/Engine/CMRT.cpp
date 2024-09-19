@@ -72,5 +72,5 @@ void CMRT::ClearDepthStencil()
 
 	// Depth Stencil 에서 자신의 깊이 값보다 작은 값들의 물체들만 그려줌
 	// 그래서 Depth Stencil View 의 초기값은 1로 초기화 해야 함
-	CONTEXT->ClearDepthStencilView(m_DSTex->GetDSV().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_DEPTH, 1.f, 0);
+	CONTEXT->ClearDepthStencilView(m_DSTex->GetDSV().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }

@@ -146,13 +146,13 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 
 		// 1. ShadowMap Target
 		Ptr<CTexture> pShadowMap = CAssetManager::GetInst()->CreateTexture(L"ShadowMapTargetTex"
-									, 4096, 4096
+									, 8192, 8192
 									, DXGI_FORMAT_R32_FLOAT
 									, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
 
 		// Depth Stencil Texture 생성
 		Ptr<CTexture> DSTex = CAssetManager::GetInst()->CreateTexture(L"ShadowMapDSTex"
-									, 4096, 4096
+									, 8192, 8192
 									, DXGI_FORMAT_D24_UNORM_S8_UINT
 									, D3D11_BIND_DEPTH_STENCIL);
 
@@ -160,7 +160,7 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 
 		// 광원의 위치에 상관없이 일정한 방향으로 그림자가 나와야 한다. (직교투영)
 		m_LightCamObject->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_LightCamObject->Camera()->SetWidth(4096);
+		m_LightCamObject->Camera()->SetWidth(8192);
 		m_LightCamObject->Camera()->SetAspectRatio(1.f);
 		m_LightCamObject->Camera()->SetFar(100000.f);
 		m_LightCamObject->Camera()->LayerCheckAll(0xffffffff);

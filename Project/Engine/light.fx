@@ -80,8 +80,8 @@ PS_OUT PS_DirLight(VS_OUT _in)
 
     // fShadowDepth 가 기존 Depth 값 보다 작으면 그림자 영역이 된다.
     // 기존 지점까지 가는 도중에 더 가까운 무언가의 깊이 값이 잡혔기 때문이다.
-    if (vShadowMapUV.x >= 0.f && vShadowMapUV.x <= 1.f
-        && vShadowMapUV.y >= 0.f && vShadowMapUV.y <= 1.f)
+    if (vShadowMapUV.x >= 0 && vShadowMapUV.x <= 1.f
+        && vShadowMapUV.y >= 0 && vShadowMapUV.y <= 1.f)
     {
         // 그림자 판정
         if (fShadowDepth + 0.001f < Depth)
