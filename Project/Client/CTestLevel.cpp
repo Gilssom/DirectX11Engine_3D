@@ -101,26 +101,26 @@ void CTestLevel::CreateTestLevel()
 
 
 	// Player
-	CGameObject* Player = new CGameObject;
-	Player->SetName(L"Player");
-
-	Player->AddComponent(new CTransform);
-	Player->AddComponent(new CMeshRender);
-	Player->AddComponent(new CBoundingBox);
-
-	Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
-	Player->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
-	//Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-	Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
-	Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"), 0);
-	Player->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Character.png"));
-
-	Player->BoundingBox()->SetAbsolute(true);
-	Player->BoundingBox()->SetOffset(Vec3(0.f, 0.f, 0.f));
-	Player->BoundingBox()->SetRadius(600.f);
-
-	m_CurLevel->AddObject(0, Player);
+	//CGameObject* Player = new CGameObject;
+	//Player->SetName(L"Player");
+	//
+	//Player->AddComponent(new CTransform);
+	//Player->AddComponent(new CMeshRender);
+	//Player->AddComponent(new CBoundingBox);
+	//
+	//Player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 500.f));
+	//Player->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	////Player->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	//
+	//Player->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	//Player->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Std3DDeferredMaterial"), 0);
+	//Player->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Character.png"));
+	//
+	//Player->BoundingBox()->SetAbsolute(true);
+	//Player->BoundingBox()->SetOffset(Vec3(0.f, 0.f, 0.f));
+	//Player->BoundingBox()->SetRadius(600.f);
+	//
+	//m_CurLevel->AddObject(0, Player);
 
 
 	// Decal

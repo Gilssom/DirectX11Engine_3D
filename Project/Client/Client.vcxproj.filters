@@ -131,26 +131,41 @@
     <Filter Include="02. EditorUI\01. Inspector\ComponentUI\06. Animator2DUI">
       <UniqueIdentifier>{31c578cd-ef85-48e4-a7cc-d8aab77ed59d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\07. MeshRenderUI">
-      <UniqueIdentifier>{3500ff59-409f-4e4e-b468-c433965c117f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\08. ParticleSystemUI">
-      <UniqueIdentifier>{27721d5e-fcb1-4342-9638-19040c963e66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\09. TileMapUI">
-      <UniqueIdentifier>{0e28ae69-4920-4e8e-af73-c61b0f51aa15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI">
       <UniqueIdentifier>{be0270b6-58ea-491e-acf1-57d311b44db5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI">
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\07. Animator3DUI">
+      <UniqueIdentifier>{f87a9c7d-81c6-4376-b2a0-100652470707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\08. MeshRenderUI">
+      <UniqueIdentifier>{3500ff59-409f-4e4e-b468-c433965c117f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\09. ParticleSystemUI">
+      <UniqueIdentifier>{27721d5e-fcb1-4342-9638-19040c963e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\10. TileMapUI">
+      <UniqueIdentifier>{0e28ae69-4920-4e8e-af73-c61b0f51aa15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\11. SkyBoxUI">
       <UniqueIdentifier>{f4077830-a1d8-4277-ae33-151fe6ae3b29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\12. ScriptUI">
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\12. DecalUI">
+      <UniqueIdentifier>{3109d571-311a-4601-a4f5-8b84699eb010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI">
       <UniqueIdentifier>{b4d9247f-cbe5-420f-9a56-cf67129ad0ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\11. DecalUI">
-      <UniqueIdentifier>{3109d571-311a-4601-a4f5-8b84699eb010}</UniqueIdentifier>
+    <Filter Include="02. EditorUI\10. 3DAnimEditor">
+      <UniqueIdentifier>{98b6a333-5ee8-4082-984f-e05eba095cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\10. 3DAnimEditor\3DAnimSubUI">
+      <UniqueIdentifier>{deb51408-b89b-43cf-a20e-949ed88bd69d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\01. PreView">
+      <UniqueIdentifier>{a0136177-ae7b-4c71-b620-b3e2b34aec7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail">
+      <UniqueIdentifier>{cc45ba62-9974-4e91-8a90-c6e7ba1e98fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -218,16 +233,16 @@
       <Filter>02. EditorUI\01. Inspector\ComponentUI\01. TransformUI</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\07. MeshRenderUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\08. MeshRenderUI</Filter>
     </ClInclude>
     <ClInclude Include="ComponentUI.h">
       <Filter>02. EditorUI\01. Inspector\ComponentUI</Filter>
     </ClInclude>
     <ClInclude Include="TileMapUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\09. TileMapUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. TileMapUI</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystemUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\08. ParticleSystemUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\09. ParticleSystemUI</Filter>
     </ClInclude>
     <ClInclude Include="Animator2DUI.h">
       <Filter>02. EditorUI\01. Inspector\ComponentUI\06. Animator2DUI</Filter>
@@ -287,7 +302,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClInclude>
     <ClInclude Include="ScriptUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\12. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI</Filter>
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -326,10 +341,25 @@
       <Filter>02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI</Filter>
     </ClInclude>
     <ClInclude Include="SkyBoxUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. SkyBoxUI</Filter>
     </ClInclude>
     <ClInclude Include="DecalUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. DecalUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\12. DecalUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator3DUI.h">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\07. Animator3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation3DEditor.h">
+      <Filter>02. EditorUI\10. 3DAnimEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim3DSubUI.h">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim3DPreView.h">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\01. PreView</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim3DDetail.h">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -393,16 +423,16 @@
       <Filter>02. EditorUI\01. Inspector\ComponentUI\01. TransformUI</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\07. MeshRenderUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\08. MeshRenderUI</Filter>
     </ClCompile>
     <ClCompile Include="ComponentUI.cpp">
       <Filter>02. EditorUI\01. Inspector\ComponentUI</Filter>
     </ClCompile>
     <ClCompile Include="TileMapUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\09. TileMapUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. TileMapUI</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystemUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\08. ParticleSystemUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\09. ParticleSystemUI</Filter>
     </ClCompile>
     <ClCompile Include="Animator2DUI.cpp">
       <Filter>02. EditorUI\01. Inspector\ComponentUI\06. Animator2DUI</Filter>
@@ -465,7 +495,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClCompile>
     <ClCompile Include="ScriptUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\12. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI</Filter>
     </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -504,10 +534,25 @@
       <Filter>02. EditorUI\01. Inspector\ComponentUI\05. Light3DUI</Filter>
     </ClCompile>
     <ClCompile Include="SkyBoxUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\10. SkyBoxUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. SkyBoxUI</Filter>
     </ClCompile>
     <ClCompile Include="DecalUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\11. DecalUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\12. DecalUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3DUI.cpp">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\07. Animator3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation3DEditor.cpp">
+      <Filter>02. EditorUI\10. 3DAnimEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim3DSubUI.cpp">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim3DPreView.cpp">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\01. PreView</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim3DDetail.cpp">
+      <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

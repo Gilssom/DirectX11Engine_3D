@@ -26,6 +26,10 @@
 #include "AnimPreView.h"
 #include "AnimDetail.h"
 
+#include "Animation3DEditor.h"
+#include "Anim3DPreView.h"
+#include "Anim3DDetail.h"
+
 CImGuiManager::CImGuiManager()
     : m_mapUI{}
     , m_hMainHwnd(nullptr)
@@ -232,6 +236,25 @@ void CImGuiManager::CreateEditorUI()
     pUI = new AnimationEditor;
     pUI->SetActive(false);
     pUI->SetMenu(true);
+    pUI->SetUIMove(false);
+    m_mapUI.insert(make_pair(pUI->GetName(), pUI));
+
+
+// =====================
+//  3D Animation Editor
+// =====================
+    pUI = new Anim3DPreView;
+    pUI->SetActive(false);
+    pUI->SetUIMove(false);
+    m_mapUI.insert(make_pair(pUI->GetName(), pUI));
+
+    pUI = new Anim3DDetail;
+    pUI->SetActive(false);
+    pUI->SetUIMove(false);
+    m_mapUI.insert(make_pair(pUI->GetName(), pUI));
+
+    pUI = new Animation3DEditor;
+    pUI->SetActive(false);
     pUI->SetUIMove(false);
     m_mapUI.insert(make_pair(pUI->GetName(), pUI));
 }

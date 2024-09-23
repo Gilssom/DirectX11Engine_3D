@@ -20,7 +20,7 @@ extern const char* COMPONENT_TYPE_STRING[(UINT)COMPONENT_TYPE::END]
 	"Animator3D",
 	"Light2D",
 	"Light3D",
-	"BoundingBox"
+	"BoundingBox",
 	"Mesh Renderer",
 	"SkyBox",
 	"Decal",

@@ -48,29 +48,45 @@ CAnimator3D::~CAnimator3D()
 
 void CAnimator3D::FinalTick()
 {
-	m_dCurTime = 0.f;
-	// 현재 재생중인 Clip 의 시간을 진행한다.
-	m_vecClipUpdateTime[m_iCurClip] += DT_Engine;
-
-	if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+	if (!m_EditorMode)
 	{
-		m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		m_dCurTime = 0.f;
+
+		// 현재 재생중인 Clip 의 시간을 진행한다.
+		m_vecClipUpdateTime[m_iCurClip] += DT_Engine;
+
+		if (m_iFrameIdx >= m_EndFrame)
+		{
+			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		}
+		else if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+		{
+			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		}
+
+		m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
+
+		// 현재 프레임 인덱스 구하기
+		double dFrameIdx = m_dCurTime * (double)m_iFrameCount + m_StartFrame;
+		m_iFrameIdx = (int)(dFrameIdx);
+
+		// 다음 프레임 인덱스
+		//if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
+		//{
+		//	m_iNextFrameIdx = m_iFrameIdx;	// 끝이면 현재 인덱스를 유지
+		//}
+		if (m_iFrameIdx >= m_EndFrame)
+		{
+			m_iNextFrameIdx = m_iFrameIdx;
+		}
+		else
+		{
+			m_iNextFrameIdx = m_iFrameIdx + 1;
+		}
+
+		// 프레임간의 시간에 따른 비율을 구해준다.
+		m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
 	}
-
-	m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
-
-	// 현재 프레임 인덱스 구하기
-	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
-	m_iFrameIdx = (int)(dFrameIdx);
-
-	// 다음 프레임 인덱스
-	if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
-		m_iNextFrameIdx = m_iFrameIdx;	// 끝이면 현재 인덱스를 유지
-	else
-		m_iNextFrameIdx = m_iFrameIdx + 1;
-
-	// 프레임간의 시간에 따른 비율을 구해준다.
-	m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
 
 	// 컴퓨트 쉐이더 연산여부
 	m_bFinalMatUpdate = false;
@@ -78,6 +94,9 @@ void CAnimator3D::FinalTick()
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* vecAnimClip)
 {
+	// Test
+	PlayAnimation(0);
+
 	m_pVecClip = vecAnimClip;
 	m_vecClipUpdateTime.resize(m_pVecClip->size());
 
@@ -116,6 +135,15 @@ void CAnimator3D::Binding()
 
 	// t17 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_pBoneFinalMatBuffer->Binding(17);
+}
+
+void CAnimator3D::PlayAnimation(int animIndex)
+{
+	// Test
+	vector<std::pair<int, int>> a = { {0, 30}, {50, 70} };
+
+	m_StartFrame = a[animIndex].first;
+	m_EndFrame = a[animIndex].second;
 }
 
 void CAnimator3D::ClearData()
