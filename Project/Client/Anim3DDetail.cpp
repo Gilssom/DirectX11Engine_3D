@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Anim3DDetail.h"
 
 #include <Engine\CAnimator3D.h>
@@ -18,103 +18,106 @@ Anim3DDetail::~Anim3DDetail()
 		m_Animator3D = nullptr;
 }
 
-void Anim3DDetail::DrawTimeLineView(int& curFrame, int maxFrame, float& zoomLevel, float& scrollOffset)
+void Anim3DDetail::DrawTimeLineView(int& curFrame, int startFrame, int endFrame, float& zoomLevel, float& scrollOffset)
 {
-    // Å¸ÀÓ¶óÀÎÀÇ Å©±â¿Í À§Ä¡¸¦ ¼³Á¤
+    // íƒ€ì„ë¼ì¸ì˜ í¬ê¸°ì™€ ìœ„ì¹˜ë¥¼ ì„¤ì •
     ImVec2 timelinePos = ImGui::GetCursorScreenPos();
-    ImVec2 timelineSize = ImVec2(ImGui::GetContentRegionAvail().x, 50); // Å¸ÀÓ¶óÀÎ ³ôÀÌ
+    ImVec2 timelineSize = ImVec2(ImGui::GetContentRegionAvail().x, 50); // íƒ€ì„ë¼ì¸ ë†’ì´
 
-    // Å¸ÀÓ¶óÀÎ ¹è°æ ±×¸®±â
+    // íƒ€ì„ë¼ì¸ ë°°ê²½ ê·¸ë¦¬ê¸°
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     drawList->AddRectFilled(timelinePos, ImVec2(timelinePos.x + timelineSize.x, timelinePos.y + timelineSize.y), IM_COL32(60, 60, 60, 255));
 
-    // ¸¶¿ì½º ÈÙ ÀÔ·ÂÀ» °¨ÁöÇØ zoomLevel ¾÷µ¥ÀÌÆ®
+    // ë§ˆìš°ìŠ¤ íœ  ì…ë ¥ì„ ê°ì§€í•´ zoomLevel ì—…ë°ì´íŠ¸
     if (ImGui::IsWindowHovered())
     {
         float wheel = ImGui::GetIO().MouseWheel;
         if (wheel != 0.0f)
         {
-            zoomLevel += wheel * 0.1f;  // ÈÙÀ» ¿òÁ÷ÀÏ ¶§¸¶´Ù zoomLevelÀ» Á¶Àı
-            zoomLevel = Custom_Clamp(zoomLevel, 0.1f, 5.0f);  // ÃÖ¼Ò/ÃÖ´ë ÁÜ ·¹º§ Á¦ÇÑ
+            zoomLevel += wheel * 0.1f;  // íœ ì„ ì›€ì§ì¼ ë•Œë§ˆë‹¤ zoomLevelì„ ì¡°ì ˆ
+            zoomLevel = Custom_Clamp(zoomLevel, 0.1f, 5.0f);  // ìµœì†Œ/ìµœëŒ€ ì¤Œ ë ˆë²¨ ì œí•œ
         }
     }
 
-    // È®´ë/Ãà¼Ò¿¡ µû¸¥ ÇÁ·¹ÀÓ °£°İ °è»ê
-    float frameStep = (timelineSize.x / maxFrame) * zoomLevel; // zoomLevel¿¡ µû¸¥ È®´ë/Ãà¼Ò
+    // ì„ íƒëœ í´ë¦½ì˜ í”„ë ˆì„ ë²”ìœ„ì— ë”°ë¥¸ ì „ì²´ í”„ë ˆì„ ìˆ˜
+    int totalFrames = endFrame - startFrame + 1;
 
-    // ½½¶óÀÌ´õ·Î Å¸ÀÓ¶óÀÎ ÁÂ¿ì ½ºÅ©·Ñ Á¶Á¤ (scrollOffsetÀº ¸¶¿ì½º ÈÙ°ú ½½¶óÀÌ´õ·Î Á¶Á¤)
-    float maxScrollOffset = (maxFrame * frameStep) - timelineSize.x;
-    scrollOffset = Custom_Clamp(scrollOffset, 0.0f, maxScrollOffset);  // ½ºÅ©·Ñ ¿ÀÇÁ¼Â Á¦ÇÑ
+    // í™•ëŒ€/ì¶•ì†Œì— ë”°ë¥¸ í”„ë ˆì„ ê°„ê²© ê³„ì‚°
+    float frameStep = (timelineSize.x / totalFrames) * zoomLevel; // zoomLevelì— ë”°ë¥¸ í™•ëŒ€/ì¶•ì†Œ
 
-    // °¢ ÇÁ·¹ÀÓÀÇ ´«±İ ±×¸®±â
-    for (int i = 0; i <= maxFrame; i++)
+    // ìŠ¬ë¼ì´ë”ë¡œ íƒ€ì„ë¼ì¸ ì¢Œìš° ìŠ¤í¬ë¡¤ ì¡°ì • (scrollOffsetì€ ë§ˆìš°ìŠ¤ íœ ê³¼ ìŠ¬ë¼ì´ë”ë¡œ ì¡°ì •)
+    float maxScrollOffset = (totalFrames * frameStep) - timelineSize.x;
+    scrollOffset = Custom_Clamp(scrollOffset, 0.0f, maxScrollOffset);  // ìŠ¤í¬ë¡¤ ì˜¤í”„ì…‹ ì œí•œ
+
+    // ê° í”„ë ˆì„ì˜ ëˆˆê¸ˆ ê·¸ë¦¬ê¸°
+    for (int i = startFrame; i <= endFrame; i++)
     {
-        float xPos = timelinePos.x + i * frameStep - scrollOffset;  // ½ºÅ©·Ñ ¿ÀÇÁ¼Â Àû¿ë
+        float xPos = timelinePos.x + (i - startFrame) * frameStep - scrollOffset;  // ìŠ¤í¬ë¡¤ ì˜¤í”„ì…‹ ì ìš© ë° í”„ë ˆì„ ì¡°ì •
 
-        // Å¸ÀÓ¶óÀÎ ¹üÀ§ ³»¿¡ ÀÖÀ» ¶§¸¸ ±×¸®±â
+        // íƒ€ì„ë¼ì¸ ë²”ìœ„ ë‚´ì— ìˆì„ ë•Œë§Œ ê·¸ë¦¬ê¸°
         if (xPos >= timelinePos.x && xPos <= timelinePos.x + timelineSize.x)
         {
-            // 10ÇÁ·¹ÀÓ¸¶´Ù Å« ´«±İ°ú ¹øÈ£ Ç¥½Ã
+            // 10í”„ë ˆì„ë§ˆë‹¤ í° ëˆˆê¸ˆê³¼ ë²ˆí˜¸ í‘œì‹œ
             if (i % 10 == 0)
             {
                 drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y), IM_COL32(255, 255, 255, 255), 2.0f);
 
-                // ÇÁ·¹ÀÓ ¹øÈ£ ÅØ½ºÆ® Ç¥½Ã
+                // í”„ë ˆì„ ë²ˆí˜¸ í…ìŠ¤íŠ¸ í‘œì‹œ
                 char frameLabel[8];
                 sprintf_s(frameLabel, "%d", i);
                 drawList->AddText(ImVec2(xPos - 10, timelinePos.y + timelineSize.y + 5), IM_COL32(255, 255, 255, 255), frameLabel);
             }
             else
             {
-                // ÀÛÀº ´«±İ Ç¥½Ã (1ÇÁ·¹ÀÓ ´ÜÀ§)
+                // ì‘ì€ ëˆˆê¸ˆ í‘œì‹œ (1í”„ë ˆì„ ë‹¨ìœ„)
                 drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y * 0.5f), IM_COL32(255, 255, 255, 150), 1.0f);
             }
         }
     }
 
-    // ÇöÀç ÇÁ·¹ÀÓÀ» Ç¥½ÃÇÏ´Â ÇÚµé·¯ (½½¶óÀÌ´õÃ³·³ º¸ÀÌ°Ô)
-    float handleX = timelinePos.x + (curFrame / (float)maxFrame) * timelineSize.x * zoomLevel - scrollOffset;
+    // í˜„ì¬ í”„ë ˆì„ì„ í‘œì‹œí•˜ëŠ” í•¸ë“¤ëŸ¬ (ìŠ¬ë¼ì´ë”ì²˜ëŸ¼ ë³´ì´ê²Œ)
+    float handleX = timelinePos.x + (curFrame - startFrame) * frameStep - scrollOffset;
     drawList->AddRectFilled(ImVec2(handleX - 5, timelinePos.y), ImVec2(handleX + 5, timelinePos.y + timelineSize.y), IM_COL32(255, 0, 0, 255));
 
-    // ÇÚµé·¯ µå·¡±× ±â´É Ãß°¡
+    // í•¸ë“¤ëŸ¬ ë“œë˜ê·¸ ê¸°ëŠ¥ ì¶”ê°€
     static bool isDraggingHandle = false;
     if (ImGui::IsMouseHoveringRect(ImVec2(handleX - 5, timelinePos.y), ImVec2(handleX + 5, timelinePos.y + timelineSize.y)))
     {
-        if (ImGui::IsMouseClicked(0))  // ¿ŞÂÊ Å¬¸¯À¸·Î µå·¡±× ½ÃÀÛ
+        if (ImGui::IsMouseClicked(0))  // ì™¼ìª½ í´ë¦­ìœ¼ë¡œ ë“œë˜ê·¸ ì‹œì‘
         {
             isDraggingHandle = true;
         }
     }
     if (isDraggingHandle)
     {
-        if (ImGui::IsMouseDragging(0))  // µå·¡±× ÁßÀÏ ¶§
+        if (ImGui::IsMouseDragging(0))  // ë“œë˜ê·¸ ì¤‘ì¼ ë•Œ
         {
             ImVec2 mousePos = ImGui::GetMousePos();
             float relativePos = (mousePos.x - timelinePos.x + scrollOffset) / (timelineSize.x * zoomLevel);
-            curFrame = (int)(relativePos * maxFrame);
-            curFrame = Custom_Clamp(curFrame, 0, maxFrame);  // ÇÁ·¹ÀÓ ¹üÀ§¸¦ ¹ş¾î³ªÁö ¾Êµµ·Ï Á¦ÇÑ
+            curFrame = (int)(relativePos * totalFrames) + startFrame;
+            curFrame = Custom_Clamp(curFrame, startFrame, endFrame);  // í”„ë ˆì„ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ì§€ ì•Šë„ë¡ ì œí•œ
         }
-        if (ImGui::IsMouseReleased(0))  // µå·¡±× Á¾·á
+        if (ImGui::IsMouseReleased(0))  // ë“œë˜ê·¸ ì¢…ë£Œ
         {
             isDraggingHandle = false;
         }
     }
 
-    // Å¸ÀÓ¶óÀÎ Å¬¸¯À¸·Îµµ ÇÁ·¹ÀÓ º¯°æ °¡´É
+    // íƒ€ì„ë¼ì¸ í´ë¦­ìœ¼ë¡œë„ í”„ë ˆì„ ë³€ê²½ ê°€ëŠ¥
     if (ImGui::IsMouseHoveringRect(timelinePos, ImVec2(timelinePos.x + timelineSize.x, timelinePos.y + timelineSize.y)) && !isDraggingHandle)
     {
-        if (ImGui::IsMouseClicked(0))  // ¿ŞÂÊ Å¬¸¯ ½Ã
+        if (ImGui::IsMouseClicked(0))  // ì™¼ìª½ í´ë¦­ ì‹œ
         {
             ImVec2 mousePos = ImGui::GetMousePos();
             float relativePos = (mousePos.x - timelinePos.x + scrollOffset) / (timelineSize.x * zoomLevel);
-            curFrame = (int)(relativePos * maxFrame);
-            curFrame = Custom_Clamp(curFrame, 0, maxFrame);  // ÇÁ·¹ÀÓ ¹üÀ§¸¦ ¹ş¾î³ªÁö ¾Êµµ·Ï Á¦ÇÑ
+            curFrame = (int)(relativePos * totalFrames) + startFrame;
+            curFrame = Custom_Clamp(curFrame, startFrame, endFrame);  // í”„ë ˆì„ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ì§€ ì•Šë„ë¡ ì œí•œ
         }
     }
 
-    // ½½¶óÀÌ´õ¸¦ Å¸ÀÓ¶óÀÎ ¾Æ·¡¿¡ Ç¥½Ã
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 100);  // Å¸ÀÓ¶óÀÎ ¹Ø¿¡ ½½¶óÀÌ´õ°¡ À§Ä¡ÇÏµµ·Ï Á¶Á¤
-    if (maxFrame * frameStep > timelineSize.x)  // Å¸ÀÓ¶óÀÎÀÌ Ã¢º¸´Ù Å¬ ¶§¸¸ ½½¶óÀÌ´õ È°¼ºÈ­
+    // ìŠ¬ë¼ì´ë”ë¥¼ íƒ€ì„ë¼ì¸ ì•„ë˜ì— í‘œì‹œ
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 100);  // íƒ€ì„ë¼ì¸ ë°‘ì— ìŠ¬ë¼ì´ë”ê°€ ìœ„ì¹˜í•˜ë„ë¡ ì¡°ì •
+    if (totalFrames * frameStep > timelineSize.x)  // íƒ€ì„ë¼ì¸ì´ ì°½ë³´ë‹¤ í´ ë•Œë§Œ ìŠ¬ë¼ì´ë” í™œì„±í™”
     {
         ImGui::SliderFloat("Scroll", &scrollOffset, 0.0f, maxScrollOffset, "Offset: %.1f");
     }
@@ -122,38 +125,71 @@ void Anim3DDetail::DrawTimeLineView(int& curFrame, int maxFrame, float& zoomLeve
 
 void Anim3DDetail::Render_Tick()
 {
+    m_Animator3D = GetOwner()->GetAnimator3D();
+
+    if (m_Animator3D == nullptr)
+        return;
+
+    m_Animator3D->SetEditorMode(true);
+
+    const vector<tMTAnimClip>* pAnimClip = m_Animator3D->GetVecAnimClip();
+    vector<AnimationClip>& pAnimationClip = m_Animator3D->GetAnimationClip();
+
+    static int selectedClip = 0;  // í˜„ì¬ ì„ íƒëœ í´ë¦½ì˜ ì¸ë±ìŠ¤
+
+    ImGui::SeparatorText("Animation Test Button");
+
+    if (ImGui::Button("Play"))
+    {
+        m_Animator3D->PlayAnimation(selectedClip);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Pause"))
+    {
+        m_Animator3D->StopAnimation();
+    }
+
 	ImGui::SeparatorText("Animation TimeLine");
 
-	m_Animator3D = GetOwner()->GetAnimator3D();
+    // ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ ì„ íƒ ë“œë¡­ë‹¤ìš´ ë©”ë‰´
+    if (ImGui::BeginCombo("Select Animation", pAnimationClip[selectedClip].animName.c_str())) 
+    {
+        for (int i = 0; i < pAnimationClip.size(); i++) 
+        {
+            if (ImGui::Selectable(pAnimationClip[i].animName.c_str(), selectedClip == i)) 
+            {
+                selectedClip = i;
 
-	if (m_Animator3D == nullptr)
-		return;
+                AnimationClip& curAnimClip = pAnimationClip[selectedClip];
+                m_StartFrame = curAnimClip.startFrame;
+                m_EndFrame = curAnimClip.endFrame;
+                m_CurFrame = curAnimClip.startFrame;
+                m_Animator3D->SetEditorFrame(m_CurFrame);
+            }
+        }
 
-	m_Animator3D->SetEditorMode(true);
+        ImGui::EndCombo();
+    }
 
-	const vector<tMTAnimClip>* pAnimClip = m_Animator3D->GetVecAnimClip();
+    m_CurFrame = m_Animator3D->GetCurFrameIdx();
 
-	int animSize = pAnimClip->size();
-	int selectAnimIndex = 0;
+    DrawTimeLineView(m_CurFrame, m_StartFrame, m_EndFrame, m_ZoomLevel, m_ScrollOffset);
 
-	int minFrame = 0;
-	int maxFrame = pAnimClip->at(selectAnimIndex).iFrameLength;
+    m_CurFrame = Custom_Clamp(m_CurFrame, m_StartFrame, m_EndFrame);
 
-	int curFrame = m_Animator3D->GetCurFrameIdx();
-
-    DrawTimeLineView(curFrame, maxFrame, m_ZoomLevel, m_ScrollOffset);
-
-    m_Animator3D->SetEditorFrame(curFrame);
+    m_Animator3D->SetEditorFrame(m_CurFrame);
 
     // zoom Level Setting
     ImGui::SeparatorText("Animation TimeLine Setting");
     ImGui::SliderFloat("Zoom", &m_ZoomLevel, 1.0f, 10.0f);
-    ImGui::InputInt("Cur Index", &curFrame);
+    ImGui::InputInt("Cur Index", &m_CurFrame);
 
-	//if (ImGui::SliderInt("Anim Frame", &curFrame, 0, maxFrame))
-	//{
-	//	m_Animator3D->SetEditorFrame(curFrame);
-	//}
+    bool isRepeat = pAnimationClip[selectedClip].repeat;
+    if (ImGui::Checkbox("Is Repeat", &isRepeat))
+    {
+        pAnimationClip[selectedClip].repeat = isRepeat;
+        m_Animator3D->SetRepeat(isRepeat);
+    }
 }
 
 void Anim3DDetail::Activate()

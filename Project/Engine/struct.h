@@ -217,6 +217,21 @@ struct tMTAnimClip
 	FbxTime::EMode	eMode;				// 애니메이션 시간 모드(프레임 or 시간)
 };
 
+struct AnimationClip
+{
+	string			animName;
+	int				startFrame;
+	int				endFrame;
+	int				frameLength;
+	bool			repeat;
+
+	AnimationClip(string _name, int _startFrame, int _endFrame, bool _repeat)
+		: animName(_name), startFrame(_startFrame), endFrame(_endFrame), repeat(_repeat)
+	{
+		frameLength = endFrame - startFrame + 1;
+	}
+};
+
 
 // ============
 //  Instancing

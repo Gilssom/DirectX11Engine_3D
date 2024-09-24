@@ -8,6 +8,7 @@ class CAnimator3D : public CComponent
 private:
     const vector<tMTBone>*      m_pVecBones;
     const vector<tMTAnimClip>*  m_pVecClip;
+    vector<AnimationClip>       m_AnimationClip;
 
     vector<float>				m_vecClipUpdateTime;
     vector<Matrix>				m_vecFinalBoneMat;      // 텍스쳐에 전달할 최종 행렬정보
@@ -21,16 +22,20 @@ private:
 
     int                         m_StartFrame;
     int                         m_EndFrame;
+    bool                        m_IsRepeat;
 
     CStructuredBuffer*          m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
     bool						m_bFinalMatUpdate;      // 최종행렬 연산 수행여부
 
+    bool                        m_Pause;
     bool                        m_EditorMode;
 
 public:
     void SetBones(const vector<tMTBone>* vecBones) { m_pVecBones = vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
     void SetAnimClip(const vector<tMTAnimClip>* vecAnimClip);
+    void SetAnimClip(string name, int startFrame, int endFrame, bool isRepeat);
     void SetClipTime(int iClipIdx, float fTime) { m_vecClipUpdateTime[iClipIdx] = fTime; }
+    void SetRepeat(bool isRepeat) { m_IsRepeat = isRepeat; }
 
     // === Editor Mode ===
     void SetEditorMode(bool editorMode) { m_EditorMode = editorMode; }
@@ -39,6 +44,7 @@ public:
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
     const vector<tMTAnimClip>* GetVecAnimClip() { return m_pVecClip; }
+    vector<AnimationClip>& GetAnimationClip() { return m_AnimationClip; }
     int GetCurFrameIdx() { return m_iFrameIdx; }
 
     void ClearData();
@@ -52,6 +58,7 @@ public:
 
 public:
     void PlayAnimation(int animIndex);
+    void StopAnimation();
 
 public:
     virtual void SaveToLevelFile(FILE* file) override;

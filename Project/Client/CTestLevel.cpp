@@ -182,6 +182,9 @@ void CTestLevel::CreateTestLevel()
 	pObj->Transform()->SetRelativePos(Vec3(50.f, 0.f, 100.f));
 	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
+	pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
+	pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, false);
+
 	m_CurLevel->AddObject(0, pObj, false);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)

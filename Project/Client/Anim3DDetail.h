@@ -8,11 +8,15 @@ class Anim3DDetail : public Anim3DSubUI
 private:
 	CAnimator3D*	m_Animator3D;
 
+	int				m_StartFrame;
+	int				m_EndFrame;
+	int				m_CurFrame;
+
 	float			m_ZoomLevel;
 	float			m_ScrollOffset;
 
 public:
-	void DrawTimeLineView(int& curFrame, int maxFrame, float& zoomLevel, float& scrollOffset);
+	void DrawTimeLineView(int& curFrame, int startFrame, int endFrame, float& zoomLevel, float& scrollOffset);
 
 public:
 	virtual void Render_Tick() override;
