@@ -2,6 +2,7 @@
 #include "Anim3DDetail.h"
 
 #include <Engine\CAnimator3D.h>
+#include <Engine\CScript.h>
 
 Anim3DDetail::Anim3DDetail()
 	: Anim3DSubUI("Anim 3D Detail", "##Anim 3D Detail")
@@ -54,23 +55,31 @@ void Anim3DDetail::DrawTimeLineView(int& curFrame, int startFrame, int endFrame,
     {
         float xPos = timelinePos.x + (i - startFrame) * frameStep - scrollOffset;  // 스크롤 오프셋 적용 및 프레임 조정
 
+        XMFLOAT4 color = { 255, 255, 255, 255 };
+
+        if (CheckFrameEvent(i))
+            color = { 255, 255, 0, 255 };
+
         // 타임라인 범위 내에 있을 때만 그리기
         if (xPos >= timelinePos.x && xPos <= timelinePos.x + timelineSize.x)
         {
             // 10프레임마다 큰 눈금과 번호 표시
             if (i % 10 == 0)
             {
-                drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y), IM_COL32(255, 255, 255, 255), 2.0f);
+                drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y), IM_COL32(color.x, color.y, color.z, color.w), 2.0f);
 
                 // 프레임 번호 텍스트 표시
                 char frameLabel[8];
                 sprintf_s(frameLabel, "%d", i);
-                drawList->AddText(ImVec2(xPos - 10, timelinePos.y + timelineSize.y + 5), IM_COL32(255, 255, 255, 255), frameLabel);
+                drawList->AddText(ImVec2(xPos - 10, timelinePos.y + timelineSize.y + 5), IM_COL32(color.x, color.y, color.z, color.w), frameLabel);
             }
             else
             {
+                if (!CheckFrameEvent(i))
+                    color.w = 150;
+
                 // 작은 눈금 표시 (1프레임 단위)
-                drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y * 0.5f), IM_COL32(255, 255, 255, 150), 1.0f);
+                drawList->AddLine(ImVec2(xPos, timelinePos.y), ImVec2(xPos, timelinePos.y + timelineSize.y * 0.5f), IM_COL32(color.x, color.y, color.z, color.w), 1.0f);
             }
         }
     }
@@ -123,6 +132,41 @@ void Anim3DDetail::DrawTimeLineView(int& curFrame, int startFrame, int endFrame,
     }
 }
 
+bool Anim3DDetail::CheckFrameEvent(int curFrame)
+{
+    vector<AnimationEvent>& pVecEvents = m_Animator3D->GetAnimEvents();
+
+    m_HasCurFrameEvent = false;
+
+    // 이벤트가 있는 프레임을 노란색으로 표시
+    for (size_t i = 0; i < pVecEvents.size(); i++)
+    {
+        if (pVecEvents[i].frame == curFrame)
+        {
+            m_HasCurFrameEvent = true;
+        }
+    }
+
+    return m_HasCurFrameEvent;
+}
+
+void Anim3DDetail::SetCurFrameInfo(int curFrame)
+{
+    m_HasCurFrameEvent = CheckFrameEvent(curFrame);
+
+    vector<AnimationEvent>& pVecEvents = m_Animator3D->GetAnimEvents();
+
+    // 이벤트가 있는 프레임을 노란색으로 표시
+    for (size_t i = 0; i < pVecEvents.size(); i++)
+    {
+        if (pVecEvents[i].frame == curFrame)
+        {
+            m_CurFrameEventName = pVecEvents[i].eventName;
+            break;
+        }
+    }
+}
+
 void Anim3DDetail::Render_Tick()
 {
     m_Animator3D = GetOwner()->GetAnimator3D();
@@ -135,7 +179,7 @@ void Anim3DDetail::Render_Tick()
     const vector<tMTAnimClip>* pAnimClip = m_Animator3D->GetVecAnimClip();
     vector<AnimationClip>& pAnimationClip = m_Animator3D->GetAnimationClip();
 
-    static int selectedClip = 0;  // 현재 선택된 클립의 인덱스
+    static int selectedClip = 0;  // 현재 선택된 클립
 
     ImGui::SeparatorText("Animation Test Button");
 
@@ -179,6 +223,8 @@ void Anim3DDetail::Render_Tick()
 
     m_Animator3D->SetEditorFrame(m_CurFrame);
 
+    SetCurFrameInfo(m_CurFrame);
+
     // zoom Level Setting
     ImGui::SeparatorText("Animation TimeLine Setting");
     ImGui::SliderFloat("Zoom", &m_ZoomLevel, 1.0f, 10.0f);
@@ -189,6 +235,40 @@ void Anim3DDetail::Render_Tick()
     {
         pAnimationClip[selectedClip].repeat = isRepeat;
         m_Animator3D->SetRepeat(isRepeat);
+    }
+
+    // Animation Event Setting
+    static int selectedEvent = 0;  // 애니메이션 이벤트
+
+    ImGui::SeparatorText("Animation Event");
+
+    vector<std::pair<std::function<void()>, string>> vecFunc;
+    const vector<CScript*>& pVecScripts = m_Animator3D->GetOwner()->GetScripts();
+
+    for (size_t i = 0; i < pVecScripts.size(); i++)
+    {
+        if (pVecScripts[i])
+        {
+            vector<std::pair<std::function<void()>, string>> pVecFunc = pVecScripts[i]->GetVecFunc();
+            vecFunc.insert(vecFunc.end(), pVecFunc.begin(), pVecFunc.end());
+        }
+    }
+
+    string curFrameEvent = m_HasCurFrameEvent ? m_CurFrameEventName : "No Event";
+
+    if (ImGui::BeginCombo("Animation Event", curFrameEvent.c_str()))
+    {
+        for (int i = 0; i < vecFunc.size(); i++)
+        {
+            if (ImGui::Selectable(vecFunc[i].second.c_str(), selectedEvent == i))
+            {
+                selectedEvent = i;
+
+                m_Animator3D->AddEvent(m_CurFrame, vecFunc[i].first, vecFunc[i].second);
+            }
+        }
+
+        ImGui::EndCombo();
     }
 }
 

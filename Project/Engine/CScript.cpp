@@ -12,6 +12,7 @@ CScript::CScript(UINT scriptType)
 
 CScript::~CScript()
 {
+
 }
 
 CGameObject* CScript::Instantiate(Ptr<CPrefab> prefab, int layerIdx, const Vec3& worldPos)

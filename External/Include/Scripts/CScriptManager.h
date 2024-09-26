@@ -7,6 +7,7 @@ enum SCRIPT_TYPE
 {
 	CAMERAMOVESCRIPT,
 	MISSILESCRIPT,
+	PLAYERSCRIPT,
 };
 
 using namespace std;

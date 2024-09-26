@@ -69,6 +69,9 @@ void CAnimator3D::FinalTick()
 		double dFrameIdx = m_dCurTime * (double)m_iFrameCount + m_StartFrame;
 		m_iFrameIdx = (int)(dFrameIdx);
 
+		// Animation Event Trigger
+		TriggerEvent(m_iFrameIdx);
+
 		// 다음 프레임 인덱스
 		if (m_iFrameIdx >= m_EndFrame)
 		{
@@ -152,6 +155,21 @@ void CAnimator3D::PlayAnimation(int animIndex)
 void CAnimator3D::StopAnimation()
 {
 	m_Pause = true;
+}
+
+void CAnimator3D::TriggerEvent(int curFrame)
+{
+	for (auto& event : m_AnimEvents)
+	{
+		if (event.frame == curFrame)
+		{
+			if (event.callback)
+			{
+				// Animation Event 함수 호출
+				event.callback();
+			}
+		}
+	}
 }
 
 void CAnimator3D::ClearData()

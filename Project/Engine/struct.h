@@ -232,6 +232,13 @@ struct AnimationClip
 	}
 };
 
+struct AnimationEvent
+{
+	int frame;
+	std::function<void()> callback;
+	string eventName;
+};
+
 
 // ============
 //  Instancing

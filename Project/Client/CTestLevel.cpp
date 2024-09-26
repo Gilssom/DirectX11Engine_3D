@@ -10,6 +10,7 @@
 
 #include <Scripts\\CCameraMoveScript.h>
 #include <Scripts\\CMissileScript.h>
+#include <Scripts\\CPlayerScript.h>
 
 #include <Engine\\CCollisionManager.h>
 #include <Engine\\CSetColorCS.h>
@@ -184,6 +185,8 @@ void CTestLevel::CreateTestLevel()
 
 	pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
 	pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, false);
+
+	pObj->AddComponent(new CPlayerScript);
 
 	m_CurLevel->AddObject(0, pObj, false);
 

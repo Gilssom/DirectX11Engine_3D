@@ -34,6 +34,9 @@ private:
 	const int					m_ScriptType;
 	vector< tScriptProperty>	m_vecProperty;
 
+protected:
+	vector<std::pair<std::function<void()>, string>> m_vecFunc;
+
 public:
 	virtual void Tick() = 0; // Tick 은 꼭 구현하도록 강제
 	virtual void FinalTick() final {} // 이 밑으로는 FinalTick 을 override 할 수 없게
@@ -43,6 +46,7 @@ public:
 	UINT GetScriptType() { return m_ScriptType; }
 
 	const vector<tScriptProperty>& GetScriptProperty() { return m_vecProperty; }
+	const vector<std::pair<std::function<void()>, string>> GetVecFunc() { return m_vecFunc; }
 
 protected:
 	void AddScriptProperty(PROPERTY_TYPE type, const string& desc, void* pData) 

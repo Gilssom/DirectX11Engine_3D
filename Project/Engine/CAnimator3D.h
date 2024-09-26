@@ -9,6 +9,7 @@ private:
     const vector<tMTBone>*      m_pVecBones;
     const vector<tMTAnimClip>*  m_pVecClip;
     vector<AnimationClip>       m_AnimationClip;
+    vector<AnimationEvent>      m_AnimEvents;
 
     vector<float>				m_vecClipUpdateTime;
     vector<Matrix>				m_vecFinalBoneMat;      // 텍스쳐에 전달할 최종 행렬정보
@@ -59,6 +60,10 @@ public:
 public:
     void PlayAnimation(int animIndex);
     void StopAnimation();
+    
+    void AddEvent(int frame, std::function<void()> func, const string& name) { m_AnimEvents.push_back({ frame, func, name }); }
+    void TriggerEvent(int curFrame);
+    vector<AnimationEvent>& GetAnimEvents() { return m_AnimEvents; }
 
 public:
     virtual void SaveToLevelFile(FILE* file) override;
