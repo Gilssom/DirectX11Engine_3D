@@ -4,12 +4,14 @@
 #include "CCameraMoveScript.h"
 #include "CMissileScript.h"
 #include "CPlayerScript.h"
+#include "CAnimStateMachine.h"
 
 void CScriptManager::GetScriptInfo(vector<wstring>& vec)
 {
 	vec.push_back(L"CCameraMoveScript");
 	vec.push_back(L"CMissileScript");
 	vec.push_back(L"CPlayerScript");
+	vec.push_back(L"CAnimStateMachine");
 }
 
 CScript* CScriptManager::GetScript(const wstring& strScriptName)
@@ -20,6 +22,8 @@ CScript* CScriptManager::GetScript(const wstring& strScriptName)
 		return new CMissileScript;
 	if (L"CPlayerScript" == strScriptName)
 		return new CPlayerScript;
+	if (L"CAnimStateMachine" == strScriptName)
+		return new CAnimStateMachine;
 	return nullptr;
 }
 
@@ -35,6 +39,9 @@ CScript* CScriptManager::GetScript(UINT scriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::PLAYERSCRIPT:
 		return new CPlayerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ANIMSTATEMACHINE:
+		return new CAnimStateMachine;
 		break;
 	}
 	return nullptr;
@@ -53,7 +60,10 @@ const wchar_t* CScriptManager::GetScriptName(CScript* pScript)
 		break;
 
 	case SCRIPT_TYPE::PLAYERSCRIPT:
-		return L"CMissileScript";
+		return L"CPlayerScript";
+
+	case SCRIPT_TYPE::ANIMSTATEMACHINE:
+		return L"CAnimStateMachine";
 		break;
 	}
 	return nullptr;

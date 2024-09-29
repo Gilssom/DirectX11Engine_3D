@@ -2,21 +2,22 @@
 
 #include "CTestLevel.h"
 
-#include <Engine\\CLevel.h>
-#include <Engine\\CLayer.h>
-#include <Engine\\CGameObject.h>
-#include <Engine\\components.h>
-#include <Engine\\CAnim2D.h>
+#include <Engine\CLevel.h>
+#include <Engine\CLayer.h>
+#include <Engine\CGameObject.h>
+#include <Engine\components.h>
+#include <Engine\CAnim2D.h>
 
-#include <Scripts\\CCameraMoveScript.h>
-#include <Scripts\\CMissileScript.h>
-#include <Scripts\\CPlayerScript.h>
+#include <Scripts\CCameraMoveScript.h>
+#include <Scripts\CMissileScript.h>
+#include <Scripts\CPlayerScript.h>
+#include <Scripts\CAnimStateMachine.h>
 
-#include <Engine\\CCollisionManager.h>
-#include <Engine\\CSetColorCS.h>
+#include <Engine\CCollisionManager.h>
+#include <Engine\CSetColorCS.h>
 
-#include <Engine\\CStructuredBuffer.h>
-#include <Engine\\CPrefab.h>
+#include <Engine\CStructuredBuffer.h>
+#include <Engine\CPrefab.h>
 
 #include "CLevelSaveLoad.h"
 
@@ -182,11 +183,19 @@ void CTestLevel::CreateTestLevel()
 
 	pObj->Transform()->SetRelativePos(Vec3(50.f, 0.f, 100.f));
 	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+	
+	// Animation Add
+	pObj->Animator3D()->SetAnimClip("ALL", 0, 1434, true);
 
 	pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
-	pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, false);
+	pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, true);
+
+	pObj->Animator3D()->SetAnimClip("ATTACK 0", 84, 126, false);
+	pObj->Animator3D()->SetAnimClip("ATTACK 1", 127, 170, false);
+	pObj->Animator3D()->SetAnimClip("ATTACK 2", 171, 259, false);
 
 	pObj->AddComponent(new CPlayerScript);
+	pObj->AddComponent(new CAnimStateMachine);
 
 	m_CurLevel->AddObject(0, pObj, false);
 

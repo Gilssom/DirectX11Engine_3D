@@ -21,6 +21,7 @@ public:
 	void DrawTimeLineView(int& curFrame, int startFrame, int endFrame, float& zoomLevel, float& scrollOffset);
 	bool CheckFrameEvent(int curFrame);
 	void SetCurFrameInfo(int curFrame);
+	void InfoUpdate(int newIndex);
 
 public:
 	virtual void Render_Tick() override;

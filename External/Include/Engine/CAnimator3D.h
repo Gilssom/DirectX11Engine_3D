@@ -30,6 +30,7 @@ private:
 
     bool                        m_Pause;
     bool                        m_EditorMode;
+    int                         m_CurPlayIndex;
 
 public:
     void SetBones(const vector<tMTBone>* vecBones) { m_pVecBones = vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
@@ -47,6 +48,8 @@ public:
     const vector<tMTAnimClip>* GetVecAnimClip() { return m_pVecClip; }
     vector<AnimationClip>& GetAnimationClip() { return m_AnimationClip; }
     int GetCurFrameIdx() { return m_iFrameIdx; }
+    int GetCurPlayIdx() { return m_CurPlayIndex; }
+    bool GetIsPause() { return m_Pause; }
 
     void ClearData();
 
@@ -64,6 +67,7 @@ public:
     void AddEvent(int frame, std::function<void()> func, const string& name) { m_AnimEvents.push_back({ frame, func, name }); }
     void TriggerEvent(int curFrame);
     vector<AnimationEvent>& GetAnimEvents() { return m_AnimEvents; }
+    void DeleteEvent(int frame);
 
 public:
     virtual void SaveToLevelFile(FILE* file) override;

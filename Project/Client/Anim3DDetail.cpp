@@ -167,6 +167,17 @@ void Anim3DDetail::SetCurFrameInfo(int curFrame)
     }
 }
 
+void Anim3DDetail::InfoUpdate(int newIndex)
+{
+    vector<AnimationClip>& pAnimationClip = m_Animator3D->GetAnimationClip();
+
+    AnimationClip& curAnimClip = pAnimationClip[newIndex];
+    m_StartFrame = curAnimClip.startFrame;
+    m_EndFrame = curAnimClip.endFrame;
+    m_CurFrame = curAnimClip.startFrame;
+    m_Animator3D->SetEditorFrame(m_CurFrame);
+}
+
 void Anim3DDetail::Render_Tick()
 {
     m_Animator3D = GetOwner()->GetAnimator3D();
@@ -180,6 +191,13 @@ void Anim3DDetail::Render_Tick()
     vector<AnimationClip>& pAnimationClip = m_Animator3D->GetAnimationClip();
 
     static int selectedClip = 0;  // 현재 선택된 클립
+
+    // Selected Update
+    if (m_Animator3D->GetCurPlayIdx() != selectedClip && !m_Animator3D->GetIsPause())
+    {
+        selectedClip = m_Animator3D->GetCurPlayIdx();
+        InfoUpdate(selectedClip);
+    }
 
     ImGui::SeparatorText("Animation Test Button");
 
@@ -269,6 +287,15 @@ void Anim3DDetail::Render_Tick()
         }
 
         ImGui::EndCombo();
+    }
+
+    // Animation Event Delete
+    if (ImGui::Button("Delete Animation Event") && m_HasCurFrameEvent)
+    {
+        m_Animator3D->DeleteEvent(m_CurFrame);
+
+        m_HasCurFrameEvent = false;
+        m_CurFrameEventName = "";
     }
 }
 

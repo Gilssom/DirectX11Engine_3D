@@ -26,7 +26,7 @@ CAnimator3D::CAnimator3D()
 
 CAnimator3D::CAnimator3D(const CAnimator3D& other)
 	: CComponent(COMPONENT_TYPE::ANIMATOR3D)
-	,m_pVecBones(other.m_pVecBones)
+	, m_pVecBones(other.m_pVecBones)
 	, m_pVecClip(other.m_pVecClip)
 	, m_iCurClip(other.m_iCurClip)
 	, m_dCurTime(other.m_dCurTime)
@@ -44,6 +44,12 @@ CAnimator3D::~CAnimator3D()
 {
 	if (nullptr != m_pBoneFinalMatBuffer)
 		delete m_pBoneFinalMatBuffer;
+
+	if (!m_AnimationClip.empty())
+		m_AnimationClip.clear();
+
+	if (!m_AnimEvents.empty())
+		m_AnimEvents.clear();
 }
 
 void CAnimator3D::FinalTick()
@@ -150,6 +156,7 @@ void CAnimator3D::PlayAnimation(int animIndex)
 
 	m_vecClipUpdateTime[m_iCurClip] = 0.f;
 	m_iFrameIdx = m_StartFrame;
+	m_CurPlayIndex = animIndex;
 }
 
 void CAnimator3D::StopAnimation()
@@ -170,6 +177,21 @@ void CAnimator3D::TriggerEvent(int curFrame)
 			}
 		}
 	}
+}
+
+void CAnimator3D::DeleteEvent(int frame)
+{
+	// remove if 의 조건에 맞는 요소 탐색 및 제거
+
+	m_AnimEvents.erase
+	(
+		std::remove_if(m_AnimEvents.begin(), m_AnimEvents.end(),
+			[frame](const AnimationEvent& event)
+			{
+				return event.frame == frame;
+			}),
+		m_AnimEvents.end()
+	);
 }
 
 void CAnimator3D::ClearData()

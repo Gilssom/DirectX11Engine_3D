@@ -60,6 +60,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+    //_CrtSetBreakAlloc(9397);
+
     MyRegisterClass(hInstance);
 
     hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
