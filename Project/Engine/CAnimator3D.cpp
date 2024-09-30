@@ -7,6 +7,7 @@
 #include "components.h"
 
 #include "CAnimation3DShader.h"
+#include "CScript.h"
 
 CAnimator3D::CAnimator3D()
 	: CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -218,6 +219,141 @@ void CAnimator3D::check_mesh(Ptr<CMesh> pMesh)
 	{
 		m_pBoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::SRV_UAV, false, nullptr);
 	}
+}
+
+void CAnimator3D::Save(const wstring& relativePath)
+{
+	wstring strFilePath = CPathManager::GetInst()->GetContentPath() + relativePath + GetName() + L".anim";
+
+	FILE* pFile = nullptr;
+	_wfopen_s(&pFile, strFilePath.c_str(), L"wb");
+
+	if (pFile == nullptr)
+	{
+		MessageBox(nullptr, L"애니메이션 저장 실패", L"애니메이션 저장 오류", MB_OK);
+		return;
+	}
+
+	// 애니메이션 이름 저장
+	SaveWString(GetName(), pFile);
+
+	// 애니메이션 클립 개수 저장
+	size_t clipCount = m_AnimationClip.size();
+	fwrite(&clipCount, sizeof(size_t), 1, pFile);
+
+	// 각 애니메이션 클립 저장
+	for (size_t i = 0; i < clipCount; ++i)
+	{
+		const AnimationClip& clip = m_AnimationClip[i];
+
+		// 클립 이름 저장
+		SaveWString(ToWString(clip.animName), pFile);
+
+		// 시작 및 종료 프레임 저장
+		fwrite(&clip.startFrame, sizeof(int), 1, pFile);
+		fwrite(&clip.endFrame, sizeof(int), 1, pFile);
+
+		// 반복 여부 저장
+		fwrite(&clip.repeat, sizeof(bool), 1, pFile);
+
+		// 애니메이션 이벤트 개수 저장
+		size_t eventCount = clip.haveEvent.size();
+		fwrite(&eventCount, sizeof(size_t), 1, pFile);
+
+		// 각 이벤트 저장
+		for (const auto& event : clip.haveEvent)
+		{
+			// 이벤트가 발생하는 프레임 번호 저장
+			fwrite(&event.frame, sizeof(int), 1, pFile);
+		
+			// 이벤트 이름 저장
+			SaveWString(ToWString(event.eventName), pFile);
+		}
+
+		// 연결된 애니메이션 정보 저장
+		//SaveWString(clip.linkedAnimation, pFile);
+	}
+
+	fclose(pFile);
+}
+
+void CAnimator3D::Load(const wstring& relativePath)
+{
+	wstring strFilePath = CPathManager::GetInst()->GetContentPath() + relativePath + GetName();
+
+	FILE* pFile = nullptr;
+	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+
+	if (pFile == nullptr)
+	{
+		MessageBox(nullptr, L"애니메이션 불러오기 실패", L"애니메이션 불러오기 오류", MB_OK);
+		return;
+	}
+
+	// 애니메이션 이름 로드
+	wstring animName;
+	LoadWString(animName, pFile);
+
+	// 애니메이션 클립 개수 로드
+	size_t clipCount = 0;
+	fread(&clipCount, sizeof(size_t), 1, pFile);
+
+	// 기존 애니메이션 클립을 비우고 새 데이터를 불러옴
+	m_AnimationClip.clear();
+	m_AnimationClip.reserve(clipCount);
+
+	// 각 애니메이션 클립 로드
+	for (size_t i = 0; i < clipCount; ++i)
+	{
+		AnimationClip clip;
+
+		// 클립 이름 로드
+		wstring wClipName;
+		LoadWString(wClipName, pFile);
+		clip.animName = ToString(wClipName);
+
+		// 시작 및 종료 프레임 로드
+		fread(&clip.startFrame, sizeof(int), 1, pFile);
+		fread(&clip.endFrame, sizeof(int), 1, pFile);
+
+		// 반복 여부 로드
+		fread(&clip.repeat, sizeof(bool), 1, pFile);
+
+		// 애니메이션 이벤트 개수 로드
+		size_t eventCount = 0;
+		fread(&eventCount, sizeof(size_t), 1, pFile);
+
+		// 각 이벤트 로드
+		for (size_t j = 0; j < eventCount; ++j)
+		{
+			AnimationEvent event;
+
+			// 이벤트가 발생하는 프레임 번호 로드
+			fread(&event.frame, sizeof(int), 1, pFile);
+
+			// 이벤트 이름 로드
+			wstring wEventName;
+			LoadWString(wEventName, pFile);
+			event.eventName = ToString(wEventName);
+
+			// 이벤트 콜백은 직렬화하지 않으므로 추후 이벤트를 추가하는 방식으로 처리
+			const vector<CScript*>& pVecScripts = GetOwner()->GetScripts();
+			for (size_t i = 0; i < pVecScripts.size(); i++)
+			{
+				event.callback = pVecScripts[i]->GetEventCallbackByName(event.eventName);
+
+				if (event.callback != nullptr)
+					break;
+			}
+
+			AddEvent(event.frame, event.callback, event.eventName);
+			clip.haveEvent.push_back(AnimationClip::SaveEvent({ event.frame, event.eventName }));
+		}
+
+		m_AnimationClip.push_back(clip);
+	}
+
+	fclose(pFile);
 }
 
 void CAnimator3D::SaveToLevelFile(FILE* file)

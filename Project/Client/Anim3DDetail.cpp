@@ -282,7 +282,9 @@ void Anim3DDetail::Render_Tick()
             {
                 selectedEvent = i;
 
-                m_Animator3D->AddEvent(m_CurFrame, vecFunc[i].first, vecFunc[i].second);
+                AnimationEvent newEvent = { m_CurFrame, vecFunc[i].first, vecFunc[i].second };
+                m_Animator3D->AddEvent(newEvent.frame, newEvent.callback, newEvent.eventName);
+                pAnimationClip[selectedClip].haveEvent.push_back(AnimationClip::SaveEvent({ m_CurFrame, vecFunc[i].second }));
             }
         }
 

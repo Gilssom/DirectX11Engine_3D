@@ -46,8 +46,8 @@ public:
 	UINT GetScriptType() { return m_ScriptType; }
 
 	const vector<tScriptProperty>& GetScriptProperty() { return m_vecProperty; }
-
 	vector<std::pair<std::function<void()>, string>>& GetVecFunc() { return m_vecFunc; }
+	std::function<void()> GetEventCallbackByName(const std::string& eventName);
 
 protected:
 	void AddScriptProperty(PROPERTY_TYPE type, const string& desc, void* pData) 

@@ -27,4 +27,14 @@ void Animator3DUI::Render_Tick()
 		pEditor->SetAnimator3D(GetTarget()->Animator3D());
 		pEditor->SetActive(true);
 	}
+
+	CAnimator3D* pAnimator = GetTarget()->Animator3D();
+	string strAnimKey;
+	if (pAnimator != nullptr)
+	{
+		strAnimKey = string(pAnimator->GetName().begin(), pAnimator->GetName().end());
+	}
+
+	ImGui::Text("Animator Name"); SAME;
+	ImGui::InputText("##AnimatorName", (char*)strAnimKey.c_str(), strAnimKey.capacity(), ImGuiInputTextFlags_ReadOnly);
 }

@@ -42,6 +42,79 @@ void Animation3DEditor::Render_Tick()
 
 	m_Sub[PREVIEW_3D]->SetActive(IsActive[PREVIEW_3D]);
 	m_Sub[DETAIL_3D]->SetActive(IsActive[DETAIL_3D]);
+
+	if (ImGui::BeginMenu("File"))
+	{
+		Anim3DDetail* pAnimDetail = (Anim3DDetail*)m_Sub[DETAIL_3D];
+
+		if (ImGui::MenuItem("Save File"))
+		{
+			if (pAnimDetail == nullptr)
+				return;
+
+			wchar_t Buff[255] = {};
+
+			OPENFILENAME ofn = {};
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = nullptr;
+			ofn.lpstrFile = Buff;        // 결과 출력
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = 255;
+			ofn.lpstrFilter = L"Animation\0*.anim\0All\0*.*";
+			ofn.nFilterIndex = 0;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+
+			// 탐색창 초기 위치 지정
+			wstring strInitPath = CPathManager::GetInst()->GetContentPath() + wstring(L"Animation\\");
+			ofn.lpstrInitialDir = strInitPath.c_str();
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+			if (GetSaveFileName(&ofn))
+			{
+				wstring RelativeName = CPathManager::GetInst()->GetRelativeName(Buff, wstring(L"Animation\\"));
+
+				m_Animator3D->SetName(RelativeName);
+				m_Animator3D->Save(L"Animation\\");
+			}
+		}
+
+
+		// Load 기능 추가
+		if (ImGui::MenuItem("Load File"))
+		{
+			if (pAnimDetail == nullptr)
+				return;
+
+			wchar_t Buff[255] = {};
+
+			OPENFILENAME ofn = {};
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = nullptr;
+			ofn.lpstrFile = Buff;        // 결과 출력
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = 255;
+			ofn.lpstrFilter = L"Animation\0*.anim\0All\0*.*";
+			ofn.nFilterIndex = 0;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+
+			// 탐색창 초기 위치 지정
+			wstring strInitPath = CPathManager::GetInst()->GetContentPath() + wstring(L"Animation\\");
+			ofn.lpstrInitialDir = strInitPath.c_str();
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+			if (GetOpenFileName(&ofn))
+			{
+				wstring RelativeName = CPathManager::GetInst()->GetRelativeName(Buff, wstring(L"Animation\\"));
+
+				m_Animator3D->SetName(RelativeName);
+				m_Animator3D->Load(L"Animation\\");  // 불러오기 함수 호출
+			}
+		}
+
+		ImGui::EndMenu();
+	}
 }
 
 void Animation3DEditor::Activate()

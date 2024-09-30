@@ -34,7 +34,7 @@ void CPlayerScript::Tick()
 
 void CPlayerScript::Move()
 {
-
+	int a = 0;
 }
 
 void CPlayerScript::Attack()

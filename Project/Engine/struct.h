@@ -225,11 +225,21 @@ struct AnimationClip
 	int				frameLength;
 	bool			repeat;
 
+	AnimationClip()
+		: animName(""), startFrame(0), endFrame(0), frameLength(0), repeat(false) { }
+
 	AnimationClip(string _name, int _startFrame, int _endFrame, bool _repeat)
 		: animName(_name), startFrame(_startFrame), endFrame(_endFrame), repeat(_repeat)
 	{
 		frameLength = endFrame - startFrame + 1;
 	}
+
+	struct SaveEvent
+	{
+		int frame;
+		string eventName;
+	};
+	vector<SaveEvent> haveEvent;
 };
 
 struct AnimationEvent

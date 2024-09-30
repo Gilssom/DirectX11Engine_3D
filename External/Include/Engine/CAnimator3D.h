@@ -69,6 +69,11 @@ public:
     vector<AnimationEvent>& GetAnimEvents() { return m_AnimEvents; }
     void DeleteEvent(int frame);
 
+
+public:
+    void Save(const wstring& relativePath);
+    void Load(const wstring& relativePath);
+
 public:
     virtual void SaveToLevelFile(FILE* file) override;
     virtual void LoadFromLevelFile(FILE* file) override;

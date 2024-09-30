@@ -23,3 +23,16 @@ CGameObject* CScript::Instantiate(Ptr<CPrefab> prefab, int layerIdx, const Vec3&
 
 	return pInst;
 }
+
+std::function<void()> CScript::GetEventCallbackByName(const std::string& eventName)
+{
+	for (const auto& func : m_vecFunc)
+	{
+		if (func.second == eventName)
+		{
+			return func.first;
+		}
+	}
+
+	return nullptr;
+}
