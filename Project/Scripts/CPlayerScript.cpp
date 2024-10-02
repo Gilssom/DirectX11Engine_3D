@@ -28,13 +28,30 @@ void CPlayerScript::Begin()
 
 void CPlayerScript::Tick()
 {
-	//if (GetOwner()->GetScript<CAnimStateMachine>() && !m_ASM)
-	//	m_ASM = GetOwner()->GetScript<CAnimStateMachine>();
+	if (GetOwner()->GetScript<CAnimStateMachine>() && !m_ASM)
+		m_ASM = GetOwner()->GetScript<CAnimStateMachine>();
+
+	if (KEY_PRESSED(KEY::W))
+	{
+		if (KEY_PRESSED(KEY::LSHIFT))
+			m_ASM->ChangeState(AnimationState::RUN);
+		else
+			m_ASM->ChangeState(AnimationState::MOVE);
+	}
+	else
+	{
+		m_ASM->ChangeState(AnimationState::IDLE);
+	}
+
+	if (KEY_TAP(KEY::Z))
+	{
+		m_ASM->ChangeState(AnimationState::ATTACK_0);
+	}
 }
 
 void CPlayerScript::Move()
 {
-	int a = 0;
+	
 }
 
 void CPlayerScript::Attack()

@@ -178,24 +178,29 @@ void CTestLevel::CreateTestLevel()
 	}*/
 
 	pObj = pMeshData->Instantiate();
-	pObj->SetName(L"Monster");
+	pObj->SetName(L"Player");
 	pObj->GetRenderComponent()->SetFrustumCheck(false);
 
 	pObj->Transform()->SetRelativePos(Vec3(50.f, 0.f, 100.f));
 	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 	
 	// Animation Add
-	pObj->Animator3D()->SetAnimClip("ALL", 0, 1434, true);
-
-	pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
-	pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, true);
-
-	pObj->Animator3D()->SetAnimClip("ATTACK 0", 84, 126, false);
-	pObj->Animator3D()->SetAnimClip("ATTACK 1", 127, 170, false);
-	pObj->Animator3D()->SetAnimClip("ATTACK 2", 171, 259, false);
+	//pObj->Animator3D()->SetAnimClip("ALL", 0, 1434, true);
+	//
+	//pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
+	//pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, true);
+	//
+	//pObj->Animator3D()->SetAnimClip("ATTACK 0", 84, 126, false);
+	//pObj->Animator3D()->SetAnimClip("ATTACK 1", 127, 170, false);
+	//pObj->Animator3D()->SetAnimClip("ATTACK 2", 171, 259, false);
+	//
+	//pObj->Animator3D()->SetAnimClip("RUN", 885, 909, true);
 
 	pObj->AddComponent(new CPlayerScript);
 	pObj->AddComponent(new CAnimStateMachine);
+
+	pObj->Animator3D()->SetName(L"Player.anim");
+	pObj->Animator3D()->Load(L"Animation\\");
 
 	m_CurLevel->AddObject(0, pObj, false);
 
