@@ -47,6 +47,7 @@ public:
     UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
     const vector<tMTAnimClip>* GetVecAnimClip() { return m_pVecClip; }
     vector<AnimationClip>& GetAnimationClip() { return m_AnimationClip; }
+    bool GetEditorMode() { return m_EditorMode; }
     int GetCurFrameIdx() { return m_iFrameIdx; }
     int GetCurPlayIdx() { return m_CurPlayIndex; }
     bool GetIsPause() { return m_Pause; }

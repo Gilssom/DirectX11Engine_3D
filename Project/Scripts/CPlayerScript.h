@@ -6,7 +6,10 @@ class CAnimStateMachine;
 class CPlayerScript : public CScript
 {
 private:
-	CAnimStateMachine* m_ASM;
+	CAnimStateMachine*	m_ASM;
+
+	bool				m_ReadyAttack;
+	bool				m_IsAttacking;
 
 public:
 	virtual void Begin() override;
@@ -14,6 +17,8 @@ public:
 
 public:
 	void Move();
+
+	void AttackStart();
 	void Attack();
 	void AttackEnd();
 

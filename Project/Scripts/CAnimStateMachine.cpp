@@ -62,6 +62,7 @@ void CAnimStateMachine::ReturnPrevState()
 	{
 		m_StateStack.pop();
 		m_CurState = !m_StateStack.empty() ? m_StateStack.top() : m_PrevState;
+		ChangeState(m_CurState);
 	}
 }
 

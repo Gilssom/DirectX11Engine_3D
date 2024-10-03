@@ -187,8 +187,8 @@ void CTestLevel::CreateTestLevel()
 	// Animation Add
 	//pObj->Animator3D()->SetAnimClip("ALL", 0, 1434, true);
 	//
-	//pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);
-	//pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, true);
+	//pObj->Animator3D()->SetAnimClip("MOVE", 1164, 1205, tru
+	//pObj->Animator3D()->SetAnimClip("IDLE", 34, 83, true);e);
 	//
 	//pObj->Animator3D()->SetAnimClip("ATTACK 0", 84, 126, false);
 	//pObj->Animator3D()->SetAnimClip("ATTACK 1", 127, 170, false);
