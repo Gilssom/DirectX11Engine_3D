@@ -13,6 +13,8 @@ enum class AnimationState
 	ATTACK_2,
 
 	RUN,
+	HIT,
+	DEATH,
 
 	END,
 };

@@ -10,6 +10,8 @@ private:
 
 	bool				m_ReadyAttack;
 	bool				m_IsAttacking;
+	bool				m_IsHit;
+	bool				m_IsDeath;
 
 public:
 	virtual void Begin() override;
@@ -21,6 +23,12 @@ public:
 	void AttackStart();
 	void Attack();
 	void AttackEnd();
+
+	void Hit();
+	void HitEnd();
+
+	void Death();
+	void DeathEnd();
 
 public:
 	CLONE(CPlayerScript);

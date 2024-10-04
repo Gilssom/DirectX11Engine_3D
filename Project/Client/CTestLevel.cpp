@@ -196,11 +196,16 @@ void CTestLevel::CreateTestLevel()
 	//
 	//pObj->Animator3D()->SetAnimClip("RUN", 885, 909, true);
 
+	
+
 	pObj->AddComponent(new CPlayerScript);
 	pObj->AddComponent(new CAnimStateMachine);
 
 	pObj->Animator3D()->SetName(L"Player.anim");
 	pObj->Animator3D()->Load(L"Animation\\");
+
+	//pObj->Animator3D()->SetAnimClip("HIT", 468, 493, false);
+	//pObj->Animator3D()->SetAnimClip("DEATH", 263, 456, false);
 
 	m_CurLevel->AddObject(0, pObj, false);
 

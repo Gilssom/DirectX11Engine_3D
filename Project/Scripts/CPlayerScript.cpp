@@ -3,6 +3,7 @@
 #include "CAnimStateMachine.h"
 
 #include <Engine\CAnimator3D.h>
+#include <Engine\CTaskManager.h>
 
 CPlayerScript::CPlayerScript()
 	: CScript(SCRIPT_TYPE::PLAYERSCRIPT)
@@ -11,6 +12,10 @@ CPlayerScript::CPlayerScript()
 	m_vecFunc.push_back({ bind(&CPlayerScript::Attack, this), "Attack" });
 	m_vecFunc.push_back({ bind(&CPlayerScript::AttackEnd, this), "Attack End" });
 	m_vecFunc.push_back({ bind(&CPlayerScript::AttackStart, this), "Attack Start" });
+	m_vecFunc.push_back({ bind(&CPlayerScript::Hit, this), "Hit" });
+	m_vecFunc.push_back({ bind(&CPlayerScript::HitEnd, this), "Hit End" });
+	m_vecFunc.push_back({ bind(&CPlayerScript::Death, this), "Death" });
+	m_vecFunc.push_back({ bind(&CPlayerScript::DeathEnd, this), "Death End" });
 }
 
 CPlayerScript::~CPlayerScript()
@@ -35,7 +40,10 @@ void CPlayerScript::Tick()
 	if (GetOwner()->Animator3D()->GetEditorMode())
 		return;
 
-	if (!m_IsAttacking)
+	if (m_IsDeath)
+		return;
+
+	if (!m_IsAttacking && !m_IsHit)
 	{
 		if (KEY_PRESSED(KEY::W))
 		{
@@ -68,6 +76,17 @@ void CPlayerScript::Tick()
 			m_ASM->ChangeState(AnimationState::ATTACK_2);
 		}
 	}
+
+	// Test
+	if (KEY_TAP(KEY::X))
+	{
+		m_ASM->ChangeState(AnimationState::HIT);
+	}
+
+	if (KEY_TAP(KEY::C))
+	{
+		m_ASM->ChangeState(AnimationState::DEATH);
+	}
 }
 
 void CPlayerScript::Move()
@@ -91,4 +110,25 @@ void CPlayerScript::AttackEnd()
 	m_ReadyAttack = false;
 	m_IsAttacking = false;
 	m_ASM->OnAnimationEnd();
+}
+
+void CPlayerScript::Hit()
+{
+	m_IsHit = true;
+}
+
+void CPlayerScript::HitEnd()
+{
+	m_IsHit = false;
+	m_ASM->OnAnimationEnd();
+}
+
+void CPlayerScript::Death()
+{
+	m_IsDeath = true;
+}
+
+void CPlayerScript::DeathEnd()
+{
+	GetOwner()->Destroy();
 }

@@ -53,6 +53,12 @@ void CAnimStateMachine::ChangeState(AnimationState newState)
 	case AnimationState::RUN:
 		GetOwner()->Animator3D()->PlayAnimation((UINT)AnimationState::RUN);
 		break;
+	case AnimationState::HIT:
+		GetOwner()->Animator3D()->PlayAnimation((UINT)AnimationState::HIT);
+		break;
+	case AnimationState::DEATH:
+		GetOwner()->Animator3D()->PlayAnimation((UINT)AnimationState::DEATH);
+		break;
 	}
 }
 
