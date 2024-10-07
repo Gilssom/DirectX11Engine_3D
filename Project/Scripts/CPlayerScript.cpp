@@ -1,14 +1,27 @@
 #include "pch.h"
 #include "CPlayerScript.h"
 #include "CAnimStateMachine.h"
+#include "CCameraMoveScript.h"
 
 #include <Engine\CAnimator3D.h>
+#include <Engine\CLevelManager.h>
+#include <Engine\CLevel.h>
 #include <Engine\CTaskManager.h>
 
 CPlayerScript::CPlayerScript()
 	: CScript(SCRIPT_TYPE::PLAYERSCRIPT)
+	, m_Speed(300.f)
+	, m_RotSpeed(3.f)
+	, m_IsDashing(false)
+	, m_DashTime(0.f)
+	, m_MaxDashTime(1.f)
+	, m_InitialDashSpeed(50.f)
+	, m_MaxDashSpeed(600.f)
 {
-	m_vecFunc.push_back({ bind(&CPlayerScript::Move, this), "Move"});
+	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Speed", &m_Speed);
+	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Rot Speed", &m_RotSpeed);
+
+	//m_vecFunc.push_back({ bind(&CPlayerScript::Move, this), "Move"});
 	m_vecFunc.push_back({ bind(&CPlayerScript::Attack, this), "Attack" });
 	m_vecFunc.push_back({ bind(&CPlayerScript::AttackEnd, this), "Attack End" });
 	m_vecFunc.push_back({ bind(&CPlayerScript::AttackStart, this), "Attack Start" });
@@ -48,9 +61,15 @@ void CPlayerScript::Tick()
 		if (KEY_PRESSED(KEY::W))
 		{
 			if (KEY_PRESSED(KEY::LSHIFT))
+			{
 				m_ASM->ChangeState(AnimationState::RUN);
+				Move(true);
+			}
 			else
+			{
 				m_ASM->ChangeState(AnimationState::MOVE);
+				Move(false);
+			}
 		}
 		else
 		{
@@ -58,6 +77,10 @@ void CPlayerScript::Tick()
 		}
 	}
 
+	if (m_IsDashing)
+	{
+		DashForward();
+	}
 
 	if (KEY_TAP(KEY::LBTN))
 	{
@@ -89,20 +112,66 @@ void CPlayerScript::Tick()
 	}
 }
 
-void CPlayerScript::Move()
+void CPlayerScript::Move(bool isRun)
 {
+	CTransform* pTransform = GetOwner()->Transform();
+	Vec3 originPos = pTransform->GetRelativePos();
+	Vec3 playerDir = pTransform->GetRelativeDir(DIR_TYPE::RIGHT);
 	
+	if (KEY_PRESSED(KEY::A))
+	{
+		Vec3 curRot = pTransform->GetRelativeRotation();
+		curRot.y -= DT_Engine * m_RotSpeed;
+		pTransform->SetRelativeRotation(curRot);
+	}
+	else if (KEY_PRESSED(KEY::D))
+	{
+		Vec3 curRot = pTransform->GetRelativeRotation();
+		curRot.y += DT_Engine * m_RotSpeed;
+		pTransform->SetRelativeRotation(curRot);
+	}
+
+	if(!isRun)
+		originPos += playerDir * DT_Engine * m_Speed;
+	else
+		originPos += playerDir * DT_Engine * m_Speed * 2.f;
+
+	pTransform->SetRelativePos(originPos);
 }
 
 void CPlayerScript::AttackStart()
 {
 	m_ReadyAttack = false;
 	m_IsAttacking = true;
+
+	// 공격 시 돌진 시작
+	m_IsDashing = true;
+	m_DashTime = 0.0f; // 돌진 시간 초기화
+	m_MaxDashTime = 0.5f; // 1초 동안 돌진
+	m_InitialDashSpeed = 50.f;
+	m_MaxDashSpeed = 600.f; // 돌진 속도 설정
 }
 
 void CPlayerScript::Attack()
 {
 	m_ReadyAttack = true;
+
+	vector<CGameObject*> pChild = GetOwner()->GetChildren();
+	CCameraMoveScript* pCameraScript = nullptr;
+
+	for (size_t i = 0; i < pChild.size(); i++)
+	{
+		if (pChild[i]->GetScript<CCameraMoveScript>() != nullptr)
+		{
+			pCameraScript = pChild[i]->GetScript<CCameraMoveScript>();
+			break;
+		}
+	}
+
+	if (pCameraScript)
+	{
+		pCameraScript->StartCameraShake(10.0f, 0.5f); // 강도와 지속 시간 설정
+	}
 }
 
 void CPlayerScript::AttackEnd()
@@ -110,6 +179,36 @@ void CPlayerScript::AttackEnd()
 	m_ReadyAttack = false;
 	m_IsAttacking = false;
 	m_ASM->OnAnimationEnd();
+}
+
+void CPlayerScript::DashForward()
+{
+	if (m_DashTime < m_MaxDashTime)
+	{
+		// 코사인 함수 기반 가속도 적용
+		float progress = m_DashTime / m_MaxDashTime;  // 진행 비율 (0.0f ~ 1.0f)
+		float cosFactor = (1.0f - cosf(progress * XM_PI)) * 0.5f; // 코사인으로 천천히 가속 후 급가속
+
+		// 현재 속도는 초기 속도와 최대 속도 사이의 값을 코사인 함수로 조절
+		float currentSpeed = m_InitialDashSpeed + cosFactor * (m_MaxDashSpeed - m_InitialDashSpeed);
+
+		// 전진하는 로직
+		CTransform* pTransform = GetOwner()->Transform();
+		Vec3 originPos = pTransform->GetRelativePos();
+		Vec3 forwardDir = pTransform->GetRelativeDir(DIR_TYPE::RIGHT); // 전방 방향
+
+		// 시간에 따라 변화하는 속도로 전진
+		originPos += forwardDir * currentSpeed * DT_Engine;
+		pTransform->SetRelativePos(originPos);
+
+		// 경과 시간 업데이트
+		m_DashTime += DT_Engine;
+	}
+	else
+	{
+		// 돌진 종료
+		m_IsDashing = false;
+	}
 }
 
 void CPlayerScript::Hit()

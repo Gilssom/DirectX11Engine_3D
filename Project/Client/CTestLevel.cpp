@@ -61,9 +61,9 @@ void CTestLevel::CreateTestLevel()
 
 	pCamObject->Camera()->LayerCheckAll(1);
 	pCamObject->Camera()->SetCameraPriority(0); // 메인 카메라로 설정
-	pCamObject->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pCamObject->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
-	m_CurLevel->AddObject(0, pCamObject);
+	//m_CurLevel->AddObject(0, pCamObject);
 
 	// Light 3D
 	CGameObject* pLight = new CGameObject;
@@ -207,7 +207,12 @@ void CTestLevel::CreateTestLevel()
 	//pObj->Animator3D()->SetAnimClip("HIT", 468, 493, false);
 	//pObj->Animator3D()->SetAnimClip("DEATH", 263, 456, false);
 
-	m_CurLevel->AddObject(0, pObj, false);
+	pObj->AddChild(pCamObject);
+	pCamObject->Transform()->SetAbsolute(true);
+	pCamObject->Transform()->SetRelativePos(Vec3(-947.7f, 795.6f, -35.7f));
+	pCamObject->Transform()->SetRelativeRotation(Vec3(24.7f, 87.5f, 0.f));
+
+	m_CurLevel->AddObject(0, pObj, true);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);

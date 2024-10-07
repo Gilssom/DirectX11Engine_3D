@@ -43,11 +43,47 @@ void CCameraMoveScript::Tick()
 	if(pCurLevel != nullptr)
 		m_TargetObject = pCurLevel->FindObjectByName(L"Player");
 
+	if (m_IsShaking)
+	{
+		UpdateCameraShake();
+	}
+
 	if (Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE)
 		MoveByPerspective();
 
 	else
 		MoveByOrthographic();
+}
+
+void CCameraMoveScript::StartCameraShake(float intensity, float duration)
+{
+	m_IsShaking = true;
+	m_ShakeIntensity = intensity;
+	m_ShakeDuration = duration;
+	m_ShakeTime = 0.0f;
+	m_OriginalPos = GetOwner()->Transform()->GetRelativePos(); // 카메라 원래 위치 저장
+}
+
+void CCameraMoveScript::UpdateCameraShake()
+{
+	if (m_ShakeTime < m_ShakeDuration)
+	{
+		// 랜덤한 오프셋을 계산하여 카메라를 흔듬
+		float offsetX = ((float)rand() / RAND_MAX - 0.5f) * m_ShakeIntensity;
+		float offsetY = ((float)rand() / RAND_MAX - 0.5f) * m_ShakeIntensity;
+		float offsetZ = ((float)rand() / RAND_MAX - 0.5f) * m_ShakeIntensity;
+
+		Vec3 shakePos = m_OriginalPos + Vec3(offsetX, offsetY, offsetZ);
+		GetOwner()->Transform()->SetRelativePos(shakePos);
+
+		m_ShakeTime += DT; // 경과 시간 업데이트
+	}
+	else
+	{
+		// 쉐이크가 끝나면 원래 위치로 복원
+		m_IsShaking = false;
+		GetOwner()->Transform()->SetRelativePos(m_OriginalPos);
+	}
 }
 
 void CCameraMoveScript::MoveByPerspective()

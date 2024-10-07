@@ -87,7 +87,87 @@ void CRenderManager::Render_Play()
 		if (m_vecCam[i] == nullptr)
 			continue;
 
-		m_vecCam[i]->Render();
+		//m_vecCam[i]->Render();
+
+		// Shadow Map Create
+		Render_ShadowMap();
+
+		g_Trans.matView = m_vecCam[i]->GetViewMat();
+		g_Trans.matViewInv = m_vecCam[i]->GetViewInvMat();
+		g_Trans.matProj = m_vecCam[i]->GetProjMat();
+		g_Trans.matProjInv = m_vecCam[i]->GetProjInvMat();
+
+		// Shader Domain 에 따른 물체의 분류 작업
+		m_vecCam[i]->SortObject();
+
+		// Deferred MRT 로 변경
+		m_MRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
+
+		// Deferred 물체 Rendering
+		m_vecCam[i]->Render_deferred();
+
+		// Decal MRT 로 변경
+		m_MRT[(UINT)MRT_TYPE::DECAL]->OMSet();
+
+		// Decal 물체 Rendering
+		m_vecCam[i]->Render_decal();
+
+		// Light MRT 로 변경
+		m_MRT[(UINT)MRT_TYPE::LIGHT]->OMSet();
+
+		// Light Rendering
+		for (size_t i = 0; i < m_vecLight3D.size(); i++)
+		{
+			m_vecLight3D[i]->Lighting();
+			AddDrawCall();
+		}
+
+		// Color 정보와 Light 정보를 병합
+		// 목적지는 SwapChain
+		// Deferred 오브젝트들의 색상이 기록된 Color Target + 빛이 기록되어 있는 Diffuse, Specular, Emissive
+
+		// Swap Chain MRT 로 변경
+		m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
+
+		Ptr<CMesh> pRectMesh = CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh");
+		Ptr<CMaterial> pMergeMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"MergeMaterial");
+
+		// 특정 Render Target 을 출력할 경우
+		if (m_OutputTarget)
+		{
+			pMergeMaterial->SetTexParam(TEX_0, nullptr);
+			pMergeMaterial->SetTexParam(TEX_1, nullptr);
+			pMergeMaterial->SetTexParam(TEX_2, nullptr);
+			pMergeMaterial->SetTexParam(TEX_3, nullptr);
+			pMergeMaterial->SetTexParam(TEX_4, nullptr);
+			pMergeMaterial->SetTexParam(TEX_5, m_OutputTargetTexture);
+
+			pMergeMaterial->SetScalarParam(INT_0, 1);
+		}
+		else
+		{
+			pMergeMaterial->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"ColorTargetTex"));
+			pMergeMaterial->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"DiffuseTargetTex"));
+			pMergeMaterial->SetTexParam(TEX_2, CAssetManager::GetInst()->FindAsset<CTexture>(L"SpecularTargetTex"));
+			pMergeMaterial->SetTexParam(TEX_3, CAssetManager::GetInst()->FindAsset<CTexture>(L"EmissiveTargetTex"));
+			pMergeMaterial->SetTexParam(TEX_4, CAssetManager::GetInst()->FindAsset<CTexture>(L"PositionTargetTex"));
+			pMergeMaterial->SetTexParam(TEX_5, m_OutputTargetTexture);
+
+			pMergeMaterial->SetScalarParam(INT_0, 0);
+		}
+
+		pMergeMaterial->Binding();
+		pRectMesh->Render(0);
+		AddDrawCall();
+
+		// Forward Rendering 진행
+		m_vecCam[i]->Render_opaque();
+		m_vecCam[i]->Render_masked();
+		m_vecCam[i]->Render_transparent();
+		m_vecCam[i]->Render_particle();
+
+		// Post Process 후처리 과정 진행
+		m_vecCam[i]->Render_postprocess();
 	}
 }
 
