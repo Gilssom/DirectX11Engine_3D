@@ -43,9 +43,6 @@ void CLevelManager::Tick()
 {
 	if (m_CurLevel != nullptr)
 	{
-		// Test
-		m_CurLevel->Tick();
-
 		// Level 이 Play 상태가 아니라면 Tick 은 호출 금지
 		if (m_CurLevel->GetState() == LEVEL_STATE::PLAY)
 		{

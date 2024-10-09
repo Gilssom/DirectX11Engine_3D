@@ -42,7 +42,8 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::Begin()
 {
-
+	Ptr<CGraphicShader> pShader = GetOwner()->GetRenderComponent()->GetMaterial(0)->GetShader();
+	pShader->AddScalarParam("Hit Event", INT_0);
 }
 
 void CPlayerScript::Tick()
@@ -170,7 +171,7 @@ void CPlayerScript::Attack()
 
 	if (pCameraScript)
 	{
-		pCameraScript->StartCameraShake(10.0f, 0.5f); // 강도와 지속 시간 설정
+		pCameraScript->StartCameraShake(10.0f, 0.05f); // 강도와 지속 시간 설정
 	}
 }
 
@@ -214,12 +215,22 @@ void CPlayerScript::DashForward()
 void CPlayerScript::Hit()
 {
 	m_IsHit = true;
+
+	for (int i = 0; i < 4; i++)
+	{
+		GetOwner()->GetRenderComponent()->GetMaterial(i)->SetScalarParam(INT_0, 1);
+	}
 }
 
 void CPlayerScript::HitEnd()
 {
 	m_IsHit = false;
 	m_ASM->OnAnimationEnd();
+
+	for (int i = 0; i < 4; i++)
+	{
+		GetOwner()->GetRenderComponent()->GetMaterial(i)->SetScalarParam(INT_0, 0);
+	}
 }
 
 void CPlayerScript::Death()

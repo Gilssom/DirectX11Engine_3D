@@ -121,6 +121,13 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV) * MtrlData.vDiff;
     }
 
+     // ======= Hit 이벤트 처리 =======
+    if (g_int_0)
+    {
+        // g_int_0 값이 1이면 빨간색으로 변경
+        vObjectColor = float4(0.7f, 0.f, 0.f, 1.f); // 빨간색 (Hit 상태)
+    }
+    
     
     // ======= Normal Texture =======    
     float3 vViewNormal = _in.vViewNormal;
