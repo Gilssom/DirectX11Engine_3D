@@ -14,6 +14,7 @@ private:
 	float m_ShakeIntensity;		// Ω¶¿Ã≈© ∞≠µµ
 
 public:
+	virtual void Begin() override;
 	virtual void Tick() override;
 
 	void StartCameraShake(float intensity, float duration);

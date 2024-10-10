@@ -24,8 +24,15 @@ CCameraMoveScript::~CCameraMoveScript()
 
 }
 
+void CCameraMoveScript::Begin()
+{
+	Transform()->SetRelativeRotation(25.519f, 89.465f, 0.f);
+}
+
 void CCameraMoveScript::Tick()
 {
+	//Transform()->SetRelativeRotation(24.7f, 87.5f, 0.f);
+
 	// 카메라 투영 모드 변경
 	if (KEY_TAP(KEY::P))
 	{

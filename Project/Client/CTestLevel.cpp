@@ -45,7 +45,7 @@ void CTestLevel::CreateTestLevel()
 	#pragma endregion
 
 	// Prefab 제작 및 Asset Manager 에 등록
-	//CreatePrefab();
+	CreatePrefab();
 
 	CLevel* m_CurLevel = new CLevel;
 	m_CurLevel->GetLayer(0)->SetName(L"Default");
@@ -219,11 +219,19 @@ void CTestLevel::CreateTestLevel()
 	//pObj->Animator3D()->SetAnimClip("DEATH", 263, 456, false);
 
 	pObj->AddChild(pCamObject);
+
 	pCamObject->Transform()->SetAbsolute(true);
 	pCamObject->Transform()->SetRelativePos(Vec3(-947.7f, 795.6f, -35.7f));
-	pCamObject->Transform()->SetRelativeRotation(Vec3(24.7f, 87.5f, 0.f));
 
 	m_CurLevel->AddObject(0, pObj, true);
+
+	CGameObject* pParticleObject = new CGameObject;
+	pParticleObject->SetName(L"Slash Effect");
+	pParticleObject->AddComponent(new CTransform);
+	pParticleObject->AddComponent(new CParticleSystem);
+	pParticleObject->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	pParticleObject->ParticleSystem()->SetParticleTexture(CAssetManager::GetInst()->Load<CTexture>(L"texture\\particle\\SmokeParticleTest.png", L"texture\\particle\\SmokeParticleTest.png"));
+	m_CurLevel->AddObject(0, pParticleObject, true);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);
@@ -231,19 +239,31 @@ void CTestLevel::CreateTestLevel()
 
 void CTestLevel::CreatePrefab()
 {
-	//// Particle Prefab
-	//CGameObject* pParticleObject = new CGameObject;
-	//pParticleObject->SetName(L"Particle");
-	//pParticleObject->AddComponent(new CTransform);
-	//pParticleObject->AddComponent(new CParticleSystem);
-	//pParticleObject->Transform()->SetRelativePos(Vec3(-675.f, 0.f, 500.f));
-	//pParticleObject->ParticleSystem()->SetParticleTexture(CAssetManager::GetInst()->Load<CTexture>(L"texture\\particle\\SmokeParticleTest.png", L"texture\\particle\\SmokeParticleTest.png"));
+	// Particle Prefab
+	CGameObject* pParticleObject = new CGameObject;
+	pParticleObject->SetName(L"Slash Effect");
+	pParticleObject->AddComponent(new CTransform);
+	pParticleObject->AddComponent(new CParticleSystem);
+	pParticleObject->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	pParticleObject->ParticleSystem()->SetParticleTexture(CAssetManager::GetInst()->Load<CTexture>(L"texture\\particle\\SmokeParticleTest.png", L"texture\\particle\\SmokeParticleTest.png"));
+	CParticleSystem* pSlashEffect = pParticleObject->ParticleSystem();
 
-	//Ptr<CPrefab> prefab = new CPrefab(pParticleObject);
-	//CAssetManager::GetInst()->AddAsset<CPrefab>(L"ParticlePrefab", prefab);
+	pSlashEffect->SetMaxParticleCount(1000); // 파티클 개수 설정
 
-	//wstring filePath = CPathManager::GetInst()->GetContentPath();
-	//prefab->Save(filePath + L"Prefab\\Particle.pref");
+	// 파티클 모듈 설정 (슬래시 모양으로 확산되는 효과)
+	pSlashEffect->SetSpawnRate(500); // 초당 생성될 파티클 개수
+	pSlashEffect->SetLife(0.1f, 0.3f); // 파티클 최소, 최대 수명
+	pSlashEffect->SetScale(Vec3(20.f, 5.f, 1.f), Vec3(50.f, 10.f, 1.f)); // 크기 설정
+	pSlashEffect->SetVelocity(Vec3(1.f, 0.f, 0.f), 500.f, 700.f); // 속도 설정
+	pSlashEffect->SetColor(Vec4(1.f, 0.f, 0.f, 1.f), Vec3(1.f, 1.f, 1.f)); // 색상 설정
+	pSlashEffect->SetFadeInOut(true, 0.5f);
+	pSlashEffect->SetModuleOnOff(PARTICLE_MODULE::SPAWN_BURST, false);
+
+	Ptr<CPrefab> prefab = new CPrefab(pParticleObject);
+	CAssetManager::GetInst()->AddAsset<CPrefab>(L"Slash_Effect", prefab);
+
+	wstring filePath = CPathManager::GetInst()->GetContentPath();
+	prefab->Save(filePath + L"Prefab\\Slash_Effect.pref");
 
 	//// Missile Prefab
 	//CGameObject* pNewObj = new CGameObject;

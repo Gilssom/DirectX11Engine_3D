@@ -3,6 +3,8 @@
 
 #include "CAssetManager.h"
 #include "CTimeManager.h"
+#include "CLevelManager.h"
+#include "CLevel.h"
 #include "CStructuredBuffer.h"
 #include "components.h"
 
@@ -55,6 +57,9 @@ CAnimator3D::~CAnimator3D()
 
 void CAnimator3D::FinalTick()
 {
+	if (CLevelManager::GetInst()->GetCurrentLevel()->GetState() == LEVEL_STATE::STOP)
+		return;
+
 	if (!m_EditorMode || (m_EditorMode && !m_Pause))
 	{
 		m_dCurTime = 0.f;

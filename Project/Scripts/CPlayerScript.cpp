@@ -7,6 +7,7 @@
 #include <Engine\CLevelManager.h>
 #include <Engine\CLevel.h>
 #include <Engine\CTaskManager.h>
+#include <Engine\CParticleSystem.h>
 
 CPlayerScript::CPlayerScript()
 	: CScript(SCRIPT_TYPE::PLAYERSCRIPT)
@@ -44,10 +45,13 @@ void CPlayerScript::Begin()
 {
 	Ptr<CGraphicShader> pShader = GetOwner()->GetRenderComponent()->GetMaterial(0)->GetShader();
 	pShader->AddScalarParam("Hit Event", INT_0);
+
+	m_Test = CAssetManager::GetInst()->FindAsset<CPrefab>(L"Slash_Effect");
 }
 
 void CPlayerScript::Tick()
 {
+
 	if (GetOwner()->GetScript<CAnimStateMachine>() && !m_ASM)
 		m_ASM = GetOwner()->GetScript<CAnimStateMachine>();
 
@@ -85,6 +89,8 @@ void CPlayerScript::Tick()
 
 	if (KEY_TAP(KEY::LBTN))
 	{
+		return;
+
 		AnimationState curState = m_ASM->GetCurState();
 
 		if (curState == AnimationState::IDLE || curState == AnimationState::MOVE || curState == AnimationState::RUN)
@@ -151,6 +157,10 @@ void CPlayerScript::AttackStart()
 	m_MaxDashTime = 0.5f; // 1초 동안 돌진
 	m_InitialDashSpeed = 50.f;
 	m_MaxDashSpeed = 600.f; // 돌진 속도 설정
+
+	CGameObject* pParticle = Instantiate(m_Test, 0, Transform()->GetRelativePos());
+	pParticle->SetName(L"Effect");
+	pParticle->GetRenderComponent()->SetFrustumCheck(false);
 }
 
 void CPlayerScript::Attack()
@@ -173,6 +183,8 @@ void CPlayerScript::Attack()
 	{
 		pCameraScript->StartCameraShake(10.0f, 0.05f); // 강도와 지속 시간 설정
 	}
+
+	//SlashEffect();
 }
 
 void CPlayerScript::AttackEnd()
@@ -180,6 +192,37 @@ void CPlayerScript::AttackEnd()
 	m_ReadyAttack = false;
 	m_IsAttacking = false;
 	m_ASM->OnAnimationEnd();
+}
+
+void CPlayerScript::SlashEffect()
+{
+	// 슬래시 파티클 이펙트 생성 및 설정
+	CGameObject* pSlash = new CGameObject;
+	pSlash->SetName(L"Slash Effect");
+	pSlash->AddComponent(new CTransform);
+	pSlash->AddComponent(new CParticleSystem);
+	pSlash->Transform()->SetRelativePos(Transform()->GetRelativePos());
+	CParticleSystem* pSlashEffect = pSlash->ParticleSystem();
+
+	CLevelManager::GetInst()->GetCurrentLevel()->AddObject(0, pSlash, true);
+
+	// 파티클 텍스처 설정 (슬래시 모양 텍스처)
+	Ptr<CTexture> pSlashTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\Effect.png");
+	pSlashEffect->SetParticleTexture(pSlashTex);
+
+	// 파티클 속성 설정
+	pSlashEffect->SetMaxParticleCount(1000); // 파티클 개수 설정
+
+	// 파티클 모듈 설정 (슬래시 모양으로 확산되는 효과)
+	pSlashEffect->SetSpawnRate(500); // 초당 생성될 파티클 개수
+	pSlashEffect->SetLife(0.1f, 0.3f); // 파티클 최소, 최대 수명
+	pSlashEffect->SetScale(Vec3(20.f, 5.f, 1.f), Vec3(50.f, 10.f, 1.f)); // 크기 설정
+	pSlashEffect->SetVelocity(Vec3(1.f, 0.f, 0.f), 500.f, 700.f); // 속도 설정
+	pSlashEffect->SetColor(Vec4(1.f, 0.f, 0.f, 1.f), Vec3(1.f, 1.f, 1.f)); // 색상 설정
+	pSlashEffect->SetFadeInOut(true, 0.5f);
+	pSlashEffect->SetModuleOnOff(PARTICLE_MODULE::SPAWN_BURST, false);
+
+	
 }
 
 void CPlayerScript::DashForward()

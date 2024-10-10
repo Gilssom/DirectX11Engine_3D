@@ -27,6 +27,18 @@ public:
 	void SetParticleTexture(Ptr<CTexture> tex) { m_ParticleTex = tex; }
 	void SetMaxParticleCount(UINT max);
 
+	void SetSpawnRate(UINT rate);
+	void SetLife(float minLife, float maxLife);
+	void SetScale(const Vec3& minScale, const Vec3& maxScale);
+	void SetVelocity(Vec3 dir, float minSpeed, float maxSpeed);
+	void SetColor(Vec4 spawnColor, Vec3 endColor);
+	void SetFadeInOut(bool isFadeOut, float startRatio);
+	void SetModuleOnOff(PARTICLE_MODULE module, bool onoff);
+
+public:
+	tParticleModule& GetModule() { return m_Module; }
+	void UpdateModuleBuffer();
+
 private:
 	void CalculateSpawnCount();
 

@@ -52,10 +52,10 @@ void TransformUI::Render_Tick()
 		GetTarget()->Transform()->SetRelativeScale(vScale);
 
 	ImGui::Text("Rotation"); SAME;
-	vRotation = (vRotation / XM_PI) * 180.f;
+	//vRotation = (vRotation / XM_PI) * 180.f;
 	if (ImGui::DragFloat3("##Rotation", vRotation, 0.1f))
 	{
-		vRotation = (vRotation / 180.f) * XM_PI;
+		//vRotation = (vRotation / 180.f) * XM_PI;
 		GetTarget()->Transform()->SetRelativeRotation(vRotation);
 	}
 

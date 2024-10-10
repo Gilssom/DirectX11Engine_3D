@@ -16,7 +16,11 @@ CAnimStateMachine::~CAnimStateMachine()
 
 void CAnimStateMachine::Begin()
 {
+	m_PrevState = m_CurState;
+	m_CurState = AnimationState::IDLE;
+	m_StateStack.push(m_CurState);
 
+	GetOwner()->Animator3D()->PlayAnimation((UINT)AnimationState::IDLE);
 }
 
 void CAnimStateMachine::Tick()

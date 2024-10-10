@@ -22,6 +22,8 @@ private:
 	float				m_InitialDashSpeed;
 	float				m_MaxDashSpeed;
 
+	Ptr<CPrefab>		m_Test;
+
 public:
 	virtual void Begin() override;
 	virtual void Tick() override;
@@ -33,6 +35,7 @@ public:
 	void Attack();
 	void AttackEnd();
 
+	void SlashEffect();
 	void DashForward();
 
 	void Hit();

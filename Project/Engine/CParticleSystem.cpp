@@ -178,6 +178,54 @@ void CParticleSystem::SetMaxParticleCount(UINT max)
 	}
 }
 
+void CParticleSystem::SetSpawnRate(UINT rate)
+{
+	m_Module.vSpawnRate = rate;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetLife(float minLife, float maxLife)
+{
+	m_Module.MinLife = minLife;
+	m_Module.MaxLife = maxLife;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetScale(const Vec3& minScale, const Vec3& maxScale)
+{
+	m_Module.vSpawnMinScale = minScale;
+	m_Module.vSpawnMaxScale = maxScale;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetVelocity(Vec3 dir, float minSpeed, float maxSpeed)
+{
+	m_Module.AddVelocityFixedDir = dir;
+	m_Module.AddMinSpeed = minSpeed;
+	m_Module.AddMaxSpeed = maxSpeed;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetColor(Vec4 spawnColor, Vec3 endColor)
+{
+	m_Module.vSpawnColor = spawnColor;
+	m_Module.EndColor = endColor;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetFadeInOut(bool isFadeOut, float startRatio)
+{
+	m_Module.FadeOut = isFadeOut;
+	m_Module.FadeOutStartRatio = startRatio;
+	UpdateModuleBuffer();
+}
+
+void CParticleSystem::SetModuleOnOff(PARTICLE_MODULE module, bool onoff)
+{
+	m_Module.Module[(UINT)module] = onoff;
+	UpdateModuleBuffer();
+}
+
 void CParticleSystem::CalculateSpawnCount()
 {
 	m_Time += DT;
@@ -223,6 +271,18 @@ void CParticleSystem::CalculateSpawnCount()
 
 	// SpawnCount Buffer РќДо
 	m_SpawnCountBuffer->SetData(&count);
+}
+
+void CParticleSystem::UpdateModuleBuffer()
+{
+	if (m_ModuleBuffer)
+	{
+		delete m_ModuleBuffer;
+		m_ModuleBuffer = nullptr;
+	}
+
+	m_ModuleBuffer = new CStructuredBuffer;
+	m_ModuleBuffer->Create(sizeof(tParticleModule) + (16 % (16 - sizeof(tParticleModule) % 16)), 1, SB_TYPE::SRV_UAV, true, &m_Module);
 }
 
 void CParticleSystem::SaveToLevelFile(FILE* file)
