@@ -7,6 +7,7 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CAnim2D.h>
+#include <Engine\CScript.h>
 
 #include <Scripts\CCameraMoveScript.h>
 #include <Scripts\CMissileScript.h>
@@ -45,7 +46,7 @@ void CTestLevel::CreateTestLevel()
 	#pragma endregion
 
 	// Prefab 제작 및 Asset Manager 에 등록
-	CreatePrefab();
+	//CreatePrefab();
 
 	CLevel* m_CurLevel = new CLevel;
 	m_CurLevel->GetLayer(0)->SetName(L"Default");
@@ -231,6 +232,11 @@ void CTestLevel::CreateTestLevel()
 	pParticleObject->AddComponent(new CParticleSystem);
 	pParticleObject->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
 	pParticleObject->ParticleSystem()->SetParticleTexture(CAssetManager::GetInst()->Load<CTexture>(L"texture\\particle\\SmokeParticleTest.png", L"texture\\particle\\SmokeParticleTest.png"));
+	pParticleObject->ParticleSystem()->SetModuleOnOff(PARTICLE_MODULE::SPAWN, true);
+	pParticleObject->ParticleSystem()->SetSpawnRate(100);
+	pParticleObject->ParticleSystem()->SetColor(Vec4(0.3f, 0.f, 0.3f, 1.f), Vec3(1.f, 1.f, 0.5f));
+	pParticleObject->ParticleSystem()->SetLife(4.f, 8.f);
+	pParticleObject->ParticleSystem()->SetScale(Vec3(50.f, 50.f, 1.f), Vec3(75.f, 75.f, 1.f));
 	m_CurLevel->AddObject(0, pParticleObject, true);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)

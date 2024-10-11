@@ -22,6 +22,8 @@ private:
 
 	tParticleModule			m_Module;			// 파티클의 기능 정의
 
+	bool					m_IsPlayed;			// 재생 여부
+
 
 public:
 	void SetParticleTexture(Ptr<CTexture> tex) { m_ParticleTex = tex; }
@@ -35,12 +37,17 @@ public:
 	void SetFadeInOut(bool isFadeOut, float startRatio);
 	void SetModuleOnOff(PARTICLE_MODULE module, bool onoff);
 
+	void SetIsPlayed(bool play) { m_IsPlayed = play; }
+ 
 public:
+	Ptr<CTexture> GetParticleTexture() { return m_ParticleTex; }
 	tParticleModule& GetModule() { return m_Module; }
+	bool GetIsPlayed() { return m_IsPlayed; }
 	void UpdateModuleBuffer();
 
 private:
 	void CalculateSpawnCount();
+	bool CheckParticleEnd();
 
 public:
 	virtual void FinalTick() override;

@@ -26,6 +26,56 @@ void ParticleSystemUI::Render_Tick()
 
     bool bUpdated = false; // 값을 변경했는지 확인하는 플래그
 
+    // 0. Texture Change
+     // Texture UI 추가
+    Ptr<CTexture> pTexture = pParticleSystem->GetParticleTexture();
+    ImTextureID TexID = 0;
+    std::string strTexKey;
+
+    if (pTexture != nullptr)
+    {
+        TexID = pTexture->GetSRV().Get();
+        strTexKey = ToString(pTexture->GetKey());
+    }
+    else
+    {
+        strTexKey = "None";
+    }
+
+    // Texture 이름 출력
+    ImGui::Text("Particle Texture");
+    ImGui::InputText("##TextureUIName", (char*)strTexKey.c_str(), strTexKey.capacity(), ImGuiInputTextFlags_ReadOnly);
+
+    // Texture 이미지 출력
+    ImGui::SeparatorText("Texture");
+    ImVec2 uv_min = ImVec2(0.0f, 0.0f);
+    ImVec2 uv_max = ImVec2(1.0f, 1.0f);
+    ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
+
+    ImGui::Image(TexID, ImVec2(150, 150), uv_min, uv_max, ImGui::GetStyleColorVec4(ImGuiCol_Text), border_col);
+
+    // Drag & Drop으로 Texture 변경 가능하도록 설정
+    if (ImGui::BeginDragDropTarget())
+    {
+        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Content");
+        if (payload != nullptr)
+        {
+            // payload에서 데이터 가져오기
+            DWORD_PTR dwData = 0;
+            memcpy(&dwData, payload->Data, payload->DataSize);
+
+            // 드래그된 Asset의 Type 확인
+            Ptr<CAsset> pAsset = (CAsset*)dwData;
+            if (pAsset->GetAssetType() == ASSET_TYPE::TEXTURE)
+            {
+                // Texture 설정
+                pParticleSystem->SetParticleTexture((CTexture*)pAsset.Get());
+                bUpdated = true;
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
+
     // 1. Spawn Module
     ImGui::SeparatorText("Spawn Settings");
     if (ImGui::Checkbox("Spawn", (bool*)&module.Module[(UINT)PARTICLE_MODULE::SPAWN])) bUpdated = true;
@@ -95,4 +145,35 @@ void ParticleSystemUI::Render_Tick()
     {
         pParticleSystem->UpdateModuleBuffer();
     }
+
+    // 프리팹 이름을 입력할 수 있는 UI
+    ImGui::SeparatorText("Save Particle System");
+    static char prefabName[128] = "Slash_Effect";  // 기본값
+    ImGui::InputText("Prefab Name", prefabName, IM_ARRAYSIZE(prefabName));
+
+    // 파일 경로 입력할 수 있는 UI (경로를 수정 가능하게 함)
+    static char filePath[256] = "Prefab\\Slash_Effect.pref";  // 기본 경로
+    ImGui::InputText("File Path", filePath, IM_ARRAYSIZE(filePath));
+
+    // 프리팹 저장 버튼
+    if (ImGui::Button("Save Prefab"))
+    {
+        SaveParticle(pParticleSystem->GetOwner(), prefabName, filePath);
+    }
+}
+
+void ParticleSystemUI::SaveParticle(CGameObject* pParticleObject, const std::string& prefabName, const std::string& filePath)
+{
+    // 프리팹 생성
+    Ptr<CPrefab> prefab = new CPrefab(pParticleObject);
+
+    // 프리팹을 에셋 매니저에 추가
+    CAssetManager::GetInst()->AddAsset<CPrefab>(std::wstring(prefabName.begin(), prefabName.end()), prefab);
+
+    // 파일 경로 생성 및 저장
+    std::wstring fullFilePath = CPathManager::GetInst()->GetContentPath() + std::wstring(filePath.begin(), filePath.end());
+    prefab->Save(fullFilePath);
+
+    // 저장이 완료되었음을 알리는 메시지 출력
+    ImGui::Text("Prefab saved to: %s", fullFilePath.c_str());
 }

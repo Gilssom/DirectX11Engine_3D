@@ -14,6 +14,7 @@ CParticleSystem::CParticleSystem()
 	, m_Time(0.f)
 	, m_BurstTime(0.f)
 	, m_MaxParticle(10000)
+	, m_IsPlayed(false)
 {
 	SetFrustumCheck(false);
 	SetDynamicShadow(false);
@@ -30,7 +31,7 @@ CParticleSystem::CParticleSystem()
 	// Particle 정보를 저장할 구조화 버퍼 생성
 	// Tick 이 생겼으니 데이터를 강제로 세팅할 필요도 없음
 	m_ParticleBuffer = new CStructuredBuffer;
-	m_ParticleBuffer->Create(sizeof(tParticle), m_MaxParticle, SB_TYPE::SRV_UAV, false);
+	m_ParticleBuffer->Create(sizeof(tParticle), m_MaxParticle, SB_TYPE::SRV_UAV, true);
 
 	m_SpawnCountBuffer = new CStructuredBuffer;
 	m_SpawnCountBuffer->Create(sizeof(tSpawnCount), 1, SB_TYPE::SRV_UAV, true);
@@ -38,65 +39,65 @@ CParticleSystem::CParticleSystem()
 
 	// Particle Module Setting Test
 	// Spawn Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::SPAWN] = true;
-	m_Module.vSpawnRate = 100;
-	m_Module.vSpawnColor = Vec4(0.3f, 0.f, 0.3f, 1.f);
-	m_Module.MinLife = 4.f;
-	m_Module.MaxLife = 8.f;
-	m_Module.vSpawnMinScale = Vec3(50.f, 50.f, 1.f);
-	m_Module.vSpawnMaxScale = Vec3(75.f, 75.f, 1.f);
-
-	// Spawn Area (No Module)
-	m_Module.SpawnShape = 0;
-	m_Module.SpawnShapeScale.y = 2500.f;
-
-	// Don't Spawn Area
-	m_Module.BlockSpawnShape = 1;
-	m_Module.BlockSpawnShapeScale.x = 0.f;
-
-	// Local || World Space Setting
-	m_Module.SpaceType = 1;
-
-
-	// Spawn Burst Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::SPAWN_BURST] = false;
-	m_Module.SpawnBurstRepeat = true;
-	m_Module.SpawnBurstCount = 100;
-	m_Module.SpawnBurstRepeatTime = 0.5f;
-
-	
-	// Add Velocity Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	m_Module.AddVelocityType = 3;
-	m_Module.AddVelocityFixedDir = Vec3(1.f, 0.f, 0.f);
-	m_Module.AddMinSpeed = 20.f;
-	m_Module.AddMaxSpeed = 60.f;
-
-
-	// Scale Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::SCALE] = true;
-	m_Module.StartScale = 1.f;
-	m_Module.EndScale = 2.f;
-
-
-	// Drag Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::DRAG] = true;
-	m_Module.DestNormalizedAge = 0.8f;
-	m_Module.LimitSpeed = 10.f;
-
-
-	// Noise Force Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	m_Module.NoiseForceTerm = 0.3f;
-	m_Module.NoiseForceScale = 1.f;
-
-
-	// Render Module
-	m_Module.Module[(UINT)PARTICLE_MODULE::RENDER] = true;
-	m_Module.EndColor = Vec3(1.f, 0.6f, 1.f);
-	m_Module.FadeOut = true;
-	m_Module.FadeOutStartRatio = 0.2f;
-	m_Module.VelocityAlignment = false;
+	//m_Module.Module[(UINT)PARTICLE_MODULE::SPAWN] = true;
+	//m_Module.vSpawnRate = 100;
+	//m_Module.vSpawnColor = Vec4(0.3f, 0.f, 0.3f, 1.f);
+	//m_Module.MinLife = 4.f;
+	//m_Module.MaxLife = 8.f;
+	//m_Module.vSpawnMinScale = Vec3(50.f, 50.f, 1.f);
+	//m_Module.vSpawnMaxScale = Vec3(75.f, 75.f, 1.f);
+	//
+	//// Spawn Area (No Module)
+	//m_Module.SpawnShape = 0;
+	//m_Module.SpawnShapeScale.y = 2500.f;
+	//
+	//// Don't Spawn Area
+	//m_Module.BlockSpawnShape = 1;
+	//m_Module.BlockSpawnShapeScale.x = 0.f;
+	//
+	//// Local || World Space Setting
+	//m_Module.SpaceType = 1;
+	//
+	//
+	//// Spawn Burst Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::SPAWN_BURST] = false;
+	//m_Module.SpawnBurstRepeat = true;
+	//m_Module.SpawnBurstCount = 100;
+	//m_Module.SpawnBurstRepeatTime = 0.5f;
+	//
+	//
+	//// Add Velocity Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
+	//m_Module.AddVelocityType = 3;
+	//m_Module.AddVelocityFixedDir = Vec3(1.f, 0.f, 0.f);
+	//m_Module.AddMinSpeed = 20.f;
+	//m_Module.AddMaxSpeed = 60.f;
+	//
+	//
+	//// Scale Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::SCALE] = true;
+	//m_Module.StartScale = 1.f;
+	//m_Module.EndScale = 2.f;
+	//
+	//
+	//// Drag Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::DRAG] = true;
+	//m_Module.DestNormalizedAge = 0.8f;
+	//m_Module.LimitSpeed = 10.f;
+	//
+	//
+	//// Noise Force Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
+	//m_Module.NoiseForceTerm = 0.3f;
+	//m_Module.NoiseForceScale = 1.f;
+	//
+	//
+	//// Render Module
+	//m_Module.Module[(UINT)PARTICLE_MODULE::RENDER] = true;
+	//m_Module.EndColor = Vec3(1.f, 0.6f, 1.f);
+	//m_Module.FadeOut = true;
+	//m_Module.FadeOutStartRatio = 0.2f;
+	//m_Module.VelocityAlignment = false;
 
 	m_ModuleBuffer = new CStructuredBuffer;
 	m_ModuleBuffer->Create(sizeof(tParticleModule) + (16 % (16 - sizeof(tParticleModule) % 16)), 1, SB_TYPE::SRV_UAV, true, &m_Module);
@@ -113,6 +114,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& other)
 	, m_BurstTime(0.f)
 	, m_MaxParticle(other.m_MaxParticle)
 	, m_Module(other.m_Module)
+	, m_IsPlayed(other.m_IsPlayed)
 {
 	assert(other.m_ParticleBuffer && other.m_SpawnCountBuffer && other.m_ModuleBuffer);
 
@@ -146,6 +148,12 @@ void CParticleSystem::FinalTick()
 	if (FAILED(m_TickCS->Execute()))
 	{
 		assert(nullptr);
+	}
+
+	// 파티클이 모두 종료되었는지 체크
+	if (m_IsPlayed && CheckParticleEnd())
+	{
+		GetOwner()->Destroy();
 	}
 }
 
@@ -271,6 +279,29 @@ void CParticleSystem::CalculateSpawnCount()
 
 	// SpawnCount Buffer 전달
 	m_SpawnCountBuffer->SetData(&count);
+}
+
+bool CParticleSystem::CheckParticleEnd()
+{
+	// Step 1: GPU의 파티클 데이터를 CPU로 가져오기 위해 임시 저장 공간을 할당합니다.
+	tParticle* particleData = new tParticle[m_MaxParticle]; // m_MaxParticle 크기만큼 임시 저장 공간 할당
+
+	// Step 2: GPU에서 CPU로 파티클 데이터를 가져옵니다.
+	m_ParticleBuffer->GetData(particleData, m_MaxParticle);
+
+	// Step 3: 모든 파티클이 비활성화되어 있는지 확인합니다.
+	for (UINT i = 0; i < m_MaxParticle; ++i)
+	{
+		if (particleData[i].Active == 1) // 파티클이 활성화되어 있는 경우
+		{
+			delete[] particleData; // 메모리 해제
+			return false;          // 하나라도 활성화되어 있다면 false 반환
+		}
+	}
+
+	// 모든 파티클이 비활성화되어 있을 경우
+	delete[] particleData; // 메모리 해제
+	return true;           // true 반환
 }
 
 void CParticleSystem::UpdateModuleBuffer()

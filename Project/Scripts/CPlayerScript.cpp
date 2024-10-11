@@ -46,7 +46,8 @@ void CPlayerScript::Begin()
 	Ptr<CGraphicShader> pShader = GetOwner()->GetRenderComponent()->GetMaterial(0)->GetShader();
 	pShader->AddScalarParam("Hit Event", INT_0);
 
-	m_Test = CAssetManager::GetInst()->FindAsset<CPrefab>(L"Slash_Effect");
+	//m_Test = CAssetManager::GetInst()->FindAsset<CPrefab>(L"Prefab\\HitEffect.pref");
+	m_Test = CAssetManager::GetInst()->Load<CPrefab>(L"Prefab\\HitEffect.pref", L"Prefab\\HitEffect.pref");
 }
 
 void CPlayerScript::Tick()
@@ -157,10 +158,6 @@ void CPlayerScript::AttackStart()
 	m_MaxDashTime = 0.5f; // 1초 동안 돌진
 	m_InitialDashSpeed = 50.f;
 	m_MaxDashSpeed = 600.f; // 돌진 속도 설정
-
-	CGameObject* pParticle = Instantiate(m_Test, 0, Transform()->GetRelativePos());
-	pParticle->SetName(L"Effect");
-	pParticle->GetRenderComponent()->SetFrustumCheck(false);
 }
 
 void CPlayerScript::Attack()
@@ -221,8 +218,6 @@ void CPlayerScript::SlashEffect()
 	pSlashEffect->SetColor(Vec4(1.f, 0.f, 0.f, 1.f), Vec3(1.f, 1.f, 1.f)); // 색상 설정
 	pSlashEffect->SetFadeInOut(true, 0.5f);
 	pSlashEffect->SetModuleOnOff(PARTICLE_MODULE::SPAWN_BURST, false);
-
-	
 }
 
 void CPlayerScript::DashForward()
@@ -257,6 +252,16 @@ void CPlayerScript::DashForward()
 
 void CPlayerScript::Hit()
 {
+	if (!m_IsHit)
+	{
+		Vec3 spawnPos = Vec3(Transform()->GetRelativePos().x, Transform()->GetRelativePos().y + 300.f, Transform()->GetRelativePos().z);
+		CGameObject* pParticle = Instantiate(m_Test, 0, spawnPos);
+		pParticle->SetName(L"Effect");
+		pParticle->GetRenderComponent()->SetFrustumCheck(true);
+		pParticle->ParticleSystem()->UpdateModuleBuffer();
+		pParticle->ParticleSystem()->SetIsPlayed(true);
+	}
+	
 	m_IsHit = true;
 
 	for (int i = 0; i < 4; i++)
