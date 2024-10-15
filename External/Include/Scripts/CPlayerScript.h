@@ -22,6 +22,9 @@ private:
 	float				m_InitialDashSpeed;
 	float				m_MaxDashSpeed;
 
+	bool				m_WeaponIsEmissive;
+	float				m_WeaponEmissive;
+
 	Ptr<CPrefab>		m_Test;
 
 public:

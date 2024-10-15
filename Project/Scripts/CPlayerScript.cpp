@@ -18,9 +18,13 @@ CPlayerScript::CPlayerScript()
 	, m_MaxDashTime(1.f)
 	, m_InitialDashSpeed(50.f)
 	, m_MaxDashSpeed(600.f)
+	, m_WeaponIsEmissive(false)
+	, m_WeaponEmissive(0.f)
 {
 	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Speed", &m_Speed);
 	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Rot Speed", &m_RotSpeed);
+	AddScriptProperty(PROPERTY_TYPE::INT, "Weapon Is Emissive", &m_WeaponIsEmissive);
+	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Weapon Emissive", &m_WeaponEmissive);
 
 	//m_vecFunc.push_back({ bind(&CPlayerScript::Move, this), "Move"});
 	m_vecFunc.push_back({ bind(&CPlayerScript::Attack, this), "Attack" });
@@ -52,6 +56,15 @@ void CPlayerScript::Begin()
 
 void CPlayerScript::Tick()
 {
+	Ptr<CMaterial> pMaterial = GetOwner()->GetRenderComponent()->GetMaterial(3);
+	pMaterial->SetScalarParam(INT_1, m_WeaponIsEmissive);
+	pMaterial->SetScalarParam(FLOAT_0, m_WeaponEmissive);
+
+	if (m_WeaponEmissive >= 1.f)
+		m_WeaponEmissive = 1.f;
+
+	if (m_WeaponEmissive < 0.f)
+		m_WeaponEmissive = 0.f;
 
 	if (GetOwner()->GetScript<CAnimStateMachine>() && !m_ASM)
 		m_ASM = GetOwner()->GetScript<CAnimStateMachine>();
@@ -88,9 +101,12 @@ void CPlayerScript::Tick()
 		DashForward();
 	}
 
-	if (KEY_TAP(KEY::LBTN))
+	if (KEY_TAP(KEY::F))
 	{
-		return;
+		//return;
+
+		m_WeaponIsEmissive = true;
+		m_WeaponEmissive = 0.8f;
 
 		AnimationState curState = m_ASM->GetCurState();
 
@@ -189,6 +205,9 @@ void CPlayerScript::AttackEnd()
 	m_ReadyAttack = false;
 	m_IsAttacking = false;
 	m_ASM->OnAnimationEnd();
+
+	m_WeaponIsEmissive = false;
+	m_WeaponEmissive = 0.f;
 }
 
 void CPlayerScript::SlashEffect()

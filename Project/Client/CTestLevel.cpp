@@ -239,6 +239,34 @@ void CTestLevel::CreateTestLevel()
 	pParticleObject->ParticleSystem()->SetScale(Vec3(50.f, 50.f, 1.f), Vec3(75.f, 75.f, 1.f));
 	m_CurLevel->AddObject(0, pParticleObject, true);
 
+
+	CGameObject* pTest = new CGameObject;
+	pTest->SetName(L"Bloom Blur Post Process");
+	pTest->AddComponent(new CTransform);
+	pTest->AddComponent(new CMeshRender);
+	pTest->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	pTest->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"BloomMaterial"), 0);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_0, 0.93f);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_1, 4.45f);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_2, 1.0f);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_3, 1.25f);
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"DataTargetTex"));
+
+	m_CurLevel->AddObject(0, pTest, true);
+
+	pTest = new CGameObject;
+	pTest->SetName(L"Vignette Post Process");
+	pTest->AddComponent(new CTransform);
+	pTest->AddComponent(new CMeshRender);
+	pTest->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	pTest->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"VignetteMaterial"), 0);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_0, 0.87f);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_1, 0.73f);
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
+
+	m_CurLevel->AddObject(0, pTest, true);
+
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);
 }

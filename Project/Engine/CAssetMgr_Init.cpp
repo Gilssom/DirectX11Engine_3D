@@ -3,6 +3,8 @@
 
 #include "CPathManager.h"
 
+#include "CDevice.h"
+
 void CAssetManager::Init()
 {
 	CreateDefaultMesh();
@@ -670,6 +672,61 @@ void CAssetManager::CreateDefaultGraphicShader()
 	AddAsset<CGraphicShader>(L"DistortionShader", pShader);
 
 
+	//// ================================
+	////  PostProcess Bright Pass Shader
+	//// ================================
+	//pShader = new CGraphicShader;
+	//pShader->CreateVertexShader(strPath + L"shader\\postprocess.fx", "VS_PostProcess");
+	//pShader->CreatePixelShader(strPath + L"shader\\postprocess.fx", "PS_BrightPass");
+
+	//pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	//pShader->SetDomain(SHADER_DOMAIN::DOMAIN_POSTPROCESS);
+
+	//pShader->AddTexParam("Copy Render Target", TEX_0);
+	//pShader->AddTexParam("Emissive Target Texture", TEX_1);
+	//pShader->AddTexParam("Output Texture", TEX_2);
+
+	//AddAsset<CGraphicShader>(L"BrightPassShader", pShader);
+
+
+	// ===========================
+	//  PostProcess Bloom Shader
+	// ===========================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\postprocess.fx", "VS_PostProcess");
+	pShader->CreatePixelShader(strPath + L"shader\\postprocess.fx", "PS_Bloom");
+
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_POSTPROCESS);
+
+	pShader->AddTexParam("Copy Render Target", TEX_0);
+	pShader->AddTexParam("Bright Pass Texture", TEX_1);
+
+	pShader->AddScalarParam("Bloom Power", FLOAT_0);
+	pShader->AddScalarParam("Blur Radius", FLOAT_1);
+	pShader->AddScalarParam("Brightness Scale", FLOAT_2);
+	pShader->AddScalarParam("Bloom Threshold", FLOAT_3);
+
+	AddAsset<CGraphicShader>(L"BloomShader", pShader);
+
+	// ===========================
+	//  PostProcess Bloom Shader
+	// ===========================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\postprocess.fx", "VS_PostProcess");
+	pShader->CreatePixelShader(strPath + L"shader\\postprocess.fx", "PS_Vignette");
+
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_POSTPROCESS);
+
+	pShader->AddTexParam("Copy Render Target", TEX_0);
+
+	pShader->AddScalarParam("Radius", FLOAT_0);
+	pShader->AddScalarParam("Sofeness", FLOAT_1);
+
+	AddAsset<CGraphicShader>(L"VignetteShader", pShader);
+
+
 	// ====================
 	//	Debug Shape Shader
 	// ====================
@@ -945,6 +1002,24 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"DistortionMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DistortionShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// BrightPassMaterial
+	//pMaterial = new CMaterial(true);
+	//pMaterial->SetName(L"BrightPassMaterial");
+	//pMaterial->SetShader(FindAsset<CGraphicShader>(L"BrightPassShader"));
+	//AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Bloom Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"BloomMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"BloomShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Vignettes Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"VignetteMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"VignetteShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Debug Shape Material

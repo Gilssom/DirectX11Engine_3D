@@ -11,6 +11,7 @@
 // g_tex_1  : Normal Texture
 // g_tex_2  : Specualr Texture
 // g_tex_3  : Emissive Texture
+// g_tex_4  : Bright Texture
 // ============================
 
 struct VS_IN
@@ -149,19 +150,42 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         vViewNormal = normalize(mul(vNormal, Rot));
     }
     
-    // ======= Emissive Texture =======    
+    // ======= Emissive 처리 =======
     float4 vEmissive = (float4) 0.f;
+    if (g_int_1)
+    {
+        // g_int_1 값이 1이면 발광 효과 추가
+        vEmissive = float4(1.f, 1.f, 0.5f, 1.f) * g_float_0; // 노란색 발광 효과
+    }
+    
+    // ======= Emissive Texture =======    
+    // float4 vEmissive = (float4) 0.f;
     if(g_btex_3)
     {
-        vEmissive = g_tex_3.Sample(g_sam_0, _in.vUV) * MtrlData.vEmv;
+        vEmissive += g_tex_3.Sample(g_sam_0, _in.vUV) * MtrlData.vEmv;
+    }
+    
+    // ======== Data Texture ======
+    float4 vBrightColor = (float4) 0.f;
+    if (g_int_1)
+    {
+        vBrightColor = vEmissive;
+
+        // 밝은 부분만 통과시키기 위한 임계값
+        float brightnessThreshold = 0.7f;
+        float luminance = dot(vBrightColor.rgb, float3(0.299, 0.587, 0.114));
+
+        if (luminance < brightnessThreshold)
+        {
+            vBrightColor = (float4) 0.f; // 밝기 임계값을 만족하지 않으면 원래 색상 유지
+        }
     }
     
     output.vColor       = float4(vObjectColor.xyz, 1.f);
     output.vNormal      = float4(vViewNormal, 1.f);
     output.vPosition    = float4(_in.vViewPos, 1.f);
     output.vEmissive    = vEmissive;
-    
-    //output.vData
+    output.vData        = vBrightColor;
     
     return output;
 }
