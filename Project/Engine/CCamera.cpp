@@ -349,10 +349,8 @@ void CCamera::Render_postprocess()
 	{
 		// Post Process 가 여러개여도 누적되어서 사용할 수 있음
 		CRenderManager::GetInst()->CopyRenderTarget();
-		//CRenderManager::GetInst()->GetMRT(MRT_TYPE::BRIGHTPASS)->OMSet();
 
 		m_vecPostProcess[i]->Render();
-		//CRenderManager::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 		CRenderManager::GetInst()->AddDrawCall();
 	}
 }

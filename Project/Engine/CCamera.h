@@ -48,7 +48,6 @@ private:
 	vector<CGameObject*>	m_vecParticle;
 	vector<CGameObject*>	m_vecPostProcess;
 
-
 	// Shadow Map
 	vector<CGameObject*>	m_vecShadowMap;
 

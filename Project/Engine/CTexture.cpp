@@ -84,7 +84,7 @@ int CTexture::Create(UINT width, UINT height, DXGI_FORMAT pixelFormat
     }
 
     // 비트 연산자로 해당 Bing Flag Type 확인
-    if (m_Desc.BindFlags & D3D11_BIND_DEPTH_STENCIL)
+    if (m_Desc.BindFlags & D3D11_BIND_DEPTH_STENCIL) 
     {
         DEVICE->CreateDepthStencilView(m_Tex2D.Get(), nullptr, m_DSV.GetAddressOf());
     }

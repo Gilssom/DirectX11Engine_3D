@@ -727,6 +727,25 @@ void CAssetManager::CreateDefaultGraphicShader()
 	AddAsset<CGraphicShader>(L"VignetteShader", pShader);
 
 
+	// ===========================
+	//  PostProcess DOF Shader
+	// ===========================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\postprocess.fx", "VS_PostProcess");
+	pShader->CreatePixelShader(strPath + L"shader\\postprocess.fx", "PS_DepthOfField");
+
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_POSTPROCESS);
+
+	pShader->AddTexParam("Copy Render Target", TEX_0);
+	pShader->AddTexParam("Depth Stencil Target", TEX_1);
+
+	pShader->AddScalarParam("Focus Distance", FLOAT_0);
+	pShader->AddScalarParam("Focus Range", FLOAT_1);
+
+	AddAsset<CGraphicShader>(L"DepthOfFieldShader", pShader);
+
+
 	// ====================
 	//	Debug Shape Shader
 	// ====================
@@ -1004,12 +1023,6 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DistortionShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
-	// BrightPassMaterial
-	//pMaterial = new CMaterial(true);
-	//pMaterial->SetName(L"BrightPassMaterial");
-	//pMaterial->SetShader(FindAsset<CGraphicShader>(L"BrightPassShader"));
-	//AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
-
 	// Bloom Material
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"BloomMaterial");
@@ -1020,6 +1033,12 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"VignetteMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"VignetteShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// DepthOfFieldShader Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"DepthOfFieldMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"DepthOfFieldShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Debug Shape Material

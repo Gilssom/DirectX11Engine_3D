@@ -118,6 +118,37 @@ float4 PS_Vignette(VS_OUT _in) : SV_Target
     return vOutColor;
 }
 
+float4 PS_DepthOfField(VS_OUT _in) : SV_Target
+{
+    // 기본 텍스처 샘플링 (Render Target 텍스처)
+    float4 color = g_tex_0.Sample(g_sam_0, _in.vUV);
+
+    // 깊이 텍스처 샘플링
+    float depth = g_tex_1.Sample(g_sam_0, _in.vUV).r;
+
+    // 초점 거리 및 범위
+    float focusDistance = g_float_0; // 초점 거리를 지정하는 파라미터
+    float focusRange = g_float_1; // 초점 범위를 지정하는 파라미터
+
+    // 초점 범위 내에 있는지 확인
+    float blurAmount = saturate(abs(depth - focusDistance) / focusRange);
+
+    // 블러 적용을 위한 텍셀 크기 계산
+    float2 texelSize = 1.0 / vResolution;
+
+    // 블러 계산 (주변 픽셀 샘플링)
+    float4 blurredColor = float4(0, 0, 0, 1);
+    blurredColor += g_tex_0.Sample(g_sam_0, _in.vUV + texelSize * float2(-blurAmount, -blurAmount));
+    blurredColor += g_tex_0.Sample(g_sam_0, _in.vUV + texelSize * float2(blurAmount, -blurAmount));
+    blurredColor += g_tex_0.Sample(g_sam_0, _in.vUV + texelSize * float2(-blurAmount, blurAmount));
+    blurredColor += g_tex_0.Sample(g_sam_0, _in.vUV + texelSize * float2(blurAmount, blurAmount));
+
+    // 평균 블러 색상 계산
+    blurredColor /= 4.0;
+
+    // 초점 범위 내의 픽셀은 원래 색상을 유지하고, 나머지는 블러 처리
+    return lerp(color, blurredColor, blurAmount);
+}
 
 // mesh : RectMesh
 VS_OUT VS_Distortion(VS_IN _in)

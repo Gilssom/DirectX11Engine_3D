@@ -224,8 +224,6 @@ void CTestLevel::CreateTestLevel()
 	pCamObject->Transform()->SetAbsolute(true);
 	pCamObject->Transform()->SetRelativePos(Vec3(-947.7f, 795.6f, -35.7f));
 
-	m_CurLevel->AddObject(0, pObj, true);
-
 	CGameObject* pParticleObject = new CGameObject;
 	pParticleObject->SetName(L"Slash Effect");
 	pParticleObject->AddComponent(new CTransform);
@@ -252,8 +250,8 @@ void CTestLevel::CreateTestLevel()
 	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_3, 1.25f);
 	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
 	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"DataTargetTex"));
-
-	m_CurLevel->AddObject(0, pTest, true);
+	//m_CurLevel->AddObject(0, pTest, true);
+	pObj->AddChild(pTest);
 
 	pTest = new CGameObject;
 	pTest->SetName(L"Vignette Post Process");
@@ -264,8 +262,23 @@ void CTestLevel::CreateTestLevel()
 	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_0, 0.87f);
 	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_1, 0.73f);
 	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
+	//m_CurLevel->AddObject(0, pTest, true);
+	pObj->AddChild(pTest);
 
-	m_CurLevel->AddObject(0, pTest, true);
+	pTest = new CGameObject;
+	pTest->SetName(L"DepthOfField Post Process");
+	pTest->AddComponent(new CTransform);
+	pTest->AddComponent(new CMeshRender);
+	pTest->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	pTest->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"DepthOfFieldMaterial"), 0);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_0, 0.54f);
+	pTest->MeshRender()->GetMaterial(0)->SetScalarParam(FLOAT_1, 0.9f);
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetCopyTex"));
+	//pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"ShadowMapDSTex"));
+	//m_CurLevel->AddObject(0, pTest, true);
+	pObj->AddChild(pTest);
+
+	m_CurLevel->AddObject(0, pObj, true);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);
