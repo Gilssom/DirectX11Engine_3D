@@ -197,6 +197,9 @@
     <ClCompile Include="CInstancingBuffer.cpp">
       <Filter>04. Manager\12. InstancingBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="CPostProcess.cpp">
+      <Filter>07. Component\10. PostProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -410,6 +413,9 @@
     <ClInclude Include="CInstancingBuffer.h">
       <Filter>04. Manager\12. InstancingBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="CPostProcess.h">
+      <Filter>07. Component\10. PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -618,6 +624,9 @@
     </Filter>
     <Filter Include="04. Manager\12. InstancingBuffer">
       <UniqueIdentifier>{c6beda52-3d95-4393-acff-d1450a2b787e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\10. PostProcess">
+      <UniqueIdentifier>{87a5a789-4542-4496-90ff-670c16bcc3e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

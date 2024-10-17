@@ -114,9 +114,9 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
 {
     PS_OUT output = (PS_OUT) 0.f;
     
+    float4 vObjectColor = float4(1.f, 0.f, 1.f, 1.f);
     
     // ======= Color Texture =======
-    float4 vObjectColor = float4(1.f, 0.f, 1.f, 1.f);
     if (g_btex_0)
     {
         vObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV) * MtrlData.vDiff;
@@ -128,7 +128,6 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         // g_int_0 값이 1이면 빨간색으로 변경
         vObjectColor = float4(0.7f, 0.f, 0.f, 1.f); // 빨간색 (Hit 상태)
     }
-    
     
     // ======= Normal Texture =======    
     float3 vViewNormal = _in.vViewNormal;
@@ -181,7 +180,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         }
     }
     
-    output.vColor       = float4(vObjectColor.xyz, 1.f);
+    output.vColor       = float4(vObjectColor);
     output.vNormal      = float4(vViewNormal, 1.f);
     output.vPosition    = float4(_in.vViewPos, 1.f);
     output.vEmissive    = vEmissive;

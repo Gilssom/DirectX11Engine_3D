@@ -709,9 +709,10 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 	AddAsset<CGraphicShader>(L"BloomShader", pShader);
 
-	// ===========================
-	//  PostProcess Bloom Shader
-	// ===========================
+
+	// =============================
+	//  PostProcess Vignette Shader
+	// =============================
 	pShader = new CGraphicShader;
 	pShader->CreateVertexShader(strPath + L"shader\\postprocess.fx", "VS_PostProcess");
 	pShader->CreatePixelShader(strPath + L"shader\\postprocess.fx", "PS_Vignette");
@@ -738,7 +739,6 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_POSTPROCESS);
 
 	pShader->AddTexParam("Copy Render Target", TEX_0);
-	pShader->AddTexParam("Depth Stencil Target", TEX_1);
 
 	pShader->AddScalarParam("Focus Distance", FLOAT_0);
 	pShader->AddScalarParam("Focus Range", FLOAT_1);
@@ -1028,6 +1028,12 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial->SetName(L"BloomMaterial");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"BloomShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Bloom With Trail Material
+	//pMaterial = new CMaterial(true);
+	//pMaterial->SetName(L"BloomTrailMaterial");
+	//pMaterial->SetShader(FindAsset<CGraphicShader>(L"BloomTrailShader"));
+	//AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 
 	// Vignettes Material
 	pMaterial = new CMaterial(true);

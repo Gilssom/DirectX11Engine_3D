@@ -205,6 +205,7 @@ call Copy.bat</Command>
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CParticleTickCS.h" />
     <ClInclude Include="CPathManager.h" />
+    <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CPrefab.h" />
     <ClInclude Include="CRaycastCS.h" />
     <ClInclude Include="CRenderComponent.h" />
@@ -278,6 +279,7 @@ call Copy.bat</Command>
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CParticleTickCS.cpp" />
     <ClCompile Include="CPathManager.cpp" />
+    <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CPrefab.cpp" />
     <ClCompile Include="CRaycastCS.cpp" />
     <ClCompile Include="CRenderComponent.cpp" />

@@ -43,6 +43,7 @@ CRenderManager::~CRenderManager()
 void CRenderManager::CopyRenderTarget()
 {
 	Ptr<CTexture> pRenderTargetTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"RenderTargetTex");
+
 	CONTEXT->CopyResource(m_RenderTargetCopyTex->GetTex2D().Get(), pRenderTargetTex->GetTex2D().Get());
 }
 

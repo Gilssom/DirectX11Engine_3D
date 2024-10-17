@@ -351,6 +351,7 @@ void CCamera::Render_postprocess()
 		CRenderManager::GetInst()->CopyRenderTarget();
 
 		m_vecPostProcess[i]->Render();
+
 		CRenderManager::GetInst()->AddDrawCall();
 	}
 }

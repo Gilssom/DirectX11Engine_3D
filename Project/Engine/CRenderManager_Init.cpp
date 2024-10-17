@@ -31,7 +31,8 @@ void CRenderManager::CreateMRT()
 
 	Ptr<CTexture> DSTex = CAssetManager::GetInst()->CreateTexture(L"DepthStencilTex"
 											, (UINT)vResolution.x, (UINT)vResolution.y
-											, DXGI_FORMAT_D24_UNORM_S8_UINT, D3D11_BIND_DEPTH_STENCIL);
+											, DXGI_FORMAT_D24_UNORM_S8_UINT
+											, D3D11_BIND_DEPTH_STENCIL);
 
 	pMRT->Create(&pRTTex, 1, DSTex);
 

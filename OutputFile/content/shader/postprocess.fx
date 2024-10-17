@@ -123,15 +123,15 @@ float4 PS_DepthOfField(VS_OUT _in) : SV_Target
     // 기본 텍스처 샘플링 (Render Target 텍스처)
     float4 color = g_tex_0.Sample(g_sam_0, _in.vUV);
 
-    // 깊이 텍스처 샘플링
-    float depth = g_tex_1.Sample(g_sam_0, _in.vUV).r;
+    // 화면 상의 y좌표를 기준으로 블러 강도 계산
+    float screenY = _in.vUV.y;
 
-    // 초점 거리 및 범위
-    float focusDistance = g_float_0; // 초점 거리를 지정하는 파라미터
-    float focusRange = g_float_1; // 초점 범위를 지정하는 파라미터
+    // 초점이 맞는 중앙 근처 (예: y좌표가 0.4 ~ 0.6 사이)
+    float focusCenter = g_float_0; // 화면 중앙이 초점
+    float focusRange = g_float_1; // 초점 범위
 
-    // 초점 범위 내에 있는지 확인
-    float blurAmount = saturate(abs(depth - focusDistance) / focusRange);
+    // y좌표를 기준으로 블러 강도 계산
+    float blurAmount = saturate(abs(screenY - focusCenter) / focusRange);
 
     // 블러 적용을 위한 텍셀 크기 계산
     float2 texelSize = 1.0 / vResolution;

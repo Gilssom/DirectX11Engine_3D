@@ -15,3 +15,4 @@
 #include "CDecal.h"
 #include "CBoundingBox.h"
 #include "CLandScape.h"
+#include "CPostProcess.h"

@@ -26,7 +26,7 @@ extern const char* COMPONENT_TYPE_STRING[(UINT)COMPONENT_TYPE::END]
 	"Decal",
 	"Particle System",
 	"Tile Map",
-	"LandScape"
+	"LandScape",
 };
 
 
