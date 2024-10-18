@@ -53,6 +53,7 @@ public:
 	void RegisterAsParentObject();
 	void AddChild(CGameObject* object);
 	const vector<CGameObject*>& GetChildren() { return m_vecChild; }
+	CGameObject* FindChildrenByName(const wstring& findName);
 	CGameObject* GetParent() { return m_Parent; }
 	const vector<CScript*>& GetScripts() { return m_vecScripts; }
 	bool IsAncestor(CGameObject* object);

@@ -154,7 +154,35 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     if (g_int_1)
     {
         // g_int_1 값이 1이면 발광 효과 추가
-        vEmissive = float4(1.f, 1.f, 0.5f, 1.f) * g_float_0; // 노란색 발광 효과
+        vEmissive = float4(1.f, 1.f, 0.5f, 1.f) * g_float_0; // 노란색 발광 효과   
+    }
+    
+    // ======= Trail 처리 ==========
+    if (g_int_2)
+    {
+        float trailAlpha = g_float_1; // Alpha 값
+
+        // 궤적 위치 4개 처리
+        float4 swordPos0 = g_vec4_0;
+        float4 swordPos1 = g_vec4_1;
+        float4 swordPos2 = g_vec4_2;
+        float4 swordPos3 = g_vec4_3;
+
+        // 각 검의 궤적 위치로부터 거리 계산
+        float dist0 = distance(_in.vPosition.xyz, swordPos0.xyz);
+        float dist1 = distance(_in.vPosition.xyz, swordPos1.xyz);
+        float dist2 = distance(_in.vPosition.xyz, swordPos2.xyz);
+        float dist3 = distance(_in.vPosition.xyz, swordPos3.xyz);
+
+        // 거리 기반으로 궤적 효과를 혼합
+        float4 trailColor0 = float4(1.f, 1.f, 0.5f, saturate(1.0f - dist0 / g_float_2));
+        float4 trailColor1 = float4(1.f, 1.f, 0.5f, saturate(1.0f - dist1 / g_float_2));
+        float4 trailColor2 = float4(1.f, 1.f, 0.5f, saturate(1.0f - dist2 / g_float_2));
+        float4 trailColor3 = float4(1.f, 1.f, 0.5f, saturate(1.0f - dist3 / g_float_2));
+
+        // 여러 궤적의 효과를 합산하여 최종 색상 생성
+        float4 finalTrailColor = (trailColor0 + trailColor1 + trailColor2 + trailColor3) * trailAlpha;
+        vEmissive += finalTrailColor;
     }
     
     // ======= Emissive Texture =======    

@@ -140,7 +140,15 @@ Vec3 CTransform::GetWorldScale()
 
 Vec3 CTransform::GetWorldRotation()
 {
-	return Vec3();
+	// 월드 행렬에서 회전 정보 추출
+	Vec3 rotation;
+
+	// 행렬을 통한 Euler 각도로의 변환 (Pitch, Yaw, Roll)
+	rotation.x = atan2(m_matWorld._32, m_matWorld._33);																// Pitch (X축 회전)
+	rotation.y = atan2(-m_matWorld._31, sqrt(m_matWorld._32 * m_matWorld._32 + m_matWorld._33 * m_matWorld._33));	// Yaw (Y축 회전)
+	rotation.z = atan2(m_matWorld._21, m_matWorld._11);																// Roll (Z축 회전)
+
+	return rotation;
 }
 
 CTransform& CTransform::operator=(const CTransform& other)

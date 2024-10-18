@@ -235,8 +235,8 @@ void CTestLevel::CreateTestLevel()
 	pParticleObject->ParticleSystem()->SetColor(Vec4(0.3f, 0.f, 0.3f, 1.f), Vec3(1.f, 1.f, 0.5f));
 	pParticleObject->ParticleSystem()->SetLife(4.f, 8.f);
 	pParticleObject->ParticleSystem()->SetScale(Vec3(50.f, 50.f, 1.f), Vec3(75.f, 75.f, 1.f));
-	m_CurLevel->AddObject(0, pParticleObject, true);
-
+	//m_CurLevel->AddObject(0, pParticleObject, true);
+	pObj->AddChild(pParticleObject);
 
 	CGameObject* pTest = new CGameObject;
 	pTest->SetName(L"Bloom Blur Post Process");

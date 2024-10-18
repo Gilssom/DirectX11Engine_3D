@@ -39,6 +39,8 @@ float GetRandomFloat(float min, float max);
 
 void PlaySoundEffect(const wstring& soundPath, float volume = 0.3f);
 
+Vec3 QuaternionToEuler(const Vec4& q);
+
 template<typename T>
 class Ptr;
 

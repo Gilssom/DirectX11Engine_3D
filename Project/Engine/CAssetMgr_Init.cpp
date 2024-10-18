@@ -701,6 +701,7 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 	pShader->AddTexParam("Copy Render Target", TEX_0);
 	pShader->AddTexParam("Bright Pass Texture", TEX_1);
+	pShader->AddTexParam("Bloom Texture", TEX_2);
 
 	pShader->AddScalarParam("Bloom Power", FLOAT_0);
 	pShader->AddScalarParam("Blur Radius", FLOAT_1);

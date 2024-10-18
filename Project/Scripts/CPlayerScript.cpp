@@ -50,6 +50,17 @@ void CPlayerScript::Begin()
 	Ptr<CGraphicShader> pShader = GetOwner()->GetRenderComponent()->GetMaterial(0)->GetShader();
 	pShader->AddScalarParam("Hit Event", INT_0);
 
+	pShader = GetOwner()->GetRenderComponent()->GetMaterial(3)->GetShader();
+	pShader->AddScalarParam("Trail On Off", INT_2);
+	pShader->AddScalarParam("Trail Alpha", FLOAT_1);
+	pShader->AddScalarParam("Trail Length", FLOAT_2);
+	
+	// 최대 4개의 검 궤적 위치만 바인딩 가능
+	pShader->AddScalarParam("SwordPosition0", VEC4_0);
+	pShader->AddScalarParam("SwordPosition1", VEC4_1);
+	pShader->AddScalarParam("SwordPosition2", VEC4_2);
+	pShader->AddScalarParam("SwordPosition3", VEC4_3);
+
 	//m_Test = CAssetManager::GetInst()->FindAsset<CPrefab>(L"Prefab\\HitEffect.pref");
 	m_Test = CAssetManager::GetInst()->Load<CPrefab>(L"Prefab\\HitEffect.pref", L"Prefab\\HitEffect.pref");
 }
@@ -59,6 +70,38 @@ void CPlayerScript::Tick()
 	Ptr<CMaterial> pMaterial = GetOwner()->GetRenderComponent()->GetMaterial(3);
 	pMaterial->SetScalarParam(INT_1, m_WeaponIsEmissive);
 	pMaterial->SetScalarParam(FLOAT_0, m_WeaponEmissive);
+
+	Vec3 vSwordLocalPos = GetOwner()->Animator3D()->GetObjectPosition(L"Dummy");
+	Vec3 vSwordLocalRot = GetOwner()->Animator3D()->GetObjectRotation(L"Dummy");
+
+	CGameObject* pEffect = GetOwner()->FindChildrenByName(L"Slash Effect");
+	pEffect->Transform()->SetRelativePos(Vec3(vSwordLocalPos.x, vSwordLocalPos.y, vSwordLocalPos.z));
+	pEffect->Transform()->SetRelativeRotation(vSwordLocalRot);
+
+	Vec3 vPlayerWorldPos = GetOwner()->Transform()->GetWorldPos();
+	Vec3 vPlayerWorldRot = GetOwner()->Transform()->GetWorldRotation();
+	Vec3 vFinalSwordPos = vPlayerWorldPos + vSwordLocalPos;
+	Vec3 vFinalSwordRot = vPlayerWorldRot * vSwordLocalRot; // 월드 회전 계산 (쿼터니언 곱셈)
+
+	UpdateSwordTrail(vFinalSwordPos, vFinalSwordRot);
+	
+	// 검의 궤적 4개만 Shader에 전달
+	if (m_SwordTrail.size() > 0)
+		pMaterial->SetScalarParam(VEC4_0, Vec4(m_SwordTrail[0].position, 1.0f));
+	if (m_SwordTrail.size() > 1)
+		pMaterial->SetScalarParam(VEC4_1, Vec4(m_SwordTrail[1].position, 1.0f));
+	if (m_SwordTrail.size() > 2)
+		pMaterial->SetScalarParam(VEC4_2, Vec4(m_SwordTrail[2].position, 1.0f));
+	if (m_SwordTrail.size() > 3)
+		pMaterial->SetScalarParam(VEC4_3, Vec4(m_SwordTrail[3].position, 1.0f));
+
+
+	// 남은 궤적은 0으로 설정 (이전 Frame의 값을 지우기 위함)
+	for (int i = m_SwordTrail.size(); i < 4; ++i)
+	{
+		std::string paramName = "SwordPosition" + std::to_string(i);
+		pMaterial->SetScalarParam(static_cast<SCALAR_PARAM>(VEC4_0 + i), Vec4(0.f, 0.f, 0.f, 0.f));
+	}
 
 	if (m_WeaponEmissive >= 1.f)
 		m_WeaponEmissive = 1.f;
@@ -308,4 +351,40 @@ void CPlayerScript::Death()
 void CPlayerScript::DeathEnd()
 {
 	GetOwner()->Destroy();
+}
+
+void CPlayerScript::UpdateSwordTrail(const Vec3& swordPos, const Vec3& swordRot)
+{
+	// 일정 시간(0.3초)마다만 업데이트 되도록 함
+	static float m_LastUpdateTime = 0.0f;
+
+	// 오래된 Trail 제거 (예: 1초 이상 지난 것)
+	for (auto& segment : m_SwordTrail)
+	{
+		segment.timeAlive += DT;
+	}
+
+	// 오래된 Trail 제거
+	while (!m_SwordTrail.empty() && m_SwordTrail.front().timeAlive > 5.0f)
+	{
+		m_SwordTrail.pop_front();
+	}
+
+	// 0.3초가 경과하지 않았다면 리턴
+	if (m_LastUpdateTime < 0.5f)
+	{
+		m_LastUpdateTime += DT;
+		return;
+	}
+
+	// 궤적을 업데이트했으므로 시간을 초기화
+	m_LastUpdateTime = 0.0f;
+
+	// 새로운 위치를 deque에 추가
+	TrailSegment newSegment;
+	newSegment.position = swordPos;
+	newSegment.rotation = swordRot;
+	newSegment.timeAlive = 0.0f;
+
+	m_SwordTrail.push_back(newSegment);
 }

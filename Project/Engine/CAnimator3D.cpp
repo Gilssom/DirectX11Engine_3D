@@ -200,6 +200,52 @@ void CAnimator3D::DeleteEvent(int frame)
 	);
 }
 
+Vec3 CAnimator3D::GetObjectPosition(const wstring& name)
+{
+	// 본 리스트를 가져온다
+	const vector<tMTBone>* bones = GetOwner()->GetRenderComponent()->GetMesh()->GetBones();
+
+	// 본 리스트에서 'DM_SWORD' 본을 찾는다
+	for (const auto& bone : *bones)
+	{
+		if (bone.strBoneName == name) // 'DM_SWORD' 본을 찾음
+		{
+			const tMTKeyFrame& curKeyFrame = bone.vecKeyFrame[m_iFrameIdx];
+
+			Vec3 swordPos = curKeyFrame.vTranslate;
+
+			return swordPos;
+		}
+	}
+
+	// 본을 찾지 못한 경우 0, 0, 0 반환
+	return Vec3(0.0f, 0.0f, 0.0f);
+}
+
+Vec3 CAnimator3D::GetObjectRotation(const wstring& name)
+{
+	// 본 리스트를 가져온다
+	const vector<tMTBone>* bones = GetOwner()->GetRenderComponent()->GetMesh()->GetBones();
+
+	// 본 리스트에서 'DM_SWORD' 본을 찾는다
+	for (const auto& bone : *bones)
+	{
+		if (bone.strBoneName == name) // 'DM_SWORD' 본을 찾음
+		{
+			const tMTKeyFrame& curKeyFrame = bone.vecKeyFrame[m_iFrameIdx];
+
+			Vec4 swordRot = curKeyFrame.qRot;
+
+			Vec3 eulerRotation = QuaternionToEuler(swordRot);
+
+			return swordRot;
+		}
+	}
+
+	// 본을 찾지 못한 경우 0, 0, 0 반환
+	return Vec3(0.0f, 0.0f, 0.0f);
+}
+
 void CAnimator3D::ClearData()
 {
 	m_pBoneFinalMatBuffer->Clear();

@@ -210,6 +210,21 @@ void CGameObject::AddChild(CGameObject* object)
 	m_vecChild.push_back(object);
 }
 
+CGameObject* CGameObject::FindChildrenByName(const wstring& findName)
+{
+	vector<CGameObject*> pChild = GetChildren();
+
+	for (size_t i = 0; i < pChild.size(); i++)
+	{
+		if (pChild[i]->GetName() == findName)
+		{
+			return pChild[i];
+		}
+	}
+
+	return nullptr;
+}
+
 bool CGameObject::IsAncestor(CGameObject* object)
 {
 	CGameObject* pAncestor = m_Parent;

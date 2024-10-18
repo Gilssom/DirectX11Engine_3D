@@ -70,6 +70,8 @@ public:
     vector<AnimationEvent>& GetAnimEvents() { return m_AnimEvents; }
     void DeleteEvent(int frame);
 
+    Vec3 GetObjectPosition(const wstring& name);
+    Vec3 GetObjectRotation(const wstring& name);
 
 public:
     void Save(const wstring& relativePath);

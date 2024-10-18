@@ -198,7 +198,7 @@ struct tMTBone
 	int					iDepth;			// 본 깊이
 	int					iParentIndx;	// 부모 본의 인덱스
 	Matrix				matOffset;		// Inverse 행렬( Skin 정점을 -> 기본상태로 되돌림)
-	Matrix				matBone;		// 본 행려 
+	Matrix				matBone;		// 본 행렬
 	vector<tMTKeyFrame>	vecKeyFrame;	// 키 프레임 목록
 };
 

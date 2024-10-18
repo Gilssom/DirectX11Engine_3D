@@ -302,3 +302,27 @@ void PlaySoundEffect(const wstring& soundPath, float volume)
 	Ptr<CSound> pNewBgm = CAssetManager::GetInst()->FindAsset<CSound>(soundPath);
 	pNewBgm->Play(1, volume, true);
 }
+
+Vec3 QuaternionToEuler(const Vec4& q)
+{
+	Vec3 euler;
+
+	// Roll (X축 회전)
+	float sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+	float cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+	euler.x = atan2(sinr_cosp, cosr_cosp);
+
+	// Pitch (Y축 회전)
+	float sinp = 2 * (q.w * q.y - q.z * q.x);
+	if (abs(sinp) >= 1)
+		euler.y = copysign(XM_PI / 2, sinp); // 90도 (파이/2) 제한
+	else
+		euler.y = asin(sinp);
+
+	// Yaw (Z축 회전)
+	float siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+	float cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+	euler.z = atan2(siny_cosp, cosy_cosp);
+
+	return euler;
+}
