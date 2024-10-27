@@ -167,6 +167,7 @@
     <ClInclude Include="CEditorManager.h" />
     <ClInclude Include="CGameObjectEx.h" />
     <ClInclude Include="CImGuiManager.h" />
+    <ClInclude Include="CLandScapeUI.h" />
     <ClInclude Include="CLevelSaveLoad.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collider2DUI.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="CEditorManager.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
     <ClCompile Include="CImGuiManager.cpp" />
+    <ClCompile Include="CLandScapeUI.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />
     <ClCompile Include="Collider2DUI.cpp" />
     <ClCompile Include="ComponentUI.cpp" />

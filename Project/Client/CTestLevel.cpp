@@ -176,18 +176,53 @@ void CTestLevel::CreateTestLevel()
 	//pMeshData = CAssetManager::GetInst()->LoadFBX(L"fbx\\Monster.fbx");
 	pMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Monster.mdat");
 
+	// Grass Instancing Test
+	CGameObject* pGrassTest = nullptr;
+	Ptr<CMeshData> pGrassMeshData = nullptr;
+	//pGrassMeshData->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"PointMesh"));
+	//pGrassMeshData->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"GrassMaterial"));
+
+	// =========== Create Mesh Data ===========
+	//CMeshData* pNewMeshData = new CMeshData(true);
+	//pNewMeshData->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"PointMesh"));
+	//pNewMeshData->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"Grass2Material"));
+	//pNewMeshData->Save(CPathManager::GetInst()->GetContentPath() + wstring(L"meshdata\\Grass_2.mdat"));
+	// =========== Create Mesh Data ===========
+
+	//pGrassMeshData->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_2.png"));
+
 	// Instancing Test
-	/*for (int i = 0; i < 10; i++)
-	{
-		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Monster" + i);
-		pObj->GetRenderComponent()->SetFrustumCheck(false);
-
-		pObj->Transform()->SetRelativePos(Vec3((i + 1) * 50.f, 0.f, 100.f));
-		pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
-
-		m_CurLevel->AddObject(0, pObj, false);
-	}*/
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	if (i <= 10)
+	//	{
+	//		pGrassMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Grass.mdat");
+	//		pGrassMeshData->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture.png"));
+	//	}
+	//	else
+	//	{
+	//		pGrassMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Grass_2.mdat");
+	//		pGrassMeshData->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_2.png"));
+	//	}
+	//
+	//	for (int j = 0; j < 20; j++)
+	//	{
+	//		pGrassTest = pGrassMeshData->Instantiate();
+	//		//pGrassTest->AddComponent(new CBoundingBox);
+	//		//pGrassTest->BoundingBox()->SetAbsolute(true);
+	//		//pGrassTest->BoundingBox()->SetOffset(Vec3(0.f, 0.f, 0.f));
+	//		//pGrassTest->BoundingBox()->SetRadius(50.f);
+	//
+	//		pGrassTest->SetName(L"Test");
+	//		pGrassTest->GetRenderComponent()->SetFrustumCheck(false);
+	//
+	//		pGrassTest->Transform()->SetRelativePos(Vec3((i + 1) * 150.f, 0.f, (j + 1) * 150.f));
+	//		pGrassTest->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+	//
+	//		m_CurLevel->AddObject(0, pGrassTest, false);
+	//	}		
+	//}
+	// Grass Inatancing Test End
 
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Player");
@@ -224,19 +259,11 @@ void CTestLevel::CreateTestLevel()
 	pCamObject->Transform()->SetAbsolute(true);
 	pCamObject->Transform()->SetRelativePos(Vec3(-947.7f, 795.6f, -35.7f));
 
-	CGameObject* pParticleObject = new CGameObject;
-	pParticleObject->SetName(L"Slash Effect");
-	pParticleObject->AddComponent(new CTransform);
-	pParticleObject->AddComponent(new CParticleSystem);
-	pParticleObject->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-	pParticleObject->ParticleSystem()->SetParticleTexture(CAssetManager::GetInst()->Load<CTexture>(L"texture\\particle\\SmokeParticleTest.png", L"texture\\particle\\SmokeParticleTest.png"));
-	pParticleObject->ParticleSystem()->SetModuleOnOff(PARTICLE_MODULE::SPAWN, true);
-	pParticleObject->ParticleSystem()->SetSpawnRate(100);
-	pParticleObject->ParticleSystem()->SetColor(Vec4(0.3f, 0.f, 0.3f, 1.f), Vec3(1.f, 1.f, 0.5f));
-	pParticleObject->ParticleSystem()->SetLife(4.f, 8.f);
-	pParticleObject->ParticleSystem()->SetScale(Vec3(50.f, 50.f, 1.f), Vec3(75.f, 75.f, 1.f));
-	//m_CurLevel->AddObject(0, pParticleObject, true);
-	pObj->AddChild(pParticleObject);
+	CGameObject* pSlashPos = new CGameObject;
+	pSlashPos->SetName(L"Slash Effect Pos");
+	pSlashPos->AddComponent(new CTransform);
+	pSlashPos->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	pObj->AddChild(pSlashPos);
 
 	CGameObject* pTest = new CGameObject;
 	pTest->SetName(L"Bloom Blur Post Process");

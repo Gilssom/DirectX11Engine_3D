@@ -16,6 +16,11 @@ public:
 
 	CGameObject* Instantiate();
 
+	void SetMesh(Ptr<CMesh> mesh) { m_pMesh = mesh; }
+	void SetMaterial(Ptr<CMaterial> mtrl) { m_vecMtrl.push_back(mtrl); }
+
+	Ptr<CMaterial> GetMaterial(UINT idx) { return m_vecMtrl[idx]; }
+
 public:
 	// 파일로 저장
 	virtual int Save(const wstring& _strFilePath) override;

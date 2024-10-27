@@ -152,9 +152,6 @@
     <Filter Include="02. EditorUI\01. Inspector\ComponentUI\12. DecalUI">
       <UniqueIdentifier>{3109d571-311a-4601-a4f5-8b84699eb010}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI">
-      <UniqueIdentifier>{b4d9247f-cbe5-420f-9a56-cf67129ad0ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. EditorUI\10. 3DAnimEditor">
       <UniqueIdentifier>{98b6a333-5ee8-4082-984f-e05eba095cb2}</UniqueIdentifier>
     </Filter>
@@ -166,6 +163,12 @@
     </Filter>
     <Filter Include="02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail">
       <UniqueIdentifier>{cc45ba62-9974-4e91-8a90-c6e7ba1e98fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\13. LandScapeUI">
+      <UniqueIdentifier>{af07c71c-983d-4132-b493-cad53b310dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. EditorUI\01. Inspector\ComponentUI\14. ScriptUI">
+      <UniqueIdentifier>{b4d9247f-cbe5-420f-9a56-cf67129ad0ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -302,7 +305,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClInclude>
     <ClInclude Include="ScriptUI.h">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\14. ScriptUI</Filter>
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -360,6 +363,9 @@
     </ClInclude>
     <ClInclude Include="Anim3DDetail.h">
       <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="CLandScapeUI.h">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. LandScapeUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -495,7 +501,7 @@
       <Filter>02. EditorUI\06. MenuUI</Filter>
     </ClCompile>
     <ClCompile Include="ScriptUI.cpp">
-      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. ScriptUI</Filter>
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\14. ScriptUI</Filter>
     </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>01. Manager\04. LevelSaveLoad</Filter>
@@ -553,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="Anim3DDetail.cpp">
       <Filter>02. EditorUI\10. 3DAnimEditor\3DAnimSubUI\02. Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScapeUI.cpp">
+      <Filter>02. EditorUI\01. Inspector\ComponentUI\13. LandScapeUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

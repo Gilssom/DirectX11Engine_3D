@@ -20,6 +20,7 @@
 #include "DecalUI.h"
 #include "ParticleSystemUI.h"
 #include "TileMapUI.h"
+#include "CLandScapeUI.h"
 #include "ScriptUI.h"
 
 #include "TileMapEditor.h"
@@ -171,6 +172,7 @@ void Inspector::CreateComponentUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM] = new ParticleSystemUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::SKYBOX] = new SkyBoxUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::DECAL] = new DecalUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE] = new CLandScapeUI;
 
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; i++)
 	{

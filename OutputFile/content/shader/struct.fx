@@ -146,6 +146,13 @@ struct tWeight
     float Weight[8];
 };
 
+struct tGrassWeight
+{
+    float GrassWeight;
+    
+    float fadding[7];
+};
+
 struct tSkinningInfo
 {
     float3 vPos;

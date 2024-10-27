@@ -419,6 +419,7 @@ int CGraphicShader::Binding_Inst()
 	CONTEXT->IASetPrimitiveTopology(m_Topology);
 
 	CONTEXT->VSSetShader(m_VSInst.Get(), nullptr, 0);
+	//CONTEXT->VSSetShader(m_VS.Get(), nullptr, 0);
 	CONTEXT->HSSetShader(m_HS.Get(), nullptr, 0);
 	CONTEXT->DSSetShader(m_DS.Get(), nullptr, 0);
 	CONTEXT->GSSetShader(m_GS.Get(), nullptr, 0);

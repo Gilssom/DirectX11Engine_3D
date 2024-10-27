@@ -200,6 +200,9 @@
     <ClCompile Include="CPostProcess.cpp">
       <Filter>07. Component\10. PostProcess</Filter>
     </ClCompile>
+    <ClCompile Include="CGrassMapCS.cpp">
+      <Filter>HLSL\06. ComputeShader\LandScape\GrassMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Temp.h" />
@@ -416,6 +419,9 @@
     <ClInclude Include="CPostProcess.h">
       <Filter>07. Component\10. PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="CGrassMapCS.h">
+      <Filter>HLSL\06. ComputeShader\LandScape\GrassMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01. Header">
@@ -628,6 +634,9 @@
     <Filter Include="07. Component\10. PostProcess">
       <UniqueIdentifier>{87a5a789-4542-4496-90ff-670c16bcc3e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\06. ComputeShader\LandScape\GrassMap">
+      <UniqueIdentifier>{4ef5b8b3-dace-44c1-b57d-cc5041fe628c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="debug_shape.fx">
@@ -681,9 +690,6 @@
     <FxCompile Include="tess.fx">
       <Filter>HLSL\03. 3D</Filter>
     </FxCompile>
-    <FxCompile Include="landscape.fx">
-      <Filter>HLSL\05. LandScape</Filter>
-    </FxCompile>
     <FxCompile Include="raycast.fx">
       <Filter>HLSL\06. ComputeShader\LandScape\Raycast</Filter>
     </FxCompile>
@@ -701,6 +707,15 @@
     </FxCompile>
     <FxCompile Include="copybone.fx">
       <Filter>HLSL\06. ComputeShader\CobyBone</Filter>
+    </FxCompile>
+    <FxCompile Include="grassmap.fx">
+      <Filter>HLSL\06. ComputeShader\LandScape\GrassMap</Filter>
+    </FxCompile>
+    <FxCompile Include="grass.fx">
+      <Filter>HLSL\05. LandScape</Filter>
+    </FxCompile>
+    <FxCompile Include="landscape.fx">
+      <Filter>HLSL\05. LandScape</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

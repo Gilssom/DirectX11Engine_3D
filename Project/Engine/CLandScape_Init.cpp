@@ -27,6 +27,10 @@ void CLandScape::Init()
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_HitFlash02.png"));
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_Twirl02.png"));
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\FX_Flare.png"));
+
+	// Grass Texture 설정
+	m_GrassTexture = CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture.png");
+
 	m_BrushIdx = 0;
 }
 
@@ -69,6 +73,14 @@ void CLandScape::CreateComputeShader()
 		m_WeightMapCS = new CWeightMapCS;
 		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"WeightMapCS", m_WeightMapCS.Get());
 	}
+
+	// GrassMapCS 생성
+	m_GrassMapCS = (CGrassMapCS*)CAssetManager::GetInst()->FindAsset<CComputeShader>(L"GrassMapCS").Get();
+	if (nullptr == m_GrassMapCS)
+	{
+		m_GrassMapCS = new CGrassMapCS;
+		CAssetManager::GetInst()->AddAsset<CComputeShader>(L"GrassMapCS", m_GrassMapCS.Get());
+	}
 }
 
 void CLandScape::CreateTexture()
@@ -84,6 +96,9 @@ void CLandScape::CreateTexture()
 	m_WeightWidth = 2048;
 	m_WeightHeight = 2048;
 
+	m_GrassWidth = 2048;
+	m_GrassHeight = 2048;
+
 	//tWeight* pWeight = new tWeight[2048 * 2048];
 	//
 	//for (int i = 0; i < 2048 * 2048; ++i)
@@ -94,6 +109,8 @@ void CLandScape::CreateTexture()
 	//}
 
 	m_WeightMap->Create(sizeof(tWeight), m_WeightWidth * m_WeightHeight, SB_TYPE::SRV_UAV, true, nullptr);
+
+	m_GrassInstances->Create(sizeof(tGrassInstance), m_GrassWidth * m_GrassHeight, SB_TYPE::SRV_UAV, true, nullptr);
 
 	//delete pWeight;
 }
@@ -151,7 +168,7 @@ void CLandScape::CreateMesh()
 		}
 	}
 
-	Ptr<CMesh> pMesh = new CMesh;
-	pMesh->Create(vecVtx.data(), vecVtx.size(), vecIdx.data(), vecIdx.size());
-	SetMesh(pMesh);
+	m_OriginMesh = new CMesh;
+	m_OriginMesh->Create(vecVtx.data(), vecVtx.size(), vecIdx.data(), vecIdx.size());
+	SetMesh(m_OriginMesh);
 }

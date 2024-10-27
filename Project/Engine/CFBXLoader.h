@@ -138,6 +138,9 @@ private:
 	FbxAMatrix GetTransform(FbxNode* _pNode);
 
 	void CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer);
+
+	void ComputeTangents(FbxMesh* _pMesh);
+
 public:
 	CFBXLoader();
 	~CFBXLoader();

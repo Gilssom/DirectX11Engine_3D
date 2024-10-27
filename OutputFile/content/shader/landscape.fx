@@ -32,14 +32,17 @@
 
 #define COLOR_TEX       g_texarr_0
 #define NORMAL_TEX      g_texarr_1
+#define GRASS_TEX       g_tex_2
 
 #define IsShowBrush     g_btex_1
 #define BRUSH_TEX       g_tex_1
 #define BrushScale      g_vec2_0
 #define BrushPos        g_vec2_1
 
-StructuredBuffer<tWeight> WEIGHT_MAP : register(t20);
+StructuredBuffer<tWeight>       WEIGHT_MAP : register(t20);
+StructuredBuffer<tGrassWeight>  GRASS_MAP : register(t21);
 #define WEIGHT_RESOLUTION   g_vec2_2
+#define GRASS_RESOLUTION    g_vec2_3
 // =============================
 
 struct VS_IN
@@ -234,6 +237,62 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _Patch
 }
 
 
+// =================
+//  Geometry Shader
+// =================
+struct GS_OUT
+{
+    float4 vPosition    : SV_Position;
+    float2 vUV          : TEXCOORD;
+    float3 vWorldPos    : POSITION1;
+};
+
+[maxvertexcount(6)]
+void GS_LandScape(point VS_OUT _in[1], inout TriangleStream<GS_OUT> _OutStream)
+{
+    int2 vColRow = _in[0].vUV * GRASS_RESOLUTION;
+    int GrassMapIdx = GRASS_RESOLUTION.x * vColRow.y + vColRow.x;
+    float GrassWeight = GRASS_MAP[GrassMapIdx].GrassWeight;
+
+    // GrassWeight 조건 확인
+    if (GrassWeight >= 0.95f)
+    {
+        GS_OUT output[4];
+
+        // 풀 배치할 위치를 중심으로 사각형 생성
+        float4 vViewPos = mul(float4(_in[0].vWorldPos, 1.f), g_matView);
+
+        output[0].vPosition = float4(-0.5f, 0.5f, 0.f, 1.f); // 좌상단
+        output[1].vPosition = float4(0.5f, 0.5f, 0.f, 1.f); // 우상단
+        output[2].vPosition = float4(0.5f, -0.5f, 0.f, 1.f); // 우하단
+        output[3].vPosition = float4(-0.5f, -0.5f, 0.f, 1.f); // 좌하단
+
+        // 카메라를 향하도록 Billboarding 처리
+        for (int i = 0; i < 4; ++i)
+        {
+            output[i].vPosition.xyz += vViewPos.xyz;
+            output[i].vPosition = mul(output[i].vPosition, g_matProj);
+            output[i].vWorldPos = _in[0].vWorldPos; // 세계 좌표를 Pixel Shader로 전달
+            output[i].vUV = (i == 0 || i == 3) ? float2(0.f, (i == 0) ? 0.f : 1.f) : float2(1.f, (i == 1) ? 0.f : 1.f);
+        }
+
+        // 사각형 출력 (삼각형 두 개로 구성)
+        _OutStream.Append(output[0]);
+        _OutStream.Append(output[1]);
+        _OutStream.Append(output[2]);
+        _OutStream.RestartStrip();
+
+        _OutStream.Append(output[0]);
+        _OutStream.Append(output[2]);
+        _OutStream.Append(output[3]);
+        _OutStream.RestartStrip();
+    }
+}
+
+
+// =============
+//  Pixel Shader
+// =============
 struct PS_OUT
 {
     float4 vColor       : SV_Target0;
@@ -243,6 +302,16 @@ struct PS_OUT
     float4 vData        : SV_Target4;
 };
 
+//PS_OUT PS_LandScape(GS_OUT _in) // Geometry Shader에서 데이터를 받음
+//{
+//    PS_OUT output = (PS_OUT) 0.f;
+//
+//    // 풀 텍스처 샘플링하여 사각형에 적용
+//    output.vColor = GRASS_TEX.Sample(g_sam_0, _in.vUV);
+//    output.vPosition = float4(_in.vWorldPos, 1.f); // 월드 좌표에 해당하는 포지션 적용
+//
+//    return output;
+//}
 
 PS_OUT PS_LandScape(DS_OUT _in)
 {
@@ -279,12 +348,14 @@ PS_OUT PS_LandScape(DS_OUT _in)
         //vColor = COLOR_TEX.Sample(g_sam_0, float3(_in.vUV, 1.f));
         int2 vColRow = _in.vFullUV * WEIGHT_RESOLUTION;
         int WeightMapIdx = WEIGHT_RESOLUTION.x * vColRow.y + vColRow.x;
+        int GrassMapIdx = GRASS_RESOLUTION.x * vColRow.y + vColRow.x;
 
         vColor = (float4) 0.f;
         
         int WeightMaxIdx = -1;
         float WeightMax = 0.f;
         
+        // Weight Map Check
         for (int i = 0; i < TEXTURE_ARRSIZE; ++i)
         {
             float Weight = WEIGHT_MAP[WeightMapIdx].Weight[i];
@@ -316,6 +387,21 @@ PS_OUT PS_LandScape(DS_OUT _in)
             };
         
             vViewNormal = normalize(mul(vNormal, Rot));
+        }
+        
+        // Grass Map Check
+        int GrassMaxIdx = -1;
+        float GrassMax = 0.f;
+        
+        float GrassWeight = GRASS_MAP[GrassMapIdx].GrassWeight;
+        
+        if (GrassWeight >= 0.95f)
+        {
+            //vColor += COLOR_TEX.SampleLevel(g_sam_0, float3(_in.vUV, i), 3) * Weight;
+            //vColor += GRASS_TEX.SampleGrad(g_sam_0, float3(_in.vUV, i), derivX * 0.25f, derivY * 0.25f) * GrassWeight;
+            //vColor = GRASS_TEX.Sample(g_sam_0, _in.vUV);
+            //vColor = float4(0.f, 0.f, 0.f, 1.f);
+            vColor = GRASS_TEX.Sample(g_sam_0, _in.vUV);
         }
     }
     

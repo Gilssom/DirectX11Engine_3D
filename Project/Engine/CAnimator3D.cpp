@@ -227,10 +227,10 @@ Vec3 CAnimator3D::GetObjectRotation(const wstring& name)
 	// 본 리스트를 가져온다
 	const vector<tMTBone>* bones = GetOwner()->GetRenderComponent()->GetMesh()->GetBones();
 
-	// 본 리스트에서 'DM_SWORD' 본을 찾는다
+	// 본 리스트에서 " name " 본을 찾는다
 	for (const auto& bone : *bones)
 	{
-		if (bone.strBoneName == name) // 'DM_SWORD' 본을 찾음
+		if (bone.strBoneName == name)
 		{
 			const tMTKeyFrame& curKeyFrame = bone.vecKeyFrame[m_iFrameIdx];
 
@@ -238,7 +238,7 @@ Vec3 CAnimator3D::GetObjectRotation(const wstring& name)
 
 			Vec3 eulerRotation = QuaternionToEuler(swordRot);
 
-			return swordRot;
+			return eulerRotation;
 		}
 	}
 

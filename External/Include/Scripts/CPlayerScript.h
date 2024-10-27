@@ -33,8 +33,8 @@ private:
 	float				m_WeaponEmissive;
 
 	Ptr<CPrefab>		m_Test;
-
-	std::deque<TrailSegment> m_SwordTrail;		// 검 위치 저장 deque
+	CGameObject*		m_WeaponPos;
+	CGameObject*		m_TrailEffect;
 
 public:
 	virtual void Begin() override;
@@ -47,7 +47,6 @@ public:
 	void Attack();
 	void AttackEnd();
 
-	void SlashEffect();
 	void DashForward();
 
 	void Hit();
@@ -55,8 +54,6 @@ public:
 
 	void Death();
 	void DeathEnd();
-
-	void UpdateSwordTrail(const Vec3& swordPos, const Vec3& swordRot);
 
 public:
 	CLONE(CPlayerScript);

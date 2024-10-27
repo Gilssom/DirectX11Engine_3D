@@ -4,6 +4,7 @@
 #include "CHeightMapCS.h"
 #include "CRaycastCS.h"
 #include "CWeightMapCS.h"
+#include "CGrassMapCS.h"
 
 class CStructuredBuffer;
 
@@ -19,11 +20,19 @@ struct tWeight
 	float   Weight[8];
 };
 
+struct tGrassInstance
+{
+	Vec4	Position;		// 풀 인스턴스의 위치
+	float	Rotation[3];	// 각 평면의 회전 값
+	float	TimeOffset;		// 흔들림 효과를 위한 시간 오프셋
+};
+
 enum LANDSCAPE_MODE
 {
 	NONE,
 	HEIGHT_MAP,
 	SPLATING,
+	GRASS_MAP,
 };
 
 class CLandScape : public CRenderComponent
@@ -31,6 +40,7 @@ class CLandScape : public CRenderComponent
 private:
 	UINT					m_FaceX;
 	UINT					m_FaceZ;
+	Ptr<CMesh>				m_OriginMesh;
 
 
 	// Brush
@@ -68,15 +78,55 @@ private:
 	tRaycastOut				m_Out;
 
 
+	// Grass Map
+	Ptr<CGrassMapCS>        m_GrassMapCS;
+	CStructuredBuffer*		m_GrassInstances;
+	UINT                    m_GrassCount;
+	UINT                    m_GrassWidth;
+	UINT                    m_GrassHeight;
+	Ptr<CTexture>           m_GrassTexture;
+
+
 	// LandScape Mod
 	LANDSCAPE_MODE			m_Mode;
 
 
+	// Wire Mode
+	bool					m_IsWireFrameMode;
+
 public:
 	void SetFace(UINT x, UINT z);
 	void SetHeightMap(Ptr<CTexture> heightMap) { m_HeightMap = heightMap; m_IsHeightMapCreated = false; }
-	void AddBrushTexture(Ptr<CTexture> brushTex) { m_vecBrush.push_back(brushTex); }
 	void CreateHeightMap(UINT width, UINT height);
+
+	void SetGrassTexture(Ptr<CTexture> grassTex) { m_GrassTexture = grassTex; }
+
+	Ptr<CTexture> GetWeightMapTexture() { return m_ColorTex; }
+	int GetWeightTextureCount() { return m_ColorTex->GetArraySize(); }
+
+	void SetWeightIndex(int weightIdx) { m_WeightIdx = weightIdx; }
+	int GetWeightIndex() { return m_WeightIdx; }
+
+	void SetMode(LANDSCAPE_MODE mode) { m_Mode = mode; }
+	LANDSCAPE_MODE GetMode() { return m_Mode; }
+
+	void AddBrushTexture(Ptr<CTexture> brushTex) { m_vecBrush.push_back(brushTex); }
+	vector<Ptr<CTexture>>& GetBrushTextures() { return m_vecBrush; }
+
+	void SetBrushScale(Vec2 scale) { m_BrushScale = scale; }
+	Vec2 GetBrushScale() { return m_BrushScale; }
+
+	void SetBrushIndex(int brushIdx) { m_BrushIdx = brushIdx; }
+	int GetBrushIndex() { return m_BrushIdx; }
+
+	void SetMinTessLevel(float minLevel) { m_MinLevel = minLevel; }
+	float GetMinTessLevel() { return m_MinLevel; }
+
+	void SetMaxTessLevel(float maxLevel) { m_MaxLevel = maxLevel; }
+	float GetMaxTessLevel() { return m_MaxLevel; }
+
+	void SetWireframeMode(bool wireFrame) { m_IsWireFrameMode = wireFrame; }
+	bool IsWireframeMode() { return m_IsWireFrameMode; }
 
 public:
 	void Init();
@@ -89,6 +139,7 @@ private:
 	void CreateTexture();
 	void Binding();
 	int Raycasting();
+	void GrassRender();
 
 public:
 	CLONE(CLandScape);
