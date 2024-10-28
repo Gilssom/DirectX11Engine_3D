@@ -973,6 +973,25 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->AddTexParam("Grass Tex", TEX_0);
 	
 	AddAsset<CGraphicShader>(L"GrassShader", pShader);
+
+
+	// ====================
+	//	Water Shader
+	// ====================
+	pShader = new CGraphicShader;
+	pShader->CreateVertexShader(strPath + L"shader\\water.fx", "VS_Water");
+	pShader->CreatePixelShader(strPath + L"shader\\water.fx", "PS_Water");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); 
+	pShader->SetRSType(RS_TYPE::CULL_NONE);                      
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);                    
+	pShader->SetDSType(DS_TYPE::LESS_EQUAL);                     
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);            
+
+	pShader->AddTexParam("Relfection Tex", TEX_0);
+	pShader->AddTexParam("Water Normal Tex", TEX_1);
+
+	AddAsset<CGraphicShader>(L"WaterShader", pShader);
 }
 
 #include "CSetColorCS.h"
@@ -1151,5 +1170,11 @@ void CAssetManager::CreateDefaultMaterial()
 	pMaterial = new CMaterial(true);
 	pMaterial->SetName(L"Grass2Material");
 	pMaterial->SetShader(FindAsset<CGraphicShader>(L"GrassShader"));
+	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
+
+	// Water Material
+	pMaterial = new CMaterial(true);
+	pMaterial->SetName(L"WaterMaterial");
+	pMaterial->SetShader(FindAsset<CGraphicShader>(L"WaterShader"));
 	AddAsset<CMaterial>(pMaterial->GetName(), pMaterial);
 }

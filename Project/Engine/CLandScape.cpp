@@ -135,32 +135,28 @@ void CLandScape::FinalTick()
 				Vec3 hitPointLocal = Vec3(m_Out.Location.x * (m_FaceX * vScale.x), 0.0f, (1.0f - m_Out.Location.y) * (m_FaceZ * vScale.z));
 				Vec2 brushScale = Vec2(m_BrushScale.x * m_WeightWidth, m_BrushScale.y * m_WeightHeight);
 
-				int grassCount = 10; // 임시 Test
 				float brushRadiusX = brushScale.x * 0.5f;  // brush 영역의 반지름 (X축)
 				float brushRadiusZ = brushScale.y * 0.5f;  // brush 영역의 반지름 (Z축)
 
 				// Create Grass
 				CGameObject* pGrassTest = nullptr;
-				Ptr<CMeshData> pGrassMeshData = nullptr;
-				pGrassMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Grass_2.mdat");
-				pGrassMeshData->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_2.png"));
+				//Ptr<CMeshData> pGrassMeshData = nullptr;
+				//pGrassMeshData = CAssetManager::GetInst()->FindAsset<CMeshData>(L"meshdata\\Grass_2.mdat");
+				//pGrassMeshData->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_2.png"));
 				
-				for (int i = 0; i < grassCount; i++)
+				for (int i = 0; i < m_GrassCount; i++)
 				{
-					pGrassTest = pGrassMeshData->Instantiate();
+					pGrassTest = m_GrassMeshData->Instantiate();
 
-					// 풀의 랜덤 위치를 hitPointLocal 기준으로 설정
 					float randomOffsetX = GetRandomFloat(-brushScale.x * 0.5f, brushScale.x * 0.5f);
 					float randomOffsetZ = GetRandomFloat(-brushScale.y * 0.5f, brushScale.y * 0.5f);
 					Vec3 randomPos = hitPointLocal + Vec3(randomOffsetX, 0.0f, randomOffsetZ);
 
-					// 풀의 위치와 크기 설정
 					pGrassTest->SetName(L"Test");
 					pGrassTest->GetRenderComponent()->SetFrustumCheck(false);
 					pGrassTest->Transform()->SetRelativePos(randomPos);
 					pGrassTest->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
-					// 현재 레벨에 추가
 					SpawnObject(0, pGrassTest);
 				}
 			}		
@@ -223,7 +219,6 @@ void CLandScape::Binding()
 	GetMaterial(0)->SetTexParam(TEX_0, m_HeightMap);
 	GetMaterial(0)->SetTexParam(TEX_ARR_0, m_ColorTex);
 	GetMaterial(0)->SetTexParam(TEX_ARR_1, m_NormalTex);
-	GetMaterial(0)->SetTexParam(TEX_2, m_GrassTexture);
 
 	// Brush 정보
 	GetMaterial(0)->SetTexParam(TEX_1, m_vecBrush[m_BrushIdx]);

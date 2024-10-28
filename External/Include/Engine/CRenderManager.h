@@ -31,6 +31,7 @@ private:
 	CStructuredBuffer*	m_Light3DBuffer;			// 구조화 버퍼
 
 	Ptr<CTexture>		m_RenderTargetCopyTex;		// Post Process 를 위한 Copy Render Target Texture
+	Ptr<CTexture>		m_ReflectionTex;
 
 	class CMRT*			m_MRT[(UINT)MRT_TYPE::END]; // MRT 관리 및 제어
 
@@ -71,6 +72,7 @@ public:
 	}
 
 	void CopyRenderTarget();
+	Ptr<CTexture> GetReflectionTex() { return m_ReflectionTex; }
 
 	void ShowBoundingBox(bool show) { m_BoundingBox = show; }
 	bool IsShowBoundingBox() { return m_BoundingBox; }

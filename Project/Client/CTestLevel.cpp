@@ -13,6 +13,7 @@
 #include <Scripts\CMissileScript.h>
 #include <Scripts\CPlayerScript.h>
 #include <Scripts\CAnimStateMachine.h>
+#include <Scripts\CWaterScript.h>
 
 #include <Engine\CCollisionManager.h>
 #include <Engine\CSetColorCS.h>
@@ -317,6 +318,19 @@ void CTestLevel::CreateTestLevel()
 	//pObj->AddChild(pTest);
 
 	m_CurLevel->AddObject(0, pObj, true);
+
+	pTest = new CGameObject;
+	pTest->SetName(L"Water Object");
+	pTest->AddComponent(new CTransform);
+	pTest->AddComponent(new CMeshRender);
+	pTest->AddComponent(new CWaterScript);
+	pTest->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	pTest->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	pTest->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
+	pTest->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"WaterMaterial"), 0);
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"ReflectionTex"));
+	//pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"DataTargetTex"));
+	m_CurLevel->AddObject(0, pTest, true);
 
 	// Level Change System 을 이용해서 Level 을 전달해줄 것 (Task Manager)
 	ChangeLevelRegister(m_CurLevel, LEVEL_STATE::STOP);

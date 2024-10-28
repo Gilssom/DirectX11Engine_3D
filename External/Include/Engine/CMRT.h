@@ -19,6 +19,14 @@ public:
 
 	Ptr<CTexture> GetRenderTarget(UINT idx) { return m_RTTex[idx]; }
 
+	ID3D11DepthStencilView* GetDSV() const 
+	{
+		if (m_DSTex != nullptr)
+			return m_DSTex->GetDSV().Get();
+		else
+			return nullptr;
+	}
+
 	void SetViewPort(const D3D11_VIEWPORT& viewPort) { m_ViewPort = viewPort; }
 	const D3D11_VIEWPORT& GetViewPort() { return m_ViewPort; }
 

@@ -36,6 +36,9 @@
     <ClInclude Include="CAnimStateMachine.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="CWaterScript.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -57,6 +60,9 @@
       <Filter>Scripts</Filter>
     </ClCompile>
     <ClCompile Include="CAnimStateMachine.cpp">
+      <Filter>Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="CWaterScript.cpp">
       <Filter>Scripts</Filter>
     </ClCompile>
   </ItemGroup>

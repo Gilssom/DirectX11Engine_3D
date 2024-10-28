@@ -18,6 +18,7 @@ CSkillManager
 CTauScript
 CTestScript
 CUIManager
+CWaterScript
 UIButton
 UIDamage
 UIElement

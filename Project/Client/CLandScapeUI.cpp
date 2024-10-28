@@ -25,7 +25,7 @@ void CLandScapeUI::Render_Tick()
 
     // 현재 모드 변경 UI
     ImGui::SeparatorText("LandScape Mode");
-    const char* modes[] = { "None", "Height Map", "Splating" };
+    const char* modes[] = { "None", "Height Map", "Splating", "Grass Brush"};
     int currentMode = (int)pLandScape->GetMode();
     if (ImGui::Combo("Mode", &currentMode, modes, IM_ARRAYSIZE(modes)))
     {
@@ -87,8 +87,49 @@ void CLandScapeUI::Render_Tick()
         pLandScape->SetBrushScale(brushScale);
     }
 
+    switch (pLandScape->GetMode())
+    {
+        case LANDSCAPE_MODE::SPLATING:
+        {
+            WeightMap(pLandScape);
+
+            break;
+        }
+        case LANDSCAPE_MODE::GRASS_MAP:
+        {
+            GrassBrush(pLandScape);
+
+            break;
+        }
+    }
+    
+
+    // 테셀레이션 레벨 조정 UI
+    ImGui::SeparatorText("Tessellation Settings");
+    float minLevel = pLandScape->GetMinTessLevel();
+    float maxLevel = pLandScape->GetMaxTessLevel();
+    if (ImGui::SliderFloat("Min Tessellation Level", &minLevel, 0.0f, 10.0f))
+    {
+        pLandScape->SetMinTessLevel(minLevel);
+    }
+    if (ImGui::SliderFloat("Max Tessellation Level", &maxLevel, 0.0f, 10.0f))
+    {
+        pLandScape->SetMaxTessLevel(maxLevel);
+    }
+
+    // 와이어 프레임 모드 토글
+    ImGui::SeparatorText("Wireframe Mode");
+    bool isWireframe = pLandScape->IsWireframeMode();
+    if (ImGui::Checkbox("Wireframe", &isWireframe))
+    {
+        pLandScape->SetWireframeMode(isWireframe);
+    }
+}
+
+void CLandScapeUI::WeightMap(CLandScape* landscape)
+{
     // Weight Map Texture 가져오기
-    Ptr<CTexture> weightMapTex = pLandScape->GetWeightMapTexture();  // m_ColorTex 가져오기
+    Ptr<CTexture> weightMapTex = landscape->GetWeightMapTexture();  // m_ColorTex 가져오기
     if (weightMapTex == nullptr)
         return;
 
@@ -117,53 +158,94 @@ void CLandScapeUI::Render_Tick()
         if (ImGui::ImageButton(texID, size, uv0, uv1))
         {
             // Weight 텍스처 인덱스를 선택한 것으로 변경
-            pLandScape->SetWeightIndex(i);
+            landscape->SetWeightIndex(i);
         }
         ImGui::PopID();
     }
     ImGui::EndTable();
 
     // 현재 선택된 Weight 텍스처 표시
-    int weightIndex = pLandScape->GetWeightIndex();
+    int weightIndex = landscape->GetWeightIndex();
     if (weightIndex >= 0 && weightIndex < srvList.size())
     {
         ImGui::SeparatorText("Current Weight Texture");
         ImTextureID texID = srvList[weightIndex].Get();
         ImGui::Image(texID, ImVec2(100, 100));
     }
+}
 
-    // 테셀레이션 레벨 조정 UI
-    ImGui::SeparatorText("Tessellation Settings");
-    float minLevel = pLandScape->GetMinTessLevel();
-    float maxLevel = pLandScape->GetMaxTessLevel();
-    if (ImGui::SliderFloat("Min Tessellation Level", &minLevel, 0.0f, 10.0f))
+void CLandScapeUI::GrassBrush(CLandScape* landscape)
+{
+    // Grass 텍스처 선택 UI
+    ImGui::SeparatorText("Grass Texture Selection");
+
+    // 텍스처 목록을 가로로 나열 (최대 4개씩)
+    std::vector<Ptr<CTexture>>& vecGrassTexture = landscape->GetGrassTextures();
+    int selectedTextureIndex = landscape->GetSelectedGrassTextureIndex();
+
+    ImGui::BeginTable("GrassTextureTable", 4, ImGuiTableFlags_SizingFixedFit);
+    for (size_t i = 0; i < vecGrassTexture.size(); ++i)
     {
-        pLandScape->SetMinTessLevel(minLevel);
+        Ptr<CTexture> grassTexture = vecGrassTexture[i];
+        if (grassTexture != nullptr)
+        {
+            ImGui::TableNextColumn();
+            ImGui::PushID(static_cast<int>(i));
+
+            ImTextureID texID = grassTexture->GetSRV().Get();
+            ImVec2 size = ImVec2(50, 50);
+            ImVec2 uv0 = ImVec2(0, 0);
+            ImVec2 uv1 = ImVec2(1, 1);
+
+            // 선택된 텍스처는 강조 표시를 위해 배경색 변경
+            bool isSelected = (i == selectedTextureIndex);
+            if (isSelected)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.3f, 1.0f)); // 녹색 강조색
+            }
+
+            // 텍스처를 버튼으로 표시
+            if (ImGui::ImageButton(texID, size, uv0, uv1))
+            {
+                // 텍스처가 선택되면 인덱스를 저장
+                selectedTextureIndex = static_cast<int>(i);
+                landscape->SetSelectedGrassTextureIndex(selectedTextureIndex); // 선택된 인덱스 업데이트
+            }
+
+            if (isSelected)
+            {
+                ImGui::PopStyleColor(); // 강조 색상 해제
+            }
+
+            ImGui::PopID();
+        }
     }
-    if (ImGui::SliderFloat("Max Tessellation Level", &maxLevel, 0.0f, 10.0f))
+    ImGui::EndTable();
+
+    // 선택된 텍스처의 인덱스를 기반으로 CMeshData 설정 및 텍스처 적용
+    if (selectedTextureIndex != -1)
     {
-        pLandScape->SetMaxTessLevel(maxLevel);
+        // 선택된 텍스처의 인덱스를 통해 CMeshData 이름 결정
+        std::wstring meshName = L"meshdata\\Grass_" + std::to_wstring(selectedTextureIndex) + L".mdat";
+        Ptr<CMeshData> selectedMesh = CAssetManager::GetInst()->FindAsset<CMeshData>(meshName);
+
+        if (selectedMesh != nullptr)
+        {
+            landscape->SetGrassMeshData(selectedMesh);
+
+            // 선택된 텍스처를 해당 CMeshData의 Material에 설정
+            selectedMesh->GetMaterial(0)->SetTexParam(TEX_0, vecGrassTexture[selectedTextureIndex]);
+        }
     }
 
-    // 와이어 프레임 모드 토글
-    ImGui::SeparatorText("Wireframe Mode");
-    bool isWireframe = pLandScape->IsWireframeMode();
-    if (ImGui::Checkbox("Wireframe", &isWireframe))
-    {
-        pLandScape->SetWireframeMode(isWireframe);
-    }
+    // Grass 개수 설정
+    ImGui::SeparatorText("Grass Settings");
 
-    // 향후 확장을 고려한 기타 UI
-    ImGui::SeparatorText("Future Extensions");
-    if (ImGui::Button("Generate Grass Instances"))
+    UINT grassCount = landscape->GetGrassCount();
+    if (ImGui::InputInt("Grass Count", (int*)&grassCount))
     {
-        //pLandScape->GenerateGrassInstances();
-    }
-
-    if (ImGui::Button("Generate Water"))
-    {
-        // 향후 물 배치 기능 추가를 위한 버튼
-        // GenerateWaterInstances(); 와 같은 함수 호출을 구현 예정
+        grassCount = max(1, grassCount);  // 최소 1개로 설정
+        landscape->SetGrassCount(grassCount);
     }
 }
 

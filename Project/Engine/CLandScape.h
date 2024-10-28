@@ -81,10 +81,13 @@ private:
 	// Grass Map
 	Ptr<CGrassMapCS>        m_GrassMapCS;
 	CStructuredBuffer*		m_GrassInstances;
-	UINT                    m_GrassCount;
 	UINT                    m_GrassWidth;
 	UINT                    m_GrassHeight;
-	Ptr<CTexture>           m_GrassTexture;
+
+	vector<Ptr<CTexture>>   m_GrassTexture;
+	int						m_GrassTextureIdx;
+	UINT                    m_GrassCount;
+	Ptr<CMeshData>			m_GrassMeshData;
 
 
 	// LandScape Mod
@@ -98,8 +101,6 @@ public:
 	void SetFace(UINT x, UINT z);
 	void SetHeightMap(Ptr<CTexture> heightMap) { m_HeightMap = heightMap; m_IsHeightMapCreated = false; }
 	void CreateHeightMap(UINT width, UINT height);
-
-	void SetGrassTexture(Ptr<CTexture> grassTex) { m_GrassTexture = grassTex; }
 
 	Ptr<CTexture> GetWeightMapTexture() { return m_ColorTex; }
 	int GetWeightTextureCount() { return m_ColorTex->GetArraySize(); }
@@ -127,6 +128,18 @@ public:
 
 	void SetWireframeMode(bool wireFrame) { m_IsWireFrameMode = wireFrame; }
 	bool IsWireframeMode() { return m_IsWireFrameMode; }
+
+	void AddGrassTexture(Ptr<CTexture> grassTex) { m_GrassTexture.push_back(grassTex); }
+	vector<Ptr<CTexture>>& GetGrassTextures() { return m_GrassTexture; }
+
+	void SetGrassCount(UINT grassCnt) { m_GrassCount = grassCnt; }
+	UINT GetGrassCount() { return m_GrassCount; }
+
+	void SetGrassMeshData(Ptr<CMeshData> meshdata) { m_GrassMeshData = meshdata; }
+	Ptr<CMeshData> GetGrassMeshData() { return m_GrassMeshData; }
+
+	void SetSelectedGrassTextureIndex(int grassTexIdx) { m_GrassTextureIdx = grassTexIdx; }
+	int GetSelectedGrassTextureIndex() { return m_GrassTextureIdx; }
 
 public:
 	void Init();

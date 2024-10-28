@@ -125,6 +125,9 @@ void CCamera::FinalTick()
 
 	// 절두체 계산
 	m_Frustum.FinalTick();
+
+	if(GetOwner()->GetName() == L"MainCamera")
+		UpdateReflectionTexture(CRenderManager::GetInst()->GetReflectionTex(), 0);
 }
 
 void CCamera::Render()
@@ -362,6 +365,46 @@ void CCamera::Render_shadowmap()
 	{
 		m_vecShadowMap[i]->GetRenderComponent()->Render_shadowmap();
 	}
+}
+
+void CCamera::UpdateReflectionTexture(Ptr<CTexture> reflectionTexture, float waterHeight)
+{
+	// 1. Reflection 카메라의 뷰 매트릭스 계산
+	Vec3 cameraPos = Transform()->GetWorldPos();
+	Vec3 cameraDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+	// 물 표면 높이(waterHeight)를 기준으로 카메라 위치와 방향 반사
+	Vec3 reflectedPos = Vec3(cameraPos.x, 2 * waterHeight - cameraPos.y, cameraPos.z);
+	Vec3 reflectedDir = Vec3(cameraDir.x, -cameraDir.y, cameraDir.z);
+
+	// Reflection 뷰 매트릭스 생성
+	Matrix reflectionViewMatrix = XMMatrixLookToLH(reflectedPos, reflectedDir, Vec3(0, 1, 0));
+
+	// 2. Reflection Render Target을 현재 렌더 타겟으로 설정
+	ID3D11RenderTargetView* pRTV = reflectionTexture->GetRTV().Get();
+	ID3D11DepthStencilView* pDSV = CRenderManager::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetDSV();
+
+	CONTEXT->OMSetRenderTargets(1, &pRTV, pDSV);
+
+	// Render Target 클리어
+	const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	CONTEXT->ClearRenderTargetView(pRTV, clearColor);
+	CONTEXT->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	// 3. Reflection 뷰 매트릭스를 RenderManager에 설정
+	g_Trans.matView = reflectionViewMatrix;
+	g_Trans.matProj = m_matProj;  // 기존 카메라의 프로젝션 매트릭스를 사용
+
+	// 4. 물체 렌더링
+	SortObject();  // Shader 도메인에 따른 물체 정렬
+	Render_deferred();
+	Render_opaque();
+	Render_masked();
+	Render_transparent();
+	Render_particle();
+
+	// Reflection 텍스처로 렌더링 완료 후 원래 Render Target으로 복귀
+	CRenderManager::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 }
 
 void CCamera::SetCameraPriority(int priority)

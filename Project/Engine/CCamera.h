@@ -103,6 +103,8 @@ public:
 
 	void Render_shadowmap();
 
+	void UpdateReflectionTexture(Ptr<CTexture> reflectionTexture, float waterHeight);
+
 public:
 	virtual void SaveToLevelFile(FILE* file) override;
 	virtual void LoadFromLevelFile(FILE* file) override;

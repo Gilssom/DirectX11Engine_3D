@@ -13,6 +13,11 @@ void CRenderManager::Init()
 		, (UINT)vRenderResol.x, (UINT)vRenderResol.y
 		, DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_BIND_SHADER_RESOURCE);
 
+	m_ReflectionTex = CAssetManager::GetInst()->CreateTexture(L"ReflectionTex"
+		, (UINT)vRenderResol.x, (UINT)vRenderResol.y
+		, DXGI_FORMAT_R32G32B32A32_FLOAT
+		, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+
 	// MRT »ý¼º
 	CreateMRT();
 }

@@ -717,6 +717,9 @@
     <FxCompile Include="landscape.fx">
       <Filter>HLSL\05. LandScape</Filter>
     </FxCompile>
+    <FxCompile Include="water.fx">
+      <Filter>HLSL\05. LandScape</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

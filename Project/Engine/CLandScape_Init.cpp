@@ -28,8 +28,9 @@ void CLandScape::Init()
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\TX_Twirl02.png"));
 	AddBrushTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\FX_Flare.png"));
 
-	// Grass Texture 설정
-	m_GrassTexture = CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture.png");
+	// GrassTexture 추가
+	AddGrassTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_0.png"));
+	AddGrassTexture(CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\GrassTexture_1.png"));
 
 	m_BrushIdx = 0;
 }

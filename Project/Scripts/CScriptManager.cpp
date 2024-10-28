@@ -5,6 +5,7 @@
 #include "CMissileScript.h"
 #include "CPlayerScript.h"
 #include "CAnimStateMachine.h"
+#include "CWaterScript.h"
 
 void CScriptManager::GetScriptInfo(vector<wstring>& vec)
 {
@@ -12,6 +13,7 @@ void CScriptManager::GetScriptInfo(vector<wstring>& vec)
 	vec.push_back(L"CMissileScript");
 	vec.push_back(L"CPlayerScript");
 	vec.push_back(L"CAnimStateMachine");
+	vec.push_back(L"CWaterScript");
 }
 
 CScript* CScriptManager::GetScript(const wstring& strScriptName)
@@ -24,6 +26,8 @@ CScript* CScriptManager::GetScript(const wstring& strScriptName)
 		return new CPlayerScript;
 	if (L"CAnimStateMachine" == strScriptName)
 		return new CAnimStateMachine;
+	if (L"CWaterScript" == strScriptName)
+		return new CWaterScript;
 	return nullptr;
 }
 
@@ -43,6 +47,9 @@ CScript* CScriptManager::GetScript(UINT scriptType)
 	case (UINT)SCRIPT_TYPE::ANIMSTATEMACHINE:
 		return new CAnimStateMachine;
 		break;
+	case (UINT)SCRIPT_TYPE::WATERSCRIPT:
+		return new CWaterScript;
+		break;
 	}
 	return nullptr;
 }
@@ -53,18 +60,18 @@ const wchar_t* CScriptManager::GetScriptName(CScript* pScript)
 	{
 	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return L"CCameraMoveScript";
-		break;
 
 	case SCRIPT_TYPE::MISSILESCRIPT:
 		return L"CMissileScript";
-		break;
 
 	case SCRIPT_TYPE::PLAYERSCRIPT:
 		return L"CPlayerScript";
 
 	case SCRIPT_TYPE::ANIMSTATEMACHINE:
 		return L"CAnimStateMachine";
-		break;
+
+	case SCRIPT_TYPE::WATERSCRIPT:
+		return L"CWaterScript";
 	}
 	return nullptr;
 }
