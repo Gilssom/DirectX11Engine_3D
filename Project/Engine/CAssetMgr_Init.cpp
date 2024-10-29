@@ -986,10 +986,11 @@ void CAssetManager::CreateDefaultGraphicShader()
 	pShader->SetRSType(RS_TYPE::CULL_NONE);                      
 	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);                    
 	pShader->SetDSType(DS_TYPE::LESS_EQUAL);                     
-	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);            
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);            
 
 	pShader->AddTexParam("Relfection Tex", TEX_0);
 	pShader->AddTexParam("Water Normal Tex", TEX_1);
+	pShader->AddTexParam("Emissive Tex", TEX_2);
 
 	AddAsset<CGraphicShader>(L"WaterShader", pShader);
 }

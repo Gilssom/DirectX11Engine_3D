@@ -126,8 +126,16 @@ void CCamera::FinalTick()
 	// 절두체 계산
 	m_Frustum.FinalTick();
 
-	if(GetOwner()->GetName() == L"MainCamera")
-		UpdateReflectionTexture(CRenderManager::GetInst()->GetReflectionTex(), 0);
+	if (GetOwner()->GetName() == L"MainCamera")
+	{
+		CGameObject* pWaterObject = CLevelManager::GetInst()->GetCurrentLevel()->FindObjectByName(L"Water Object");
+		float height = 0.f;
+
+		if(pWaterObject != nullptr)
+			height = pWaterObject->Transform()->GetRelativePos().y;
+
+		//UpdateReflectionTexture(CRenderManager::GetInst()->GetReflectionTex(), height);
+	}
 }
 
 void CCamera::Render()

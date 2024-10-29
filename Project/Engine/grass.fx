@@ -7,7 +7,7 @@
 #define GrassWidth          300.f
 #define GrassHeight         300.f
 
-#define time                DeltaTime_Engine
+#define time                Time
 #define windSpeed           5.f
 #define windStrength        5.f
 
