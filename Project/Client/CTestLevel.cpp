@@ -271,11 +271,13 @@ void CTestLevel::CreateTestLevel()
 	pTest->AddComponent(new CTransform);
 	pTest->AddComponent(new CMeshRender);
 	pTest->AddComponent(new CWaterScript);
-	pTest->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-	pTest->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	pTest->Transform()->SetRelativePos(Vec3(1500.f, 250.f, 1500.f));
+	pTest->Transform()->SetRelativeScale(Vec3(3000.f, 3000.f, 1000.f));
+	pTest->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
 	pTest->MeshRender()->SetMesh(CAssetManager::GetInst()->FindAsset<CMesh>(L"RectMesh"));
 	pTest->MeshRender()->SetMaterial(CAssetManager::GetInst()->FindAsset<CMaterial>(L"WaterMaterial"), 0);
 	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CAssetManager::GetInst()->FindAsset<CTexture>(L"ReflectionTex"));
+	pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"texture\\WaterNormal.jpg"));
 	//pTest->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CAssetManager::GetInst()->FindAsset<CTexture>(L"DataTargetTex"));
 	m_CurLevel->AddObject(0, pTest, true);
 

@@ -15,6 +15,8 @@ CWaterScript::CWaterScript()
 	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Wave Speed", &m_WaveSpeed);
 	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Wave Amplitude", &m_WaveAmplitude);
 	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Wave Frequency", &m_WaveFrequency);
+
+	AddScriptProperty(PROPERTY_TYPE::FLOAT, "Fresnel Power", &m_FresnelPower);
 }
 
 CWaterScript::~CWaterScript()
@@ -34,10 +36,11 @@ void CWaterScript::Tick()
 	pMaterial->SetScalarParam(FLOAT_0, m_WaveSpeed);
 	pMaterial->SetScalarParam(FLOAT_1, m_WaveAmplitude);
 	pMaterial->SetScalarParam(FLOAT_2, m_WaveFrequency);
+	pMaterial->SetScalarParam(FLOAT_3, m_FresnelPower);
 
 	CGameObject* pMainCam = CLevelManager::GetInst()->GetCurrentLevel()->FindObjectByName(L"MainCamera");
-	pMaterial->SetScalarParam(VEC4_0, pMainCam->Transform()->GetRelativePos());
+	pMaterial->SetScalarParam(VEC4_0, pMainCam->Transform()->GetWorldPos());
 
 	Vec3 vTest = GetOwner()->Transform()->GetRelativeScale();
-	pMaterial->SetScalarParam(VEC2_0, pMainCam->Transform()->GetRelativeScale());
+	pMaterial->SetScalarParam(VEC2_0, vTest);
 }

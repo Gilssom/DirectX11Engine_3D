@@ -134,7 +134,7 @@ void CCamera::FinalTick()
 		if(pWaterObject != nullptr)
 			height = pWaterObject->Transform()->GetRelativePos().y;
 
-		//UpdateReflectionTexture(CRenderManager::GetInst()->GetReflectionTex(), height);
+		UpdateReflectionTexture(CRenderManager::GetInst()->GetReflectionTex(), height);
 	}
 }
 
@@ -386,7 +386,7 @@ void CCamera::UpdateReflectionTexture(Ptr<CTexture> reflectionTexture, float wat
 	Vec3 reflectedDir = Vec3(cameraDir.x, -cameraDir.y, cameraDir.z);
 
 	// Reflection 뷰 매트릭스 생성
-	Matrix reflectionViewMatrix = XMMatrixLookToLH(reflectedPos, reflectedDir, Vec3(0, 1, 0));
+	Matrix reflectionViewMatrix = XMMatrixLookToLH(reflectedPos, reflectedDir, Vec3(0, -1, 0));
 
 	// 2. Reflection Render Target을 현재 렌더 타겟으로 설정
 	ID3D11RenderTargetView* pRTV = reflectionTexture->GetRTV().Get();

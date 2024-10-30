@@ -6,12 +6,11 @@
 
 Texture2D reflectionTex     : register(t0);     // Reflection Texture
 Texture2D waterNormalTex    : register(t1);     // Water Normal Texture
-Texture2D emissiveTex       : register(t2);     // Emissive Texture (Optional)
 
 #define time                Time
 #define cameraPos           g_vec4_0
 #define objectScale         g_vec2_0
-//#define fresnelPower        g_float_0       // Fresnel 효과의 강도
+#define fresnelPower        g_float_3       // Fresnel 효과의 강도
 //#define normalStrength      g_float_1       // 물결 왜곡 강도
 
 #define waveSpeed           g_float_0       // 파도 속도
@@ -58,29 +57,40 @@ PS_INPUT VS_Water(VS_INPUT input)
 
 float4 PS_Water(PS_INPUT input) : SV_TARGET
 {
-    // 노멀 텍스처 샘플링 및 애니메이션을 위한 좌표 계산
+    //// 노멀 텍스처 샘플링 및 애니메이션을 위한 좌표 계산
+    //float2 animatedUV = input.tex + float2(time * 0.02, time * 0.03);
+    //float3 waterNormal = waterNormalTex.Sample(g_sam_0, animatedUV).xyz * 2.0 - 1.0;
+    //
+    //// 기본 색상과 노멀 효과
+    //float4 baseColor = float4(0.0, 0.3, 0.5, 1.0); // 물의 기본 색상
+    //float3 finalNormal = normalize(input.normal + waterNormal * 0.3);
+    //
+    //return baseColor;
+    
+    
+    // 1. 카메라 방향 및 물 표면 노멀 계산
+    float3 viewDir = normalize(cameraPos.xyz - input.worldPos);
+    float3 normal = normalize(input.normal);
+
+    // 2. Water Normal Texture 샘플링으로 물결 왜곡 추가
     float2 animatedUV = input.tex + float2(time * 0.02, time * 0.03);
     float3 waterNormal = waterNormalTex.Sample(g_sam_0, animatedUV).xyz * 2.0 - 1.0;
+    
+    // 3. finalNormal 계산 시 더 낮은 강도로 설정
+    float3 finalNormal = normalize(normal + waterNormal * 0.1f); // 0.1로 낮춰서 테스트
 
-    // 기본 색상과 노멀 효과
-    float4 baseColor = float4(0.0, 0.3, 0.5, 1.0); // 물의 기본 색상
-    float3 finalNormal = normalize(input.normal + waterNormal * 0.3);
+    // 3. Fresnel 효과 계산 (반사와 기본 색상 혼합 강도 조절)
+    float fresnel = pow(1.0 - dot(viewDir, finalNormal), fresnelPower);
 
-    // 간단한 라이트 계산 (빛 반사 효과)
-    float lightIntensity = saturate(dot(finalNormal, normalize(float3(0.0, 1.0, 0.5))));
-    float4 finalColor = baseColor * lightIntensity;
+    // 4. 반사 텍스처 샘플링
+    float3 reflectDir = reflect(-viewDir, finalNormal);
+    float2 reflectionCoords = reflectDir.xy * 0.5 + 0.5;
+    reflectionCoords = saturate(reflectionCoords); // Water Object의 크기에 맞춰 텍스처 조정
+    float4 reflectionColor = reflectionTex.Sample(g_sam_0, reflectionCoords);
 
-    // ======= Emissive 처리 =======
-    float4 vEmissive = MtrlData.vEmv; // 기본 발광값
-
-    // Emissive 텍스처가 있다면 텍스처 샘플링하여 Emissive 효과 추가
-    if (g_btex_2)
-    {
-        vEmissive += emissiveTex.Sample(g_sam_0, input.tex) * MtrlData.vEmv;
-    }
-
-    // Emissive 효과를 적용한 최종 색상
-    finalColor.rgb += vEmissive.rgb;
+    // 5. 기본 색상과 반사 색상 혼합
+    float4 baseColor = float4(0.0, 0.3, 0.5, 1.0); // 물 기본 색상
+    float4 finalColor = lerp(baseColor, reflectionColor, fresnel); // Fresnel로 혼합
 
     return finalColor;
 }

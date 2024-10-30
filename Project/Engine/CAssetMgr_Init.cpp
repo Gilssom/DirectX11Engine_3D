@@ -990,7 +990,6 @@ void CAssetManager::CreateDefaultGraphicShader()
 
 	pShader->AddTexParam("Relfection Tex", TEX_0);
 	pShader->AddTexParam("Water Normal Tex", TEX_1);
-	pShader->AddTexParam("Emissive Tex", TEX_2);
 
 	AddAsset<CGraphicShader>(L"WaterShader", pShader);
 }
