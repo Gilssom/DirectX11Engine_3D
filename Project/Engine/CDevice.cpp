@@ -178,6 +178,9 @@ int CDevice::CreateConstBuffer()
 	m_CB[(UINT)CB_TYPE::GLOBAL] = new CConstBuffer;
 	m_CB[(UINT)CB_TYPE::GLOBAL]->Create(sizeof(tGlobalData), CB_TYPE::GLOBAL);
 
+	m_CB[(UINT)CB_TYPE::CLIP_PLANE] = new CConstBuffer;
+	m_CB[(UINT)CB_TYPE::CLIP_PLANE]->Create(sizeof(tClipPlane), CB_TYPE::CLIP_PLANE);
+
 	return 0;
 }
 

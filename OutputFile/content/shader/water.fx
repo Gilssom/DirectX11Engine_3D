@@ -56,18 +56,7 @@ PS_INPUT VS_Water(VS_INPUT input)
 }
 
 float4 PS_Water(PS_INPUT input) : SV_TARGET
-{
-    //// 노멀 텍스처 샘플링 및 애니메이션을 위한 좌표 계산
-    //float2 animatedUV = input.tex + float2(time * 0.02, time * 0.03);
-    //float3 waterNormal = waterNormalTex.Sample(g_sam_0, animatedUV).xyz * 2.0 - 1.0;
-    //
-    //// 기본 색상과 노멀 효과
-    //float4 baseColor = float4(0.0, 0.3, 0.5, 1.0); // 물의 기본 색상
-    //float3 finalNormal = normalize(input.normal + waterNormal * 0.3);
-    //
-    //return baseColor;
-    
-    
+{   
     // 1. 카메라 방향 및 물 표면 노멀 계산
     float3 viewDir = normalize(cameraPos.xyz - input.worldPos);
     float3 normal = normalize(input.normal);
@@ -85,7 +74,8 @@ float4 PS_Water(PS_INPUT input) : SV_TARGET
     // 4. 반사 텍스처 샘플링
     float3 reflectDir = reflect(-viewDir, finalNormal);
     float2 reflectionCoords = reflectDir.xy * 0.5 + 0.5;
-    reflectionCoords = saturate(reflectionCoords); // Water Object의 크기에 맞춰 텍스처 조정
+    reflectionCoords.x = 1.0 - reflectionCoords.x;
+    reflectionCoords = saturate(reflectionCoords);
     float4 reflectionColor = reflectionTex.Sample(g_sam_0, reflectionCoords);
 
     // 5. 기본 색상과 반사 색상 혼합

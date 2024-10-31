@@ -89,6 +89,8 @@ public:
 
 private:
 	void CalcRay();
+	void SetClipPlane(float waterHeight);
+	void DisableClipPlane();
 
 public:
 	void SortClear();

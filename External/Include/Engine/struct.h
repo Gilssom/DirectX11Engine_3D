@@ -353,3 +353,10 @@ struct tGlobalData
 };
 
 extern tGlobalData g_GlobalData;
+
+struct tClipPlane
+{
+	Vec4 clipPlane;
+};
+
+extern tClipPlane g_ClipPlane;

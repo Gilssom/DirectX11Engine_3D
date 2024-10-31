@@ -51,6 +51,7 @@ enum class CB_TYPE
 	MATERIAL,
 	ANIMATION,
 	GLOBAL,
+	CLIP_PLANE,
 
 	END,
 };

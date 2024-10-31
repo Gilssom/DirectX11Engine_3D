@@ -95,6 +95,11 @@ cbuffer GLOBAL_DATA : register(b3)
     int     Light3DCount;       // 3D 광원 개수
 };
 
+cbuffer ClipPlaneBuffer : register(b4)
+{
+    float4 clipPlane; // 클리핑 평면 (Ax + By + Cz + D = 0 형태로 정의)
+}
+
 // 기존 한장의 Texture
 Texture2D       g_tex_0     : register(t0);
 Texture2D       g_tex_1     : register(t1);

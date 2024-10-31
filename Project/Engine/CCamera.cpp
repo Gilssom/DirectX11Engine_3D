@@ -16,6 +16,7 @@
 #include "components.h"
 
 #include "CDevice.h"
+#include "CConstBuffer.h"
 #include "CInstancingBuffer.h"
 
 CCamera::CCamera()
@@ -171,6 +172,30 @@ void CCamera::CalcRay()
 	// 방향 벡터에 ViewMatInv 를 적용, 월드상에서의 방향을 알아낸다.
 	m_Ray.vDir = XMVector3TransformNormal(m_Ray.vDir, m_matViewInv);
 	m_Ray.vDir.Normalize();
+}
+
+void CCamera::SetClipPlane(float waterHeight)
+{
+	// 데이터 GPU 로 보내기
+	CConstBuffer* pCB = CDevice::GetInst()->GetConstBuffer(CB_TYPE::CLIP_PLANE);
+
+	// Clip Plane 설정 (y축 기준 물 표면 위쪽만 남기기)
+	g_ClipPlane.clipPlane = Vec4(0.0f, 1.0f, 0.0f, -waterHeight);
+
+	pCB->SetData(&g_ClipPlane);
+	pCB->Binding();
+}
+
+void CCamera::DisableClipPlane()
+{
+	//if (m_ClipPlaneBuffer)
+	//{
+	//	// 클리핑 평면 해제 (상수 버퍼를 nullptr로 설정)
+	//	/*ID3D11Buffer* pBuffer = nullptr;
+	//	CONTEXT->VSSetConstantBuffers((UINT)CB_TYPE::CLIP_PLANE, 1, &pBuffer);
+	//	CONTEXT->PSSetConstantBuffers((UINT)CB_TYPE::CLIP_PLANE, 1, &pBuffer);*/
+	//	m_ClipPlaneBuffer->Clear();
+	//}
 }
 
 void CCamera::SortClear()
@@ -388,6 +413,9 @@ void CCamera::UpdateReflectionTexture(Ptr<CTexture> reflectionTexture, float wat
 	// Reflection 뷰 매트릭스 생성
 	Matrix reflectionViewMatrix = XMMatrixLookToLH(reflectedPos, reflectedDir, Vec3(0, -1, 0));
 
+	// 1. Clip Plane 설정 (물 표면을 기준으로 아래쪽 부분 클리핑)
+	SetClipPlane(waterHeight);
+
 	// 2. Reflection Render Target을 현재 렌더 타겟으로 설정
 	ID3D11RenderTargetView* pRTV = reflectionTexture->GetRTV().Get();
 	ID3D11DepthStencilView* pDSV = CRenderManager::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetDSV();
@@ -403,15 +431,19 @@ void CCamera::UpdateReflectionTexture(Ptr<CTexture> reflectionTexture, float wat
 	g_Trans.matView = reflectionViewMatrix;
 	g_Trans.matProj = m_matProj;  // 기존 카메라의 프로젝션 매트릭스를 사용
 
+	Ptr<CMaterial> pMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ReflectionMaterial");
+	pMaterial->Binding();
+
 	// 4. 물체 렌더링
 	SortObject();  // Shader 도메인에 따른 물체 정렬
 	Render_deferred();
 	Render_opaque();
-	Render_masked();
-	Render_transparent();
-	Render_particle();
+	//Render_masked();
+	//Render_transparent();
+	//Render_particle();
 
 	// Reflection 텍스처로 렌더링 완료 후 원래 Render Target으로 복귀
+	DisableClipPlane();
 	CRenderManager::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 }
 
