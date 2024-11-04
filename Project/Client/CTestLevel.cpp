@@ -73,7 +73,7 @@ void CTestLevel::CreateTestLevel()
 	pLight->AddComponent(new CTransform);
 	pLight->AddComponent(new CLight3D);
 	
-	pLight->Transform()->SetRelativePos(-500.f, 3000.f, -500.f);
+	pLight->Transform()->SetRelativePos(0.f, 1000.f, 0.f);
 	pLight->Transform()->SetRelativeRotation(XM_PI / 4.f, XM_PI / 4.f, 0.f);
 
 	pLight->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);

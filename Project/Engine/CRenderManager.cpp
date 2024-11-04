@@ -88,8 +88,6 @@ void CRenderManager::Render_Play()
 		if (m_vecCam[i] == nullptr)
 			continue;
 
-		//m_vecCam[i]->Render();
-
 		// Shadow Map Create
 		Render_ShadowMap();
 

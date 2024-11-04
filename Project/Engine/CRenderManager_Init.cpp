@@ -16,7 +16,12 @@ void CRenderManager::Init()
 	m_ReflectionTex = CAssetManager::GetInst()->CreateTexture(L"ReflectionTex"
 		, (UINT)vRenderResol.x, (UINT)vRenderResol.y
 		, DXGI_FORMAT_R32G32B32A32_FLOAT
-		, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE),
+		, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+
+	Ptr<CTexture> pTest = CAssetManager::GetInst()->CreateTexture(L"ShadowMapTargetTex"
+		, 8192, 8192
+		, DXGI_FORMAT_R32_FLOAT
+		, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
 
 	// MRT »ý¼º
 	CreateMRT();

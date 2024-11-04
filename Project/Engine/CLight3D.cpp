@@ -18,8 +18,11 @@ CLight3D::CLight3D()
 {
 	// 광원에서 Shadow Map 을 만들기 위해 사용할 카메라
 	m_LightCamObject = new CGameObject;
+	m_LightCamObject->SetName(L"Light Camera");
 	m_LightCamObject->AddComponent(new CTransform);
 	m_LightCamObject->AddComponent(new CCamera);
+
+	m_ShadowTex = CAssetManager::GetInst()->FindAsset<CTexture>(L"ShadowMapTargetTex");
 }
 
 CLight3D::CLight3D(const CLight3D& origin)
@@ -160,9 +163,9 @@ void CLight3D::SetLightType(LIGHT_TYPE type)
 
 		// 광원의 위치에 상관없이 일정한 방향으로 그림자가 나와야 한다. (직교투영)
 		m_LightCamObject->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_LightCamObject->Camera()->SetWidth(8192);
+		m_LightCamObject->Camera()->SetWidth(2048);
 		m_LightCamObject->Camera()->SetAspectRatio(1.f);
-		m_LightCamObject->Camera()->SetFar(100000.f);
+		m_LightCamObject->Camera()->SetFar(5000.f);
 		m_LightCamObject->Camera()->LayerCheckAll(0xffffffff);
 	}
 	else if ((LIGHT_TYPE)m_Info.LightType == LIGHT_TYPE::POINT)

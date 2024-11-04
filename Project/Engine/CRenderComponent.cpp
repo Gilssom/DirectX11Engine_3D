@@ -4,6 +4,8 @@
 #include "CLevelManager.h"
 #include "CLevel.h"
 #include "CTransform.h"
+#include "CAnimator3D.h"
+#include "CMeshRender.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE type)
 	: CComponent(type)
@@ -127,7 +129,31 @@ void CRenderComponent::Render_shadowmap()
 {
 	Transform()->Binding();
 
+	if (Animator3D())
+	{
+		Animator3D()->Binding(true); // 애니메이션 활성화
+
+		//for (UINT i = 0; i < GetMaterialCount(); ++i)
+		//{
+		//	if (nullptr == GetMaterial(i))
+		//		continue;
+
+		//	GetMaterial(i)->SetAnim3D(true); // Animation Mesh 알리기
+		//	GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount());
+		//}
+	}
+
 	Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
+
+	if (Animator3D())
+	{
+		pShadowMapMaterial->SetScalarParam(INT_0, 1); // 애니메이션 활성화
+	}
+	else
+	{
+		pShadowMapMaterial->SetScalarParam(INT_0, 0); // 애니메이션 비활성화
+	}
+
 	pShadowMapMaterial->Binding();
 
 	GetMesh()->Render(0);

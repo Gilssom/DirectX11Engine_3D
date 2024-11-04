@@ -59,7 +59,7 @@ private:
 
 public:
     virtual void FinalTick() override;
-    void Binding();
+    void Binding(bool update = false);
 
 public:
     void PlayAnimation(int animIndex);

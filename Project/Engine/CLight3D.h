@@ -23,6 +23,8 @@ private:
 	CGameObject*	m_LightCamObject;	// ±¤¿ø Àü¿ë Camera Object
 	CMRT*			m_ShadowMapMRT;		// Shadow Map MRT
 
+	Ptr<CTexture>	m_ShadowTex;
+
 public:
 	void SetLightType(LIGHT_TYPE type);
 
