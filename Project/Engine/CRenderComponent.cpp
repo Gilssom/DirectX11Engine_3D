@@ -133,14 +133,14 @@ void CRenderComponent::Render_shadowmap()
 	{
 		Animator3D()->Binding(true); // 애니메이션 활성화
 
-		//for (UINT i = 0; i < GetMaterialCount(); ++i)
-		//{
-		//	if (nullptr == GetMaterial(i))
-		//		continue;
+		for (UINT i = 0; i < GetMaterialCount(); ++i)
+		{
+			if (nullptr == GetMaterial(i))
+				continue;
 
-		//	GetMaterial(i)->SetAnim3D(true); // Animation Mesh 알리기
-		//	GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount());
-		//}
+			GetMaterial(i)->SetAnim3D(true); // Animation Mesh 알리기
+			GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount());
+		}
 	}
 
 	Ptr<CMaterial> pShadowMapMaterial = CAssetManager::GetInst()->FindAsset<CMaterial>(L"ShadowMapMaterial");
@@ -156,7 +156,10 @@ void CRenderComponent::Render_shadowmap()
 
 	pShadowMapMaterial->Binding();
 
-	GetMesh()->Render(0);
+	for (int i = 0; i < GetMaterialCount(); i++)
+	{
+		GetMesh()->Render(i);
+	}
 }
 
 ULONG64 CRenderComponent::GetInstID(UINT iMtrlIdx)
